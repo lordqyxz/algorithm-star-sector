@@ -19,8 +19,8 @@ export type RegionTone = 'blue' | 'orange' | 'green' | 'purple' | 'yellow'
 /** 所有 label 都必须是 string | number，保证 Trace 可以原样存成 JSON。 */
 export type SceneCell = { id: string; label: string | number; caption?: string; tone?: Tone }
 
-export type PointerTag = { id: string; index: number; label: string; tone?: PointerTone }
-export type RegionLabel = { id: string; from: number; to: number; label: string; tone?: RegionTone }
+export type PointerTag = { id?: string; index: number; label: string; tone?: PointerTone }
+export type RegionLabel = { id?: string; from: number; to: number; label: string; tone?: RegionTone }
 
 export type ArrayScene = {
   kind: 'array'
