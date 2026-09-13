@@ -1,0 +1,80 @@
+- generic [ref=f4e3]:
+  - complementary [ref=f4e4]:
+    - generic [ref=f4e10]:
+      - strong [ref=f4e11]: Algorithm
+      - generic [ref=f4e12]: Animation Studio
+    - navigation "站点主题导航" [ref=f4e13]:
+      - button "主页 学习路线与绘制方法" [ref=f4e14] [cursor=pointer]:
+        - generic [ref=f4e19]:
+          - generic [ref=f4e20]: 主页
+          - generic [ref=f4e21]: 学习路线与绘制方法
+      - button "算法 可操作动画课程" [active] [ref=f4e23] [cursor=pointer]:
+        - generic [ref=f4e29]:
+          - generic [ref=f4e30]: 算法
+          - generic [ref=f4e31]: 可操作动画课程
+  - main [ref=f4e62]:
+    - generic [ref=f4e64]:
+      - text: 算法动画站
+      - generic [ref=f4e67]: /
+      - text: 算法 / 排序算法
+    - generic [ref=f4e125]:
+      - tablist "排序算法" [ref=f4e126]:
+        - tab "归并排序" [selected] [ref=f4e127] [cursor=pointer]
+        - tab "堆排序" [ref=f4e128] [cursor=pointer]
+        - tab "快速排序" [ref=f4e129] [cursor=pointer]
+      - tabpanel "归并排序" [ref=f4e130]:
+        - generic [ref=f4e131]:
+          - generic [ref=f4e133]:
+            - paragraph [ref=f4e134]: ANIMATION 01 · MERGE SORT
+            - heading "初始问题：给 8 个数字排序" [level=2] [ref=f4e135]
+            - paragraph [ref=f4e136]: 数字真的被分开、比较、合并；每一层的工作量都能从数组读出来。
+          - group "初始问题：给 8 个数字排序步骤控制" [ref=f4e137]:
+            - tablist "初始问题：给 8 个数字排序步骤" [ref=f4e138]:
+              - tab "01 初始" [selected] [ref=f4e139] [cursor=pointer]
+              - tab "02 拆分" [ref=f4e140] [cursor=pointer]
+              - tab "03 基例" [ref=f4e141] [cursor=pointer]
+              - tab "04 合并" [ref=f4e142] [cursor=pointer]
+              - tab "05 复杂度" [ref=f4e143] [cursor=pointer]
+            - generic [ref=f4e144]:
+              - button "上一步" [disabled] [ref=f4e145]
+              - button "下一步" [ref=f4e148] [cursor=pointer]
+              - button "自动播放" [ref=f4e151] [cursor=pointer]
+              - button "重播" [ref=f4e154] [cursor=pointer]
+          - progressbar "教学进度" [ref=f4e158]
+          - generic [ref=f4e159]:
+            - generic [ref=f4e160]:
+              - generic [ref=f4e161]: 这一步，公式记录了什么？
+              - strong [ref=f4e162]: T(8) = 2T(4) + 8
+            - generic [ref=f4e163]:
+              - generic [ref=f4e164]:
+                - heading "递归树：每一层的实际数字" [level=3] [ref=f4e166]
+                - generic [ref=f4e169]:
+                  - generic [ref=f4e170]:
+                    - text: 第 0 层
+                    - generic [ref=f4e171]: 1 个问题
+                  - generic [ref=f4e173]:
+                    - generic [ref=f4e174]: "8"
+                    - generic [ref=f4e175]: "3"
+                    - generic [ref=f4e176]: "7"
+                    - generic [ref=f4e177]: "4"
+                    - generic [ref=f4e178]: "1"
+                    - generic [ref=f4e179]: "6"
+                    - generic [ref=f4e180]: "2"
+                    - generic [ref=f4e181]: "5"
+                  - emphasis [ref=f4e182]: 1 × 8 = 8
+              - generic [ref=f4e183]:
+                - heading "计算台" [level=3] [ref=f4e185]
+                - generic [ref=f4e186]:
+                  - generic [ref=f4e187]:
+                    - generic [ref=f4e188]:
+                      - generic [ref=f4e189]: 这一层有多少个问题
+                      - strong [ref=f4e190]: "1"
+                    - generic [ref=f4e191]:
+                      - generic [ref=f4e192]: 每个问题有多大
+                      - strong [ref=f4e193]: "8"
+                    - generic [ref=f4e194]:
+                      - generic [ref=f4e195]: 整层工作量
+                      - strong [ref=f4e196]: "8"
+                  - generic [ref=f4e197]: 1 × 8 = 8
+                  - paragraph [ref=f4e198]: 先看这一层：问题数 × 单题规模。
+            - generic [ref=f4e199]: 下一步：让第一刀真的发生。

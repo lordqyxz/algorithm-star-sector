@@ -1,0 +1,312 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e10]:
+      - strong [ref=e11]: Algorithm
+      - generic [ref=e12]: Animation Studio
+    - generic [ref=e13]: WORKSPACE
+    - navigation "站点主题导航" [ref=e14]:
+      - button "主页 学习路线与绘制方法" [ref=e15] [cursor=pointer]:
+        - generic [ref=e20]:
+          - generic [ref=e21]: 主页
+          - generic [ref=e22]: 学习路线与绘制方法
+      - generic [ref=e23]:
+        - button "算法 按《算法导论》章节组织" [expanded] [ref=e24] [cursor=pointer]:
+          - generic [ref=e30]:
+            - generic [ref=e31]: 算法
+            - generic [ref=e32]: 按《算法导论》章节组织
+        - generic [ref=e35]:
+          - generic [ref=e36]:
+            - generic [ref=e37]: I · 基础
+            - generic [ref=e38]:
+              - generic [ref=e39]:
+                - generic [ref=e40]: 第 1 章
+                - generic [ref=e41]: 算法与计算
+              - button "算法的角色 问题、输入、输出与正确性 DEV" [ref=e42] [cursor=pointer]:
+                - generic [ref=e48]:
+                  - generic [ref=e49]: 算法的角色
+                  - generic [ref=e50]: 问题、输入、输出与正确性
+                - generic [ref=e51]: DEV
+            - generic [ref=e52]:
+              - generic [ref=e53]:
+                - generic [ref=e54]: 第 2 章
+                - generic [ref=e55]: 起步
+              - button "插入排序 循环不变量与逐个插入 DEV" [ref=e56] [cursor=pointer]:
+                - generic [ref=e62]:
+                  - generic [ref=e63]: 插入排序
+                  - generic [ref=e64]: 循环不变量与逐个插入
+                - generic [ref=e65]: DEV
+              - button "归并排序 2.3 · 拆分、合并与递归树" [ref=e66] [cursor=pointer]:
+                - generic [ref=e72]:
+                  - generic [ref=e73]: 归并排序
+                  - generic [ref=e74]: 2.3 · 拆分、合并与递归树
+              - button "二分查找 区间缩小与对数复杂度 DEV" [ref=e75] [cursor=pointer]:
+                - generic [ref=e81]:
+                  - generic [ref=e82]: 二分查找
+                  - generic [ref=e83]: 区间缩小与对数复杂度
+                - generic [ref=e84]: DEV
+            - generic [ref=e85]:
+              - generic [ref=e86]:
+                - generic [ref=e87]: 第 3 章
+                - generic [ref=e88]: 刻画运行时间
+              - button "渐近记号 O、Ω、Θ 的图形比较 DEV" [ref=e89] [cursor=pointer]:
+                - generic [ref=e95]:
+                  - generic [ref=e96]: 渐近记号
+                  - generic [ref=e97]: O、Ω、Θ 的图形比较
+                - generic [ref=e98]: DEV
+              - button "递归式 从递归树读出运行时间 DEV" [ref=e99] [cursor=pointer]:
+                - generic [ref=e105]:
+                  - generic [ref=e106]: 递归式
+                  - generic [ref=e107]: 从递归树读出运行时间
+                - generic [ref=e108]: DEV
+            - generic [ref=e109]:
+              - generic [ref=e110]:
+                - generic [ref=e111]: 第 4 章
+                - generic [ref=e112]: 分治法
+              - button "最大子数组 跨中点候选与线性合并 DEV" [ref=e113] [cursor=pointer]:
+                - generic [ref=e119]:
+                  - generic [ref=e120]: 最大子数组
+                  - generic [ref=e121]: 跨中点候选与线性合并
+                - generic [ref=e122]: DEV
+              - button "最近点对 跨界候选与线性合并" [active] [ref=e123] [cursor=pointer]:
+                - generic [ref=e129]:
+                  - generic [ref=e130]: 最近点对
+                  - generic [ref=e131]: 跨界候选与线性合并
+              - button "主方法 递归树中谁在主导" [ref=e132] [cursor=pointer]:
+                - generic [ref=e138]:
+                  - generic [ref=e139]: 主方法
+                  - generic [ref=e140]: 递归树中谁在主导
+              - button "Strassen 矩阵乘法 减少递归子问题数量 DEV" [ref=e141] [cursor=pointer]:
+                - generic [ref=e147]:
+                  - generic [ref=e148]: Strassen 矩阵乘法
+                  - generic [ref=e149]: 减少递归子问题数量
+                - generic [ref=e150]: DEV
+            - generic [ref=e151]:
+              - generic [ref=e152]:
+                - generic [ref=e153]: 第 5 章
+                - generic [ref=e154]: 概率分析与随机算法
+              - button "随机化算法 随机选择与期望运行时间 DEV" [ref=e155] [cursor=pointer]:
+                - generic [ref=e161]:
+                  - generic [ref=e162]: 随机化算法
+                  - generic [ref=e163]: 随机选择与期望运行时间
+                - generic [ref=e164]: DEV
+              - button "招聘问题 指示器随机变量与期望 DEV" [ref=e165] [cursor=pointer]:
+                - generic [ref=e171]:
+                  - generic [ref=e172]: 招聘问题
+                  - generic [ref=e173]: 指示器随机变量与期望
+                - generic [ref=e174]: DEV
+          - generic [ref=e175]:
+            - generic [ref=e176]: II · 排序与顺序统计
+            - generic [ref=e177]:
+              - generic [ref=e178]:
+                - generic [ref=e179]: 第 6 章
+                - generic [ref=e180]: 堆排序
+              - button "堆排序 大根堆、取最大值与原地排序" [ref=e181] [cursor=pointer]:
+                - generic [ref=e187]:
+                  - generic [ref=e188]: 堆排序
+                  - generic [ref=e189]: 大根堆、取最大值与原地排序
+              - button "优先队列 插入、取最大值与堆的接口 DEV" [ref=e190] [cursor=pointer]:
+                - generic [ref=e196]:
+                  - generic [ref=e197]: 优先队列
+                  - generic [ref=e198]: 插入、取最大值与堆的接口
+                - generic [ref=e199]: DEV
+            - generic [ref=e200]:
+              - generic [ref=e201]:
+                - generic [ref=e202]: 第 7 章
+                - generic [ref=e203]: 快速排序
+              - button "快速排序 均衡分区与最坏情况" [ref=e204] [cursor=pointer]:
+                - generic [ref=e210]:
+                  - generic [ref=e211]: 快速排序
+                  - generic [ref=e212]: 均衡分区与最坏情况
+              - button "随机化快速排序 随机主元与期望复杂度 DEV" [ref=e213] [cursor=pointer]:
+                - generic [ref=e219]:
+                  - generic [ref=e220]: 随机化快速排序
+                  - generic [ref=e221]: 随机主元与期望复杂度
+                - generic [ref=e222]: DEV
+            - generic [ref=e223]:
+              - generic [ref=e224]:
+                - generic [ref=e225]: 第 8 章
+                - generic [ref=e226]: 线性时间排序
+              - button "计数排序 频次数组与稳定输出 DEV" [ref=e227] [cursor=pointer]:
+                - generic [ref=e233]:
+                  - generic [ref=e234]: 计数排序
+                  - generic [ref=e235]: 频次数组与稳定输出
+                - generic [ref=e236]: DEV
+              - button "基数排序 从低位到高位的稳定排序 DEV" [ref=e237] [cursor=pointer]:
+                - generic [ref=e243]:
+                  - generic [ref=e244]: 基数排序
+                  - generic [ref=e245]: 从低位到高位的稳定排序
+                - generic [ref=e246]: DEV
+              - button "桶排序 按分布把元素放入桶中 DEV" [ref=e247] [cursor=pointer]:
+                - generic [ref=e253]:
+                  - generic [ref=e254]: 桶排序
+                  - generic [ref=e255]: 按分布把元素放入桶中
+                - generic [ref=e256]: DEV
+            - generic [ref=e257]:
+              - generic [ref=e258]:
+                - generic [ref=e259]: 第 9 章
+                - generic [ref=e260]: 中位数与顺序统计量
+              - button "顺序统计量 选择第 k 小元素 DEV" [ref=e261] [cursor=pointer]:
+                - generic [ref=e267]:
+                  - generic [ref=e268]: 顺序统计量
+                  - generic [ref=e269]: 选择第 k 小元素
+                - generic [ref=e270]: DEV
+              - button "中位数的中位数 最坏情况线性时间选择 DEV" [ref=e271] [cursor=pointer]:
+                - generic [ref=e277]:
+                  - generic [ref=e278]: 中位数的中位数
+                  - generic [ref=e279]: 最坏情况线性时间选择
+                - generic [ref=e280]: DEV
+    - generic [ref=e281]: 本地静态站点React 19.3 · Anime.js 4.5
+  - main [ref=e283]:
+    - generic [ref=e285]:
+      - text: 算法动画站
+      - generic [ref=e288]: /
+      - text: 算法 / 第 4 章 最近点对
+    - generic [ref=e1482]:
+      - generic [ref=e1483]:
+        - generic [ref=e1484]:
+          - paragraph [ref=e1485]: ANIMATION 02 · CLOSEST PAIR
+          - heading "看问题：从所有点对中找最小距离" [level=2] [ref=e1486]
+          - paragraph [ref=e1487]: 局部答案还不够：只有检查中线附近的候选，才能得到全局最近点对。
+        - generic [ref=e1488]:
+          - text: LESSON
+          - strong [ref=e1489]: "01"
+          - generic [ref=e1490]: / 05
+      - group "看问题：从所有点对中找最小距离步骤控制" [ref=e1491]:
+        - tablist "看问题：从所有点对中找最小距离步骤" [ref=e1492]:
+          - tab "01 看问题" [selected] [ref=e1493] [cursor=pointer]
+          - tab "02 分开" [ref=e1494] [cursor=pointer]
+          - tab "03 局部解" [ref=e1495] [cursor=pointer]
+          - tab "04 条带" [ref=e1496] [cursor=pointer]
+          - tab "05 答案" [ref=e1497] [cursor=pointer]
+        - generic [ref=e1498]:
+          - button "上一步" [disabled] [ref=e1499]
+          - button "下一步" [ref=e1502] [cursor=pointer]
+          - button "自动播放" [ref=e1505] [cursor=pointer]
+          - button "重播" [ref=e1508] [cursor=pointer]
+      - progressbar "教学进度" [ref=e1512]
+      - region "选择演示样例" [ref=e1513]:
+        - generic [ref=e1514]:
+          - generic [ref=e1515]:
+            - paragraph [ref=e1516]: INPUT LAB
+            - strong [ref=e1517]: 换一组输入再看一次
+          - generic [ref=e1518]: 跨界最近：C–E
+        - group "演示样例" [ref=e1519]:
+          - button "课堂混合点集 跨界最近：C–E" [pressed] [ref=e1520] [cursor=pointer]:
+            - generic [ref=e1521]: 课堂混合点集
+            - generic [ref=e1522]: 跨界最近：C–E
+          - button "跨界候选更近 中线两侧各有近邻" [ref=e1523] [cursor=pointer]:
+            - generic [ref=e1524]: 跨界候选更近
+            - generic [ref=e1525]: 中线两侧各有近邻
+          - button "分散点集 局部答案已经很小" [ref=e1526] [cursor=pointer]:
+            - generic [ref=e1527]: 分散点集
+            - generic [ref=e1528]: 局部答案已经很小
+          - button "中线附近密集 条带候选更多" [ref=e1529] [cursor=pointer]:
+            - generic [ref=e1530]: 中线附近密集
+            - generic [ref=e1531]: 条带候选更多
+      - generic [ref=e1532]:
+        - generic [ref=e1533]:
+          - generic [ref=e1534]: 这一步，公式记录了图上的什么？
+          - generic [ref=e1537]:
+            - math [ref=e1539]:
+              - generic [ref=e1541]:
+                - generic [ref=e1542]: 目标：
+                - generic [ref=e1543]: min
+                - generic: ⁡
+                - generic [ref=e1544]: d
+                - generic [ref=e1545]: (
+                - generic [ref=e1546]:
+                  - generic [ref=e1547]: P
+                  - generic [ref=e1548]: i
+                - generic [ref=e1549]: ","
+                - generic [ref=e1550]:
+                  - generic [ref=e1551]: P
+                  - generic [ref=e1552]: j
+                - generic [ref=e1553]: )
+            - generic [ref=e1555]:
+              - generic [ref=e1556]: 目标：
+              - text: min d(
+              - generic [ref=e1557]:
+                - text: P
+                - generic [ref=e1558]: i
+              - text: ","
+              - generic [ref=e1566]:
+                - text: P
+                - generic [ref=e1567]: j
+              - text: )
+        - generic [ref=e1575]:
+          - generic [ref=e1576]:
+            - heading "点集：距离是图上的线段" [level=3] [ref=e1578]
+            - img "最近点对分治过程" [ref=e1580]:
+              - generic [ref=e1582]: 中线 x = 5.5
+              - generic [ref=e1584]: A–C=3.16
+              - generic [ref=e1586]: E–G=3.16
+              - generic [ref=e1587]: C–E=2
+              - generic [ref=e1588]: A
+              - generic [ref=e1591]: B
+              - generic [ref=e1594]: C
+              - generic [ref=e1597]: D
+              - generic [ref=e1600]: E
+              - generic [ref=e1603]: F
+              - generic [ref=e1606]: G
+              - generic [ref=e1609]: H
+          - generic [ref=e1612]:
+            - heading "计算台" [level=3] [ref=e1614]
+            - generic [ref=e1615]:
+              - generic [ref=e1616]:
+                - generic [ref=e1617]:
+                  - generic [ref=e1618]: 左半边最小距离 δL
+                  - strong [ref=e1619]: —
+                - generic [ref=e1620]:
+                  - generic [ref=e1621]: 右半边最小距离 δR
+                  - strong [ref=e1622]: —
+                - generic [ref=e1623]:
+                  - generic [ref=e1624]: 当前最好 δ
+                  - strong [ref=e1625]: —
+              - generic [ref=e1628]:
+                - math [ref=e1630]:
+                  - generic [ref=e1631]: 枚举所有点对作为候选
+                - generic [ref=e1635]: 枚举所有点对作为候选
+              - paragraph [ref=e1637]: 暴力枚举要比较 8×8 级别的点对。
+        - generic [ref=e1638]: 下一步：画中线，把大问题分成左右两个小问题。
+      - region [ref=e1639]:
+        - generic [ref=e1640]:
+          - generic [ref=e1641]:
+            - paragraph [ref=e1642]: COMPLEXITY MAP
+            - heading "最近点对：数据形状不改变分治的阶数" [level=3] [ref=e1643]
+            - paragraph [ref=e1644]: 以下是标准分治版本：先排序，再递归求左右答案，最后检查中线条带。
+          - generic [ref=e1645]: 条件 → 复杂度
+        - generic [ref=e1646]:
+          - generic [ref=e1648]:
+            - generic [ref=e1649]:
+              - generic [ref=e1650]: 最好
+              - strong [ref=e1651]: Θ(n log n)
+            - paragraph [ref=e1652]:
+              - generic [ref=e1653]: 条件
+              - text: 点很分散，也不能跳过分治和条带检查。
+            - paragraph [ref=e1654]:
+              - generic [ref=e1655]: 例子
+              - code [ref=e1656]: 均匀分布：(0,0)、(10,0)、(0,10)…
+            - generic [ref=e1657]: 距离大小会改变常数，但算法仍要完成排序、分半和合并。
+          - generic [ref=e1659]:
+            - generic [ref=e1660]:
+              - generic [ref=e1661]: 平均
+              - strong [ref=e1662]: Θ(n log n)
+            - paragraph [ref=e1663]:
+              - generic [ref=e1664]: 条件
+              - text: 点是随机分布的平面点。
+            - paragraph [ref=e1665]:
+              - generic [ref=e1666]: 例子
+              - code [ref=e1667]: 随机点集：P₁…Pₙ
+            - generic [ref=e1668]: 平均情况下条带候选较少，但递归树和排序成本仍在。
+          - generic [ref=e1670]:
+            - generic [ref=e1671]:
+              - generic [ref=e1672]: 最差
+              - strong [ref=e1673]: Θ(n log n)
+            - paragraph [ref=e1674]:
+              - generic [ref=e1675]: 条件
+              - text: 很多点靠近中线，条带候选变多。
+            - paragraph [ref=e1676]:
+              - generic [ref=e1677]: 例子
+              - code [ref=e1678]: Pᵢ=(5±εᵢ, yᵢ)
+            - generic [ref=e1679]: 条带检查可能更忙，但几何性质仍把合并限制在线性规模。
+        - generic [ref=e1680]: 别只背结论若改成暴力枚举所有点对，才会变成 Θ(n²)；本动画展示的是分治版。

@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>分治法：公式就是这棵树的读数</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --ink: light-dark(#172235, #eef4ff);
+      --muted: light-dark(#607087, #aab8cc);
+      --line: light-dark(#d7e0eb, #2c3b50);
+      --surface: light-dark(#ffffff, #121c2b);
+      --surface-2: light-dark(#f3f6f9, #0d1521);
+      --surface-3: light-dark(#e9eef5, #1b293c);
+      --blue: light-dark(#2f60d6, #8eb0ff);
+      --blue-soft: light-dark(#e7edff, #22345b);
+      --yellow: light-dark(#e4aa21, #f2c85d);
+      --yellow-soft: light-dark(#fff3c9, #493c1a);
+      --orange: light-dark(#d96643, #ff9c7b);
+      --orange-soft: light-dark(#ffe9e1, #4e281f);
+      --green: light-dark(#12866d, #6bd8b0);
+      --green-soft: light-dark(#dcf4ec, #183e36);
+      --purple: light-dark(#7659d5, #b9aaff);
+      --shadow: light-dark(rgba(25, 45, 75, .12), rgba(0, 0, 0, .3));
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--surface-2); color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; }
+    button { font: inherit; }
+    button:focus-visible { outline: 3px solid color-mix(in srgb, var(--blue) 35%, transparent); outline-offset: 2px; }
+    h1, h2, h3, p { margin-top: 0; }
+    .dc-page { max-width: 1120px; margin: 0 auto; padding: 28px clamp(16px, 3vw, 40px) 42px; }
+    .dc-kicker { margin: 0 0 10px; color: var(--blue); font-size: .78rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    h1 { max-width: 820px; margin-bottom: 12px; font-size: clamp(2rem, 4.5vw, 3.35rem); font-weight: 550; letter-spacing: -.06em; line-height: 1.05; }
+    .dc-lede { max-width: 880px; margin-bottom: 24px; color: var(--muted); font-size: 1rem; line-height: 1.7; }
+    .dc-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .dc-step-tabs, .dc-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .dc-step-tab, .dc-action { border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--ink); cursor: pointer; transition: border-color .18s ease, background-color .18s ease, color .18s ease, transform .18s ease; }
+    .dc-step-tab:hover, .dc-action:hover { border-color: var(--blue); transform: translateY(-1px); }
+    .dc-step-tab { padding: 9px 13px; font-size: .86rem; }
+    .dc-step-tab[aria-selected="true"] { border-color: var(--blue); background: var(--blue); color: #fff; }
+    .dc-action { min-width: 68px; padding: 9px 12px; }
+    .dc-action-primary { border-color: var(--blue); background: var(--blue); color: #fff; }
+    .dc-progress { height: 5px; margin: 18px 0 12px; overflow: hidden; border-radius: 999px; background: var(--surface-3); }
+    .dc-progress-bar { width: 0; height: 100%; border-radius: inherit; background: var(--yellow); transition: width .12s linear; }
+    .dc-step-label { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin: 0 0 12px; color: var(--muted); font-size: .8rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+    .dc-step-label strong { color: var(--ink); font-size: 1rem; letter-spacing: -.02em; text-transform: none; }
+    .dc-story { padding: clamp(18px, 3vw, 30px); border: 1px solid var(--line); border-radius: 14px; background: var(--surface); box-shadow: 0 18px 42px var(--shadow); }
+    .dc-formula-band { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(230px, .7fr); gap: 14px; align-items: center; margin-bottom: 18px; padding: 17px 19px; border-left: 4px solid var(--blue); border-radius: 10px; background: var(--blue-soft); }
+    .dc-formula-kicker { margin: 0 0 7px; color: var(--muted); font-size: .75rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
+    .dc-formula { min-height: 38px; color: var(--ink); font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; font-size: clamp(1.15rem, 2.55vw, 1.7rem); font-weight: 850; letter-spacing: -.05em; }
+    .dc-formula .token-recursive { color: var(--blue); }
+    .dc-formula .token-level { color: #a87300; }
+    .dc-formula .token-total { color: var(--green); }
+    .dc-formula-legend { display: grid; gap: 7px; color: var(--muted); font-size: .78rem; line-height: 1.4; }
+    .dc-legend-item { display: flex; align-items: center; gap: 7px; }
+    .dc-legend-dot { width: 10px; height: 10px; flex: 0 0 auto; border-radius: 3px; background: var(--blue); }
+    .dc-legend-dot.level { background: var(--yellow); }
+    .dc-legend-dot.total { background: var(--green); }
+    .dc-main-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(270px, .65fr); gap: 15px; }
+    .dc-card { min-width: 0; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+    .dc-card-title { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 13px; color: var(--muted); font-size: .8rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+    .dc-card-title strong { color: var(--ink); font-size: 1rem; letter-spacing: -.02em; text-transform: none; }
+    .dc-tree { display: grid; gap: 8px; }
+    .dc-tree-level { display: grid; grid-template-columns: 72px minmax(0, 1fr) 145px; align-items: center; gap: 10px; min-height: 67px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface-2); transition: border-color .2s ease, background-color .2s ease, transform .2s ease; }
+    .dc-tree-level.is-current { border-color: var(--blue); background: var(--blue-soft); }
+    .dc-level-label { color: var(--muted); font-size: .73rem; font-weight: 800; line-height: 1.3; }
+    .dc-level-label strong { display: block; color: var(--ink); font-size: .88rem; }
+    .dc-node-group { display: flex; flex-wrap: wrap; gap: 4px; min-height: 30px; }
+    .dc-node { width: 15px; height: 15px; border-radius: 4px; background: var(--yellow); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .13); }
+    .dc-node.blue { background: var(--blue); }
+    .dc-node.orange { background: var(--orange); }
+    .dc-node.green { background: var(--green); }
+    .dc-tree-equation { color: var(--muted); font-family: "SFMono-Regular", Consolas, monospace; font-size: .75rem; line-height: 1.4; }
+    .dc-tree-equation strong { display: block; color: var(--green); font-size: 1.05rem; }
+    .dc-level-total { padding: 5px 7px; border-radius: 6px; background: var(--green-soft); color: var(--green); font-family: "SFMono-Regular", Consolas, monospace; font-size: .76rem; font-weight: 850; text-align: center; }
+    .dc-level-total span { display: block; color: var(--muted); font-family: inherit; font-size: .63rem; font-weight: 600; }
+    .dc-tree-path { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--line); color: var(--muted); font-size: .8rem; }
+    .dc-path-number { padding: 4px 7px; border-radius: 5px; background: var(--surface-3); color: var(--ink); font-family: monospace; font-weight: 850; }
+    .dc-path-arrow { color: var(--blue); font-weight: 900; }
+    .dc-path-depth { margin-left: auto; color: var(--blue); font-family: monospace; font-weight: 900; }
+    .dc-readout { display: grid; gap: 12px; }
+    .dc-metric { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 9px; padding: 13px; border-radius: 9px; background: var(--surface-2); }
+    .dc-metric span { color: var(--muted); font-size: .8rem; font-weight: 750; }
+    .dc-metric strong { color: var(--blue); font-family: "SFMono-Regular", Consolas, monospace; font-size: 1.65rem; }
+    .dc-metric-total { background: var(--green-soft); }
+    .dc-metric-total strong { color: var(--green); }
+    .dc-readout-equation { margin-top: 2px; padding: 12px; border-radius: 8px; background: var(--yellow-soft); color: var(--ink); font-family: monospace; font-size: .83rem; font-weight: 800; line-height: 1.55; }
+    .dc-readout-note { margin: 0; color: var(--muted); font-size: .82rem; line-height: 1.6; }
+    .dc-merge-panel { margin-top: 15px; padding-top: 15px; border-top: 1px dashed var(--line); }
+    .dc-merge-panel[hidden] { display: none; }
+    .dc-merge-title { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 10px; color: var(--muted); font-size: .78rem; font-weight: 800; }
+    .dc-merge-title strong { color: var(--ink); font-size: .92rem; }
+    .dc-merge-flow { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 8px; }
+    .dc-merge-input { padding: 9px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-2); text-align: center; }
+    .dc-merge-input small { display: block; margin-bottom: 6px; color: var(--muted); font-size: .66rem; font-weight: 800; }
+    .dc-merge-arrow { color: var(--orange); font-size: 1.2rem; font-weight: 900; }
+    .dc-merge-result { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; margin-top: 10px; }
+    .dc-result-number { display: inline-grid; place-items: center; width: 29px; height: 29px; border-radius: 5px; background: var(--blue); color: #fff; font-family: monospace; font-size: .86rem; font-weight: 900; }
+    .dc-result-number.is-next { background: var(--orange); color: #421b10; }
+    .dc-conclusion { margin-top: 15px; padding: 13px 14px; border-radius: 8px; background: var(--green-soft); color: var(--green); font-size: .88rem; font-weight: 800; line-height: 1.6; }
+    .dc-cost-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 15px; }
+    .dc-cost-card { padding: 12px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface-2); }
+    .dc-cost-card strong { display: block; margin-bottom: 5px; color: var(--ink); font-family: monospace; font-size: .95rem; }
+    .dc-cost-card span { display: block; color: var(--muted); font-size: .76rem; line-height: 1.45; }
+    .dc-details { margin-top: 14px; color: var(--muted); font-size: .84rem; }
+    .dc-details summary { cursor: pointer; color: var(--blue); font-weight: 800; }
+    .dc-details ol { line-height: 1.7; }
+    .dc-fallback { margin: 13px 0 0; color: var(--muted); font-size: .8rem; line-height: 1.6; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    @media (max-width: 900px) {
+      .dc-main-grid, .dc-cost-top { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 660px) {
+      .dc-page { padding-inline: 12px; }
+      .dc-story { padding: 15px; }
+      .dc-scene-heading { display: block; }
+      .dc-formula-band { grid-template-columns: 1fr; }
+      .dc-tree-level { grid-template-columns: 58px minmax(0, 1fr); }
+      .dc-level-total { grid-column: 2; text-align: left; }
+      .dc-level-total span { display: inline; margin-right: 4px; }
+      .dc-path-depth { margin-left: 0; }
+      .dc-cost-cards { grid-template-columns: 1fr; }
+      .dc-step-tab, .dc-action { padding: 8px 9px; font-size: .8rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="dc-page" id="divide-and-conquer-page">
+    <header>
+      <p class="dc-kicker">Chapter 02 · Divide &amp; Conquer · Synchronized Story</p>
+      <h1>分治法：公式就是这棵树的读数</h1>
+      <p class="dc-lede">按“下一步”，让同一件事同时发生在三处：递归树长出新一层，公式增加一项，右侧数字重新计算。学生看到的不是字幕，而是公式和图形的同一条因果链。</p>
+    </header>
+
+    <div class="dc-toolbar" role="group" aria-label="分治法步骤控制">
+      <div class="dc-step-tabs" role="tablist" aria-label="分治法五个步骤">
+        <button class="dc-step-tab" id="step-tab-0" type="button" role="tab" aria-controls="story" aria-selected="true" data-step="0">01 初始问题</button>
+        <button class="dc-step-tab" id="step-tab-1" type="button" role="tab" aria-controls="story" aria-selected="false" data-step="1">02 第一次拆分</button>
+        <button class="dc-step-tab" id="step-tab-2" type="button" role="tab" aria-controls="story" aria-selected="false" data-step="2">03 到达基例</button>
+        <button class="dc-step-tab" id="step-tab-3" type="button" role="tab" aria-controls="story" aria-selected="false" data-step="3">04 向上合并</button>
+        <button class="dc-step-tab" id="step-tab-4" type="button" role="tab" aria-controls="story" aria-selected="false" data-step="4">05 得到复杂度</button>
+      </div>
+      <div class="dc-actions">
+        <button class="dc-action" id="dc-prev" type="button">上一步</button>
+        <button class="dc-action dc-action-primary" id="dc-next" type="button">下一步</button>
+        <button class="dc-action" id="dc-auto" type="button">自动播放</button>
+        <button class="dc-action" id="dc-replay" type="button">重播</button>
+      </div>
+    </div>
+
+    <div class="dc-progress" id="dc-progress" role="progressbar" aria-label="分治法教学进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <div class="dc-progress-bar" id="dc-progress-bar"></div>
+    </div>
+
+    <section class="dc-story" id="story" role="tabpanel" aria-labelledby="step-tab-0">
+      <div class="dc-step-label"><strong id="step-title">初始问题：给 8 个数字排序</strong><span id="step-counter">01 / 05</span></div>
+
+      <div class="dc-formula-band" id="formula-band">
+        <div>
+          <p class="dc-formula-kicker">这一步，公式记录了什么？</p>
+          <div class="dc-formula" id="formula-main">T(8) = <span class="token-recursive">2T(4)</span> + <span class="token-level">8</span></div>
+        </div>
+        <div class="dc-formula-legend" aria-label="公式颜色图例">
+          <div class="dc-legend-item"><span class="dc-legend-dot"></span><span>蓝色：还要递归解决的子问题</span></div>
+          <div class="dc-legend-item"><span class="dc-legend-dot level"></span><span>黄色：当前层的合并工作</span></div>
+          <div class="dc-legend-item"><span class="dc-legend-dot total"></span><span>绿色：整层算完后的总量</span></div>
+        </div>
+      </div>
+
+      <div class="dc-main-grid">
+        <div class="dc-card">
+          <div class="dc-card-title"><strong>递归树：每一层的实际数字</strong><span>方块 = 一个子问题</span></div>
+          <div class="dc-tree" id="dc-tree">
+            <div class="dc-tree-level" data-level="0">
+              <div class="dc-level-label">第 0 层<strong>根</strong></div>
+              <div class="dc-node-group"><span class="dc-node"></span></div>
+              <div class="dc-tree-equation">1 个问题 × 每题 8<strong>= 8</strong></div>
+              <div class="dc-level-total"><span>整层工作</span>8</div>
+            </div>
+            <div class="dc-tree-level" data-level="1">
+              <div class="dc-level-label">第 1 层<strong>2 个</strong></div>
+              <div class="dc-node-group"><span class="dc-node blue"></span><span class="dc-node blue"></span></div>
+              <div class="dc-tree-equation">2 个问题 × 每题 4<strong>= 8</strong></div>
+              <div class="dc-level-total"><span>整层工作</span>8</div>
+            </div>
+            <div class="dc-tree-level" data-level="2">
+              <div class="dc-level-label">第 2 层<strong>4 个</strong></div>
+              <div class="dc-node-group"><span class="dc-node orange"></span><span class="dc-node orange"></span><span class="dc-node orange"></span><span class="dc-node orange"></span></div>
+              <div class="dc-tree-equation">4 个问题 × 每题 2<strong>= 8</strong></div>
+              <div class="dc-level-total"><span>整层工作</span>8</div>
+            </div>
+            <div class="dc-tree-level" data-level="3">
+              <div class="dc-level-label">第 3 层<strong>8 个</strong></div>
+              <div class="dc-node-group"><span class="dc-node green"></span><span class="dc-node green"></span><span class="dc-node green"></span><span class="dc-node green"></span><span class="dc-node green"></span><span class="dc-node green"></span><span class="dc-node green"></span><span class="dc-node green"></span></div>
+              <div class="dc-tree-equation">8 个问题 × 每题 1<strong>= 8</strong></div>
+              <div class="dc-level-total"><span>基例层</span>8</div>
+            </div>
+          </div>
+          <div class="dc-tree-path" aria-label="问题规模每层减半">
+            <span>规模</span><span class="dc-path-number">8</span><span class="dc-path-arrow">→</span><span class="dc-path-number">4</span><span class="dc-path-arrow">→</span><span class="dc-path-number">2</span><span class="dc-path-arrow">→</span><span class="dc-path-number">1</span>
+            <span class="dc-path-depth" id="path-depth">L = log₂8 = 3</span>
+          </div>
+        </div>
+
+        <div class="dc-card dc-readout">
+          <div class="dc-card-title"><strong>同一层，算三次</strong><span>公式的来源</span></div>
+          <div class="dc-metric"><span>这一层有多少个问题</span><strong id="readout-count">1</strong></div>
+          <div class="dc-metric"><span>每个问题有多大</span><strong id="readout-size">8</strong></div>
+          <div class="dc-metric dc-metric-total"><span>整层工作量</span><strong id="readout-total">8</strong></div>
+          <div class="dc-readout-equation" id="readout-equation">1 × 8 = 8</div>
+          <p class="dc-readout-note" id="readout-note">先别看总答案。先看这一层的“问题数 × 单题规模”。</p>
+
+          <div class="dc-merge-panel" id="merge-panel" hidden>
+            <div class="dc-merge-title"><strong>向上合并一个局部例子</strong><span>Combine</span></div>
+            <div class="dc-merge-flow">
+              <div class="dc-merge-input"><small>左边已排序</small><div class="dc-number-row"><span class="dc-number blue">3</span><span class="dc-number blue">8</span></div></div>
+              <div class="dc-merge-arrow">→</div>
+              <div class="dc-merge-input"><small>右边已排序</small><div class="dc-number-row"><span class="dc-number orange">4</span><span class="dc-number orange">7</span></div></div>
+            </div>
+            <div class="dc-merge-result" id="merge-result">
+              <span class="dc-result-number">3</span><span class="dc-result-number">4</span><span class="dc-result-number">7</span><span class="dc-result-number">8</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dc-conclusion" id="story-conclusion">点击“下一步”：让第一刀真的发生，并同时观察公式如何增加一项。</div>
+      <div class="dc-cost-cards" id="cost-cards">
+        <div class="dc-cost-card"><strong>Divide</strong><span>把 8 拆成两个 4，再继续拆。</span></div>
+        <div class="dc-cost-card"><strong>Conquer</strong><span>单个数字已经有序；小组分别解决。</span></div>
+        <div class="dc-cost-card"><strong>Combine</strong><span>利用小组有序，把答案合回来。</span></div>
+      </div>
+    </section>
+
+    <p class="dc-caption" id="dc-caption" role="status" aria-live="polite">第一步：先看一个规模为 8 的问题。</p>
+    <details class="dc-details">
+      <summary>只看文字版：分治法和公式如何连起来？</summary>
+      <ol>
+        <li>对归并排序，$T(n)=2T(n/2)+n$：2 表示拆成两个子问题，$n$ 表示这一层合并时要处理的数字总数。</li>
+        <li>当 $n=8$ 时，三层合并工作分别是 $1×8=8$、$2×4=8$、$4×2=8$。</li>
+        <li>所以总合并工作是 $8+8+8=3×8$，而 $3=\\log_2 8$，于是得到 $n\\log n$。</li>
+      </ol>
+    </details>
+    <p class="dc-fallback">如果 Anime.js 或 CDN 不可用，页面仍会显示完整的递归树、公式、合并结果和复杂度数字；动画只是把同一条因果链按步骤播放。</p>
+    <p class="sr-only">本页面用归并排序的递归树同步展示分治法：拆分、到达基例、向上合并，并由每层 n 个数字和 log n 层得到 n log n。</p>
+  </main>
+
+  <noscript>
+    <p>当前浏览器未启用 JavaScript。请阅读页面中静态显示的递归树、公式和复杂度数字。</p>
+  </noscript>
+
+  <script src="https://cdn.jsdelivr.net/npm/animejs/dist/bundles/anime.umd.min.js"></script>
+  <script>
+    (function () {
+      var animeApi = window.anime;
+      var playButton = document.getElementById("dc-auto");
+      var nextButton = document.getElementById("dc-next");
+      var prevButton = document.getElementById("dc-prev");
+      var replayButton = document.getElementById("dc-replay");
+      var progressBar = document.getElementById("dc-progress-bar");
+      var progressTrack = document.getElementById("dc-progress");
+      var caption = document.getElementById("dc-caption");
+      var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var canAnimate = !!(animeApi && typeof animeApi.animate === "function" && typeof animeApi.createTimeline === "function");
+      var currentStep = 0;
+      var autoTimer = null;
+      var currentAnimation = null;
+      var animating = false;
+
+      var STEPS = [
+        { title: "初始问题：给 8 个数字排序", formula: 'T(8) = <span class="token-recursive">2T(4)</span> + <span class="token-level">8</span>', visible: 1, focus: 0, count: 1, size: 8, total: 8, caption: "第一步：先看一个规模为 8 的问题。", note: "先别看总答案。先看这一层的“问题数 × 单题规模”。", conclusion: "点击“下一步”：让第一刀真的发生，并同时观察公式如何增加一项。" },
+        { title: "第一次拆分：一个问题变成两个", formula: 'T(8) = <span class="token-recursive">4T(2)</span> + <span class="token-level">2×4</span> + <span class="token-level">8</span>', visible: 2, focus: 1, count: 2, size: 4, total: 8, caption: "第一刀：1 个规模 8 的问题变成 2 个规模 4 的问题；这一层的工作是 2×4=8。", note: "问题数翻倍，单题规模减半；先把这两个数字记住。", conclusion: "公式的 2T(4) 被展开成 4T(2)+2×4；右侧的 2×4 就是新出现的第二层工作。" },
+        { title: "到达基例：单个数字不用再排序", formula: 'T(8) = <span class="token-recursive">8T(1)</span> + <span class="token-level">4×2</span> + <span class="token-level">2×4</span> + <span class="token-level">8</span>', visible: 4, focus: 3, count: 8, size: 1, total: 8, caption: "再拆两次：8 个单数字问题。单个数字天然有序，递归在这里停下。", note: "规模路径是 8→4→2→1，向下减半 3 次，所以 L=log₂8。", conclusion: "公式里的 8T(1) 对应树底部的 8 个绿色方块；递归部分到此停止，剩下的是各层工作之和。" },
+        { title: "向上合并：把小答案合成大答案", formula: 'T(8) = <span class="token-total">8 + 8 + 8</span> + <span class="token-recursive">基例成本</span>', visible: 4, focus: -1, count: 4, size: 2, total: 8, caption: "向上合并时，三个内部层各处理 8 个数字；合并两个有序小组只需线性扫描。", note: "小问题已经解决；现在利用“子序列有序”把答案合回来。", conclusion: "具体合并例子：[3,8] 与 [4,7] 依次比较队首，得到 [3,4,7,8]；这就是 Combine。" },
+        { title: "得到复杂度：每层 n，共 log₂n 层", formula: 'T(8) ≈ <span class="token-total">3×8</span> = <span class="token-total">n log₂n</span>', visible: 4, focus: -1, count: 3, size: 8, total: 24, caption: "公式不是额外背诵的结论：它只是把树里的三层数字 8+8+8 压缩成 n×log₂n。", note: "n=8 有 3 层；n 变大时，每层变宽，但只多出对数级的层数。", conclusion: "分治法的完整链条：拆小 → 解决基例 → 合并；归并排序因此得到 Θ(n log n)。" }
+      ];
+
+      function setProgress(value) {
+        var safeValue = Math.max(0, Math.min(100, Math.round(value || 0)));
+        progressBar.style.width = safeValue + "%";
+        progressTrack.setAttribute("aria-valuenow", String(safeValue));
+      }
+      function setCaption(text) { caption.textContent = text; }
+      function formatNumber(value) { return Math.round(Number(value)).toLocaleString("zh-CN"); }
+      function setAutoState(isRunning) {
+        playButton.textContent = isRunning ? "暂停自动" : "自动播放";
+        playButton.dataset.state = isRunning ? "playing" : "ready";
+      }
+      function stopAuto() {
+        if (autoTimer) window.clearInterval(autoTimer);
+        autoTimer = null;
+        setAutoState(false);
+      }
+      function pauseCurrentAnimation() {
+        if (currentAnimation && currentAnimation.pause) currentAnimation.pause();
+        currentAnimation = null;
+        animating = false;
+      }
+      function updateTabs() {
+        document.querySelectorAll(".dc-step-tab").forEach(function (tab) {
+          tab.setAttribute("aria-selected", String(Number(tab.getAttribute("data-step")) === currentStep));
+        });
+      }
+      function updateReadout(step) {
+        document.getElementById("readout-count").textContent = formatNumber(step.count);
+        document.getElementById("readout-size").textContent = formatNumber(step.size);
+        document.getElementById("readout-total").textContent = formatNumber(step.total);
+        document.getElementById("readout-equation").textContent = step.count + " × " + step.size + " = " + step.total;
+        document.getElementById("readout-note").textContent = step.note;
+        document.getElementById("story-conclusion").textContent = step.conclusion;
+        document.getElementById("step-title").textContent = step.title;
+        document.getElementById("step-counter").textContent = String(currentStep + 1).padStart(2, "0") + " / 05";
+        document.getElementById("story").setAttribute("aria-labelledby", "step-tab-" + currentStep);
+      }
+      function setTreeState(step, animateChange) {
+        var rows = Array.from(document.querySelectorAll(".dc-tree-level"));
+        rows.forEach(function (row, index) {
+          var visible = index < step.visible;
+          row.hidden = !visible;
+          row.classList.toggle("is-current", index === step.focus);
+          if (animateChange && visible && index === step.focus) {
+            row.style.opacity = "0";
+            row.style.transform = "translateY(13px)";
+          } else {
+            row.style.opacity = "1";
+            row.style.transform = "none";
+          }
+        });
+        document.getElementById("path-depth").textContent = currentStep < 2 ? "L = log₂8 = 3" : "L = log₂8 = 3";
+      }
+      function setFormulaState(step) {
+        document.getElementById("formula-main").innerHTML = step.formula;
+        document.querySelectorAll(".dc-step-tab").forEach(function (tab) { tab.disabled = false; });
+      }
+      function setMergeState(step, animateChange) {
+        var panel = document.getElementById("merge-panel");
+        var stepIndex = STEPS.indexOf(step);
+        panel.hidden = stepIndex < 3;
+        var result = Array.from(document.querySelectorAll("#merge-result .dc-result-number"));
+        result.forEach(function (node, index) {
+          node.classList.toggle("is-next", stepIndex === 3 && index === Math.min(stepIndex - 3, 3));
+          if (animateChange && stepIndex === 3) {
+            node.style.opacity = "0";
+            node.style.transform = "scale(.35) translateY(12px)";
+          } else {
+            node.style.opacity = stepIndex >= 3 ? "1" : "0";
+            node.style.transform = "none";
+          }
+        });
+      }
+      function resetVisual(step) {
+        var state = STEPS[step];
+        updateTabs();
+        updateReadout(state);
+        setFormulaState(state);
+        setTreeState(state, false);
+        setMergeState(state, false);
+        document.getElementById("formula-band").style.opacity = "1";
+        document.getElementById("formula-band").style.transform = "none";
+        document.getElementById("dc-tree").style.opacity = "1";
+        document.getElementById("dc-tree").style.transform = "none";
+        document.getElementById("dc-tree").querySelectorAll(".dc-tree-level").forEach(function (row) { row.style.opacity = row.hidden ? "0" : "1"; row.style.transform = "none"; });
+        document.getElementById("merge-panel").style.opacity = step >= 3 ? "1" : "0";
+        document.getElementById("cost-cards").style.opacity = step >= 4 ? "1" : "0";
+        document.getElementById("cost-cards").style.transform = "none";
+        setCaption(state.caption);
+        setProgress((step / (STEPS.length - 1)) * 100);
+        nextButton.disabled = step >= STEPS.length - 1;
+        prevButton.disabled = step <= 0;
+      }
+      function animateIn(nodes) {
+        if (!canAnimate || reducedMotion || !nodes.length) {
+          nodes.forEach(function (node) { node.style.opacity = "1"; node.style.transform = "none"; });
+          return null;
+        }
+        return animeApi.animate(nodes, { opacity: [0, 1], y: [13, 0], duration: 430, delay: animeApi.stagger(65), ease: "out(3)" });
+      }
+      function animateStep(step, direction) {
+        pauseCurrentAnimation();
+        var state = STEPS[step];
+        updateTabs();
+        updateReadout(state);
+        setFormulaState(state);
+        setTreeState(state, true);
+        setMergeState(state, true);
+        setCaption(state.caption);
+        setProgress((step / (STEPS.length - 1)) * 100);
+        nextButton.disabled = step >= STEPS.length - 1;
+        prevButton.disabled = step <= 0;
+        if (!canAnimate || reducedMotion) {
+          resetVisual(step);
+          currentStep = step;
+          return;
+        }
+        animating = true;
+        var targets = [];
+        if (direction >= 0 && step > 0) {
+          targets = [document.getElementById("formula-band")];
+          if (step >= 3) targets.push(document.getElementById("merge-panel"));
+          if (step >= 4) targets.push(document.getElementById("cost-cards"));
+          currentAnimation = animateIn(targets);
+          var newRows = Array.from(document.querySelectorAll(".dc-tree-level")).filter(function (row) { return !row.hidden && Number(row.getAttribute("data-level")) === state.focus; });
+          if (newRows.length) animateIn(newRows);
+          if (step === 3) animateIn(Array.from(document.querySelectorAll("#merge-result .dc-result-number")));
+          window.setTimeout(function () { animating = false; }, 500);
+        } else {
+          resetVisual(step);
+          animating = false;
+        }
+        currentStep = step;
+      }
+      function goToStep(step, direction) {
+        var bounded = Math.max(0, Math.min(STEPS.length - 1, step));
+        animateStep(bounded, direction || (bounded >= currentStep ? 1 : -1));
+      }
+      function startAuto() {
+        if (autoTimer) { stopAuto(); return; }
+        setAutoState(true);
+        if (currentStep >= STEPS.length - 1) goToStep(0, -1);
+        autoTimer = window.setInterval(function () {
+          if (currentStep >= STEPS.length - 1) stopAuto();
+          else goToStep(currentStep + 1, 1);
+        }, 1900);
+      }
+
+      nextButton.addEventListener("click", function () { stopAuto(); goToStep(currentStep + 1, 1); });
+      prevButton.addEventListener("click", function () { stopAuto(); goToStep(currentStep - 1, -1); });
+      replayButton.addEventListener("click", function () { stopAuto(); goToStep(0, -1); });
+      playButton.addEventListener("click", startAuto);
+      document.querySelectorAll(".dc-step-tab").forEach(function (tab, index, tabs) {
+        tab.addEventListener("click", function () { stopAuto(); goToStep(Number(tab.getAttribute("data-step")), Number(tab.getAttribute("data-step")) >= currentStep ? 1 : -1); });
+        tab.addEventListener("keydown", function (event) {
+          if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+          event.preventDefault();
+          var nextIndex = event.key === "ArrowRight" ? (index + 1) % tabs.length : (index - 1 + tabs.length) % tabs.length;
+          tabs[nextIndex].focus();
+          stopAuto();
+          goToStep(nextIndex, nextIndex >= currentStep ? 1 : -1);
+        });
+      });
+
+      if (canAnimate) {
+        resetVisual(0);
+        window.setTimeout(function () { startAuto(); }, 450);
+      } else {
+        setTreeState(STEPS[0], false);
+        setMergeState(STEPS[0], false);
+        setCaption("动画不可用；请直接阅读页面中的递归树、公式和复杂度数字。");
+        setProgress(100);
+      }
+    }());
+  </script>
+</body>
+</html>

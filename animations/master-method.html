@@ -1,0 +1,1436 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>主方法：把数字画出来</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --ink: light-dark(#172235, #eef4ff);
+      --muted: light-dark(#617086, #aab8cc);
+      --line: light-dark(#d8e0ea, #2b3a4e);
+      --surface: light-dark(#ffffff, #121c2b);
+      --surface-2: light-dark(#f3f6f9, #0d1521);
+      --surface-3: light-dark(#e9eef5, #1b293c);
+      --blue: light-dark(#2e5ed4, #8eb0ff);
+      --blue-soft: light-dark(#e7edff, #22345b);
+      --yellow: light-dark(#e6ad24, #f3ca5f);
+      --yellow-soft: light-dark(#fff3c9, #493c1a);
+      --orange: light-dark(#d96542, #ff9c7b);
+      --orange-soft: light-dark(#ffe9e1, #4e281f);
+      --green: light-dark(#13866d, #69d8b0);
+      --green-soft: light-dark(#dcf4ec, #183e36);
+      --purple: light-dark(#7659d5, #b9aaff);
+      --purple-soft: light-dark(#eee9ff, #30285a);
+      --shadow: light-dark(rgba(25, 45, 75, .12), rgba(0, 0, 0, .30));
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--surface-2);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+
+    button { font: inherit; }
+
+    button:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--blue) 35%, transparent);
+      outline-offset: 2px;
+    }
+
+    .mm-page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 28px clamp(16px, 3vw, 40px) 42px;
+    }
+
+    .mm-kicker {
+      margin: 0 0 10px;
+      color: var(--blue);
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 760px;
+      margin-bottom: 12px;
+      font-size: clamp(2rem, 4.5vw, 3.35rem);
+      font-weight: 550;
+      letter-spacing: -.06em;
+      line-height: 1.05;
+    }
+
+    .mm-lede {
+      max-width: 820px;
+      margin-bottom: 24px;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .mm-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 13px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .mm-tabs, .mm-actions, .mm-case-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .mm-tab, .mm-action, .mm-case-tab {
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--surface);
+      color: var(--ink);
+      cursor: pointer;
+      transition: border-color .18s ease, background-color .18s ease, color .18s ease, transform .18s ease;
+    }
+
+    .mm-tab:hover, .mm-action:hover, .mm-case-tab:hover {
+      border-color: var(--blue);
+      transform: translateY(-1px);
+    }
+
+    .mm-tab {
+      padding: 9px 13px;
+      font-size: .91rem;
+    }
+
+    .mm-tab[aria-selected="true"], .mm-case-tab[aria-pressed="true"] {
+      border-color: var(--blue);
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .mm-action {
+      min-width: 58px;
+      padding: 9px 13px;
+    }
+
+    .mm-action-primary {
+      border-color: var(--blue);
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .mm-progress {
+      height: 5px;
+      margin: 18px 0 12px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--surface-3);
+    }
+
+    .mm-progress-bar {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--yellow);
+      transition: width .08s linear;
+    }
+
+    .mm-scene {
+      padding: clamp(18px, 3vw, 30px);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      box-shadow: 0 18px 42px var(--shadow);
+    }
+
+    .mm-scene[hidden] { display: none; }
+
+    .mm-scene-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .mm-scene-heading h2 {
+      margin-bottom: 0;
+      font-size: clamp(1.35rem, 3vw, 2rem);
+      letter-spacing: -.045em;
+    }
+
+    .mm-scene-index {
+      color: var(--muted);
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      white-space: nowrap;
+    }
+
+    .mm-intro {
+      max-width: 850px;
+      margin-bottom: 18px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .mm-equation-hero {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 20px;
+      padding: 16px 18px;
+      border-left: 4px solid var(--blue);
+      border-radius: 10px;
+      background: var(--blue-soft);
+    }
+
+    .mm-equation {
+      color: var(--ink);
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: clamp(1.14rem, 2.6vw, 1.7rem);
+      font-weight: 700;
+      letter-spacing: -.035em;
+    }
+
+    .mm-equation small {
+      color: var(--muted);
+      font-family: inherit;
+      font-size: .56em;
+      font-weight: 500;
+      letter-spacing: 0;
+    }
+
+    .mm-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .mm-pill {
+      padding: 5px 9px;
+      border: 1px solid color-mix(in srgb, var(--blue) 35%, var(--line));
+      border-radius: 999px;
+      color: var(--blue);
+      font-size: .78rem;
+      font-weight: 700;
+    }
+
+    .mm-tree-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(260px, .75fr);
+      gap: 16px;
+    }
+
+    .mm-card {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+    }
+
+    .mm-card-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 13px;
+      color: var(--muted);
+      font-size: .82rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .mm-card-title strong {
+      color: var(--ink);
+      font-size: 1rem;
+      letter-spacing: -.02em;
+      text-transform: none;
+    }
+
+    .mm-tree-levels {
+      display: grid;
+      gap: 8px;
+    }
+
+    .mm-tree-level {
+      display: grid;
+      grid-template-columns: 78px minmax(0, 1fr);
+      align-items: center;
+      gap: 10px;
+      min-height: 66px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--surface-2);
+      transition: border-color .2s ease, background-color .2s ease, transform .2s ease;
+    }
+
+    .mm-tree-level.is-current {
+      border-color: var(--blue);
+      background: var(--blue-soft);
+    }
+
+    .mm-level-label {
+      color: var(--muted);
+      font-size: .76rem;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+
+    .mm-level-label strong {
+      display: block;
+      color: var(--ink);
+      font-size: .92rem;
+    }
+
+    .mm-level-main {
+      display: grid;
+      grid-template-columns: minmax(95px, .7fr) minmax(260px, 1.3fr);
+      align-items: center;
+      gap: 13px;
+    }
+
+    .mm-node-grid {
+      display: flex;
+      flex-wrap: wrap;
+      align-content: center;
+      gap: 4px;
+      min-height: 32px;
+      max-width: 180px;
+    }
+
+    .mm-node {
+      width: 13px;
+      height: 13px;
+      border-radius: 3px;
+      background: var(--yellow);
+      box-shadow: inset 0 -2px 0 rgba(0, 0, 0, .12);
+    }
+
+    .mm-level-calc {
+      color: var(--muted);
+      font-size: .86rem;
+      line-height: 1.5;
+    }
+
+    .mm-level-calc .mm-num {
+      color: var(--ink);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 1.18rem;
+      font-weight: 800;
+    }
+
+    .mm-level-calc .mm-level-total {
+      display: inline-block;
+      margin-left: 4px;
+      color: var(--blue);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 1.3rem;
+      font-weight: 900;
+    }
+
+    .mm-tree-path {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 13px;
+      padding-top: 13px;
+      border-top: 1px dashed var(--line);
+      color: var(--muted);
+      font-size: .86rem;
+    }
+
+    .mm-path-number {
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: var(--surface-3);
+      color: var(--ink);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-weight: 800;
+    }
+
+    .mm-path-arrow { color: var(--blue); font-weight: 900; }
+
+    .mm-accumulator {
+      position: relative;
+      min-height: 100%;
+      overflow: hidden;
+    }
+
+    .mm-accumulator .mm-card-title { margin-bottom: 7px; }
+
+    .mm-height-readout {
+      margin-bottom: 17px;
+      color: var(--muted);
+      font-size: .85rem;
+    }
+
+    .mm-height-readout strong {
+      color: var(--blue);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 1.75rem;
+    }
+
+    .mm-stack {
+      display: grid;
+      gap: 5px;
+      margin: 11px 0 17px;
+    }
+
+    .mm-stack-segment {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 31px;
+      padding: 5px 9px;
+      border-radius: 5px;
+      background: var(--yellow);
+      color: #3d2f06;
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .mm-stack-segment:nth-child(2n) { background: var(--orange); color: #421b10; }
+    .mm-stack-segment:nth-child(3n) { background: var(--green); color: #07392e; }
+
+    .mm-running {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 10px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: .86rem;
+    }
+
+    .mm-running strong {
+      color: var(--ink);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: clamp(1.8rem, 4vw, 2.7rem);
+      letter-spacing: -.08em;
+    }
+
+    .mm-takeaway {
+      margin-top: 15px;
+      padding: 11px 12px;
+      border-radius: 8px;
+      background: var(--green-soft);
+      color: var(--green);
+      font-size: .86rem;
+      font-weight: 750;
+      line-height: 1.55;
+    }
+
+    .mm-caption {
+      min-height: 26px;
+      margin: 13px 0 0;
+      color: var(--muted);
+      font-size: .88rem;
+      line-height: 1.55;
+    }
+
+    .mm-compare-top {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(230px, .7fr);
+      gap: 15px;
+      align-items: stretch;
+      margin-bottom: 18px;
+    }
+
+    .mm-case-tabs { margin-top: 13px; }
+
+    .mm-case-tab {
+      padding: 8px 11px;
+      font-size: .86rem;
+      font-weight: 700;
+    }
+
+    .mm-ratio-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--surface-2);
+    }
+
+    .mm-ratio-card .label {
+      margin-bottom: 6px;
+      color: var(--muted);
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .mm-ratio-line {
+      color: var(--ink);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 1.08rem;
+      font-weight: 800;
+    }
+
+    .mm-ratio-line strong { color: var(--blue); font-size: 1.45rem; }
+
+    .mm-ratio-verdict {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: .83rem;
+      line-height: 1.45;
+    }
+
+    .mm-case-layout {
+      display: grid;
+      grid-template-columns: minmax(0, .95fr) minmax(0, 1.2fr);
+      gap: 15px;
+    }
+
+    .mm-chart-card, .mm-table-card {
+      min-width: 0;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+    }
+
+    .mm-chart-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 9px;
+      margin-bottom: 14px;
+    }
+
+    .mm-chart-title strong { font-size: 1rem; }
+    .mm-chart-title span { color: var(--muted); font-size: .76rem; }
+
+    .mm-chart-rows { display: grid; gap: 9px; }
+
+    .mm-chart-row {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr) 60px;
+      align-items: center;
+      gap: 8px;
+      min-height: 29px;
+    }
+
+    .mm-chart-row .level {
+      color: var(--muted);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .mm-bar-track {
+      height: 24px;
+      overflow: hidden;
+      border-radius: 5px;
+      background: var(--surface-3);
+    }
+
+    .mm-bar-fill {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--blue);
+      transform-origin: left center;
+    }
+
+    .mm-chart-row:nth-child(2n) .mm-bar-fill { background: var(--purple); }
+    .mm-chart-row:nth-child(3n) .mm-bar-fill { background: var(--orange); }
+
+    .mm-chart-row .value {
+      color: var(--ink);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: .83rem;
+      font-weight: 800;
+      text-align: right;
+    }
+
+    .mm-chart-note {
+      margin: 14px 0 0;
+      padding-top: 12px;
+      border-top: 1px dashed var(--line);
+      color: var(--muted);
+      font-size: .83rem;
+      line-height: 1.55;
+    }
+
+    .mm-table-wrap { overflow-x: auto; }
+
+    .mm-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .78rem;
+      white-space: nowrap;
+    }
+
+    .mm-table th {
+      padding: 0 8px 9px;
+      color: var(--muted);
+      font-size: .7rem;
+      font-weight: 700;
+      text-align: right;
+      text-transform: uppercase;
+    }
+
+    .mm-table th:first-child, .mm-table td:first-child { text-align: left; }
+
+    .mm-table td {
+      padding: 9px 8px;
+      border-top: 1px solid var(--line);
+      color: var(--ink);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .mm-table td:last-child { color: var(--blue); font-size: .9rem; }
+
+    .mm-table .small-muted {
+      color: var(--muted);
+      font-family: inherit;
+      font-weight: 500;
+    }
+
+    .mm-sum-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 13px;
+    }
+
+    .mm-sum-card {
+      position: relative;
+      padding: 15px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--surface);
+      transition: border-color .2s ease, transform .2s ease;
+    }
+
+    .mm-sum-card.is-active {
+      border-color: var(--blue);
+      transform: translateY(-3px);
+    }
+
+    .mm-sum-card[data-case="p0"] { --case-color: var(--yellow); --case-soft: var(--yellow-soft); }
+    .mm-sum-card[data-case="p1"] { --case-color: var(--blue); --case-soft: var(--blue-soft); }
+    .mm-sum-card[data-case="p2"] { --case-color: var(--orange); --case-soft: var(--orange-soft); }
+
+    .mm-sum-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 13px;
+    }
+
+    .mm-sum-head strong { font-size: 1.1rem; }
+    .mm-sum-head span { color: var(--case-color); font-family: monospace; font-size: .82rem; font-weight: 800; }
+
+    .mm-mini-chart {
+      display: flex;
+      align-items: end;
+      gap: 5px;
+      height: 128px;
+      padding: 9px 7px 0;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(to top, var(--case-soft), transparent 72%);
+    }
+
+    .mm-mini-column {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      align-items: center;
+      justify-content: end;
+      gap: 5px;
+      height: 100%;
+      min-width: 0;
+    }
+
+    .mm-mini-bar {
+      width: 100%;
+      max-width: 32px;
+      min-height: 3px;
+      border-radius: 4px 4px 0 0;
+      background: var(--case-color);
+      transform-origin: center bottom;
+    }
+
+    .mm-mini-column small {
+      color: var(--muted);
+      font-family: monospace;
+      font-size: .65rem;
+    }
+
+    .mm-sum-arithmetic {
+      min-height: 48px;
+      margin: 12px 0 9px;
+      color: var(--muted);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: .75rem;
+      line-height: 1.5;
+    }
+
+    .mm-sum-arithmetic strong {
+      color: var(--ink);
+      font-size: 1.45rem;
+    }
+
+    .mm-sum-verdict {
+      margin: 0;
+      padding: 9px 10px;
+      border-radius: 7px;
+      background: var(--case-soft);
+      color: var(--ink);
+      font-size: .79rem;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .mm-final-rule {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 9px;
+      margin-top: 15px;
+    }
+
+    .mm-rule-chip {
+      padding: 11px 12px;
+      border-left: 3px solid var(--blue);
+      border-radius: 6px;
+      background: var(--surface-2);
+      color: var(--muted);
+      font-size: .8rem;
+      line-height: 1.45;
+    }
+
+    .mm-rule-chip strong { color: var(--ink); }
+
+    .mm-static-explanation {
+      margin-top: 15px;
+      padding-top: 14px;
+      border-top: 1px dashed var(--line);
+      color: var(--muted);
+      font-size: .84rem;
+      line-height: 1.65;
+    }
+
+    .mm-details {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: .84rem;
+    }
+
+    .mm-details summary {
+      cursor: pointer;
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .mm-details ol { line-height: 1.7; }
+    .mm-fallback { margin: 13px 0 0; color: var(--muted); font-size: .8rem; line-height: 1.6; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+    @media (max-width: 860px) {
+      .mm-tree-layout, .mm-compare-top, .mm-case-layout { grid-template-columns: 1fr; }
+      .mm-accumulator { min-height: 0; }
+    }
+
+    @media (max-width: 650px) {
+      .mm-page { padding-inline: 12px; }
+      .mm-scene { padding: 15px; }
+      .mm-scene-heading { display: block; }
+      .mm-scene-index { display: block; margin-top: 7px; }
+      .mm-level-main { grid-template-columns: 1fr; gap: 5px; }
+      .mm-tree-level { grid-template-columns: 58px minmax(0, 1fr); }
+      .mm-node-grid { max-width: none; }
+      .mm-sum-grid, .mm-final-rule { grid-template-columns: 1fr; }
+      .mm-tab, .mm-action { padding: 8px 9px; font-size: .8rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="mm-page" id="master-method-page">
+    <header>
+      <p class="mm-kicker">Chapter 02 · Divide &amp; Conquer · Numeric Lab</p>
+      <h1>主方法：把数字画出来</h1>
+      <p class="mm-lede">不先背三个结论。先看一棵具体的递归树：每一层有多少个问题、每个问题做多少工作、整层加起来是多少。</p>
+    </header>
+
+    <div class="mm-toolbar" role="group" aria-label="主方法动画控制">
+      <div class="mm-tabs" role="tablist" aria-label="数学实验章节">
+        <button class="mm-tab" id="tab-tree" type="button" role="tab" aria-controls="scene-tree" aria-selected="true" data-scene="tree">实验 01 · 画出递归树</button>
+        <button class="mm-tab" id="tab-compare" type="button" role="tab" aria-controls="scene-compare" aria-selected="false" data-scene="compare">实验 02 · 改变 f(m)</button>
+        <button class="mm-tab" id="tab-sum" type="button" role="tab" aria-controls="scene-sum" aria-selected="false" data-scene="sum">实验 03 · 看谁主导</button>
+      </div>
+      <div class="mm-actions">
+        <button class="mm-action mm-action-primary" id="mm-play" type="button">播放</button>
+        <button class="mm-action" id="mm-replay" type="button">重播</button>
+      </div>
+    </div>
+
+    <div class="mm-progress" id="mm-progress" role="progressbar" aria-label="动画进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <div class="mm-progress-bar" id="mm-progress-bar"></div>
+    </div>
+
+    <section class="mm-scene" id="scene-tree" role="tabpanel" aria-labelledby="tab-tree" data-scene-panel="tree">
+      <div class="mm-scene-heading">
+        <h2>实验 01：一层一层把它算出来</h2>
+        <span class="mm-scene-index">01 / 03</span>
+      </div>
+      <p class="mm-intro">先固定一个最重要的例子：<strong>每个规模为 m 的问题做 m 个单位的工作</strong>。数字选小一点，才能看清楚。</p>
+
+      <div class="mm-equation-hero" id="tree-hero">
+        <div class="mm-equation">T(16) = 2T(8) + 16</div>
+        <div class="mm-pills">
+          <span class="mm-pill">a = 2：每题分成 2 题</span>
+          <span class="mm-pill">b = 2：规模减半</span>
+          <span class="mm-pill">f(m) = m</span>
+        </div>
+      </div>
+
+      <div class="mm-tree-layout">
+        <div class="mm-card">
+          <div class="mm-card-title"><strong>递归树的每一层</strong><span>方块 = 一个子问题</span></div>
+          <div class="mm-tree-levels" id="tree-levels">
+            <div class="mm-tree-level" data-level="0" data-count="1" data-size="16" data-total="16">
+              <div class="mm-level-label">第 0 层<strong>根</strong></div>
+              <div class="mm-level-main">
+                <div class="mm-node-grid" aria-hidden="true"><span class="mm-node"></span></div>
+                <div class="mm-level-calc"><span class="mm-num">1</span> 个问题 × 每题 <span class="mm-num">16</span> = <strong class="mm-level-total">16</strong></div>
+              </div>
+            </div>
+            <div class="mm-tree-level" data-level="1" data-count="2" data-size="8" data-total="16">
+              <div class="mm-level-label">第 1 层<strong>2 个</strong></div>
+              <div class="mm-level-main">
+                <div class="mm-node-grid" aria-hidden="true"><span class="mm-node"></span><span class="mm-node"></span></div>
+                <div class="mm-level-calc"><span class="mm-num">2</span> 个问题 × 每题 <span class="mm-num">8</span> = <strong class="mm-level-total">16</strong></div>
+              </div>
+            </div>
+            <div class="mm-tree-level" data-level="2" data-count="4" data-size="4" data-total="16">
+              <div class="mm-level-label">第 2 层<strong>4 个</strong></div>
+              <div class="mm-level-main">
+                <div class="mm-node-grid" aria-hidden="true"><span class="mm-node"></span><span class="mm-node"></span><span class="mm-node"></span><span class="mm-node"></span></div>
+                <div class="mm-level-calc"><span class="mm-num">4</span> 个问题 × 每题 <span class="mm-num">4</span> = <strong class="mm-level-total">16</strong></div>
+              </div>
+            </div>
+            <div class="mm-tree-level" data-level="3" data-count="8" data-size="2" data-total="16">
+              <div class="mm-level-label">第 3 层<strong>8 个</strong></div>
+              <div class="mm-level-main">
+                <div class="mm-node-grid" aria-hidden="true"><span class="mm-node"></span><span class="mm-node"></span><span class="mm-node"></span><span class="mm-node"></span><span class="mm-node"></span><span class="mm-node"></span><span class="mm-node"></span><span class="mm-node"></span></div>
+                <div class="mm-level-calc"><span class="mm-num">8</span> 个问题 × 每题 <span class="mm-num">2</span> = <strong class="mm-level-total">16</strong></div>
+              </div>
+            </div>
+            <div class="mm-tree-level" data-level="4" data-count="16" data-size="1" data-total="16">
+              <div class="mm-level-label">第 4 层<strong>16 个</strong></div>
+              <div class="mm-level-main">
+                <div class="mm-node-grid" aria-hidden="true"><span class="mm-node"></span><span class="mm-node"></span><span class="mm-node"></span><span class="mm-node"></span><span class="mm-node"></span><span class="mm-node"></span><span class="mm-node"></span><span class="mm-node"></span><span class="mm-node"></span><span class="mm-node"></span><span class="mm-node"></span><span class="mm-node"></span><span class="mm-node"></span><span class="mm-node"></span><span class="mm-node"></span><span class="mm-node"></span></div>
+                <div class="mm-level-calc"><span class="mm-num">16</span> 个问题 × 每题 <span class="mm-num">1</span> = <strong class="mm-level-total">16</strong></div>
+              </div>
+            </div>
+          </div>
+          <div class="mm-tree-path" aria-label="递归规模变化">
+            <span>规模变化</span>
+            <span class="mm-path-number">16</span><span class="mm-path-arrow">→</span>
+            <span class="mm-path-number">8</span><span class="mm-path-arrow">→</span>
+            <span class="mm-path-number">4</span><span class="mm-path-arrow">→</span>
+            <span class="mm-path-number">2</span><span class="mm-path-arrow">→</span>
+            <span class="mm-path-number">1</span>
+            <strong id="tree-depth">4</strong><span>次减半 = L = log₂16</span>
+          </div>
+        </div>
+
+        <div class="mm-card mm-accumulator">
+          <div class="mm-card-title"><strong>把各层加起来</strong><span>只算 f(m)</span></div>
+          <div class="mm-height-readout">已经走过 <strong id="tree-height">0</strong> 层向下；每一层都贡献：</div>
+          <div class="mm-stack" id="tree-stack" aria-label="各层工作量">
+            <div class="mm-stack-segment" data-level="0"><span>第 0 层</span><strong>16</strong></div>
+            <div class="mm-stack-segment" data-level="1"><span>第 1 层</span><strong>16</strong></div>
+            <div class="mm-stack-segment" data-level="2"><span>第 2 层</span><strong>16</strong></div>
+            <div class="mm-stack-segment" data-level="3"><span>第 3 层</span><strong>16</strong></div>
+            <div class="mm-stack-segment" data-level="4"><span>第 4 层</span><strong>16</strong></div>
+          </div>
+          <div class="mm-running"><span>累计工作</span><strong id="tree-running">80</strong></div>
+          <div class="mm-takeaway" id="tree-takeaway">5 层 × 每层 16 = 80。<br>这就是“每层一样重，所以多出 log n”的来源。</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mm-scene" id="scene-compare" role="tabpanel" aria-labelledby="tab-compare" data-scene-panel="compare">
+      <div class="mm-scene-heading">
+        <h2>实验 02：只改变 f(m)，数字会反转</h2>
+        <span class="mm-scene-index">02 / 03</span>
+      </div>
+      <p class="mm-intro">同一棵树仍然是 <strong>a=2、b=2、n=16</strong>。点击下面三个按钮，只换“单个问题的工作量” $f(m)$，观察整层总量如何改变。</p>
+
+      <div class="mm-compare-top">
+        <div class="mm-equation-hero" id="compare-hero">
+          <div>
+            <div class="mm-equation">第 i 层 = 问题数 × 单题工作量</div>
+            <div class="mm-case-tabs" role="group" aria-label="选择单题工作量">
+              <button class="mm-case-tab" type="button" aria-pressed="false" data-case="p0">f(m)=1</button>
+              <button class="mm-case-tab" type="button" aria-pressed="true" data-case="p1">f(m)=m</button>
+              <button class="mm-case-tab" type="button" aria-pressed="false" data-case="p2">f(m)=m²</button>
+            </div>
+          </div>
+        </div>
+        <div class="mm-ratio-card" id="ratio-card">
+          <span class="label">相邻两层的变化倍数</span>
+          <div class="mm-ratio-line">r = 2 / 2<sup>p</sup> = <strong id="ratio-value">1</strong></div>
+          <div class="mm-ratio-verdict" id="ratio-verdict">r=1：下一层和这一层一样重。</div>
+        </div>
+      </div>
+
+      <div class="mm-case-layout">
+        <div class="mm-chart-card">
+          <div class="mm-chart-title"><strong>每层总工作量</strong><span>条越长，代表这一层越重</span></div>
+          <div class="mm-chart-rows" id="case-chart-rows">
+            <div class="mm-chart-row" data-level="0"><span class="level">L0</span><div class="mm-bar-track"><div class="mm-bar-fill" style="width:100%"></div></div><span class="value">16</span></div>
+            <div class="mm-chart-row" data-level="1"><span class="level">L1</span><div class="mm-bar-track"><div class="mm-bar-fill" style="width:100%"></div></div><span class="value">16</span></div>
+            <div class="mm-chart-row" data-level="2"><span class="level">L2</span><div class="mm-bar-track"><div class="mm-bar-fill" style="width:100%"></div></div><span class="value">16</span></div>
+            <div class="mm-chart-row" data-level="3"><span class="level">L3</span><div class="mm-bar-track"><div class="mm-bar-fill" style="width:100%"></div></div><span class="value">16</span></div>
+            <div class="mm-chart-row" data-level="4"><span class="level">L4</span><div class="mm-bar-track"><div class="mm-bar-fill" style="width:100%"></div></div><span class="value">16</span></div>
+          </div>
+          <p class="mm-chart-note" id="chart-note">现在五根条一样长：不是巧合，而是每下一层“问题数 × 单题规模”刚好抵消。</p>
+        </div>
+
+        <div class="mm-table-card">
+          <div class="mm-chart-title"><strong>把每一根条算出来</strong><span>n=16，规模每层减半</span></div>
+          <div class="mm-table-wrap">
+            <table class="mm-table">
+              <thead>
+                <tr><th>层</th><th>问题数</th><th>单题规模 m</th><th>单题 f(m)</th><th>整层总量</th></tr>
+              </thead>
+              <tbody id="case-table-body">
+                <tr data-level="0"><td>L0</td><td data-cell="count">1</td><td data-cell="size">16</td><td data-cell="per">16</td><td data-cell="total">16</td></tr>
+                <tr data-level="1"><td>L1</td><td data-cell="count">2</td><td data-cell="size">8</td><td data-cell="per">8</td><td data-cell="total">16</td></tr>
+                <tr data-level="2"><td>L2</td><td data-cell="count">4</td><td data-cell="size">4</td><td data-cell="per">4</td><td data-cell="total">16</td></tr>
+                <tr data-level="3"><td>L3</td><td data-cell="count">8</td><td data-cell="size">2</td><td data-cell="per">2</td><td data-cell="total">16</td></tr>
+                <tr data-level="4"><td>L4</td><td data-cell="count">16</td><td data-cell="size">1</td><td data-cell="per">1</td><td data-cell="total">16</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mm-scene" id="scene-sum" role="tabpanel" aria-labelledby="tab-sum" data-scene-panel="sum">
+      <div class="mm-scene-heading">
+        <h2>实验 03：三个结论，其实是三种堆法</h2>
+        <span class="mm-scene-index">03 / 03</span>
+      </div>
+      <p class="mm-intro">现在把刚才的五层数字并排放在一起。你看到的“规则 1、2、3”，本质上只是下面三种求和形状。</p>
+
+      <div class="mm-sum-grid" id="sum-cards">
+        <article class="mm-sum-card" data-case="p0" id="summary-p0">
+          <div class="mm-sum-head"><strong>f(m)=1</strong><span>r=2 &gt; 1</span></div>
+          <div class="mm-mini-chart" aria-label="1、2、4、8、16 的层工作量">
+            <div class="mm-mini-column"><div class="mm-mini-bar" style="height:6.25%"></div><small>1</small></div>
+            <div class="mm-mini-column"><div class="mm-mini-bar" style="height:12.5%"></div><small>2</small></div>
+            <div class="mm-mini-column"><div class="mm-mini-bar" style="height:25%"></div><small>4</small></div>
+            <div class="mm-mini-column"><div class="mm-mini-bar" style="height:50%"></div><small>8</small></div>
+            <div class="mm-mini-column"><div class="mm-mini-bar" style="height:100%"></div><small>16</small></div>
+          </div>
+          <div class="mm-sum-arithmetic">1 + 2 + 4 + 8 + 16 = <strong>31</strong></div>
+          <p class="mm-sum-verdict">越靠近叶子越重 → 叶子主导 → Θ(n<sup>k</sup>)</p>
+        </article>
+
+        <article class="mm-sum-card" data-case="p1" id="summary-p1">
+          <div class="mm-sum-head"><strong>f(m)=m</strong><span>r=1</span></div>
+          <div class="mm-mini-chart" aria-label="五个 16 的层工作量">
+            <div class="mm-mini-column"><div class="mm-mini-bar" style="height:100%"></div><small>16</small></div>
+            <div class="mm-mini-column"><div class="mm-mini-bar" style="height:100%"></div><small>16</small></div>
+            <div class="mm-mini-column"><div class="mm-mini-bar" style="height:100%"></div><small>16</small></div>
+            <div class="mm-mini-column"><div class="mm-mini-bar" style="height:100%"></div><small>16</small></div>
+            <div class="mm-mini-column"><div class="mm-mini-bar" style="height:100%"></div><small>16</small></div>
+          </div>
+          <div class="mm-sum-arithmetic">16 + 16 + 16 + 16 + 16 = <strong>80</strong></div>
+          <p class="mm-sum-verdict">每层一样重，共 log₂16+1 层 → Θ(n<sup>k</sup> log n)</p>
+        </article>
+
+        <article class="mm-sum-card" data-case="p2" id="summary-p2">
+          <div class="mm-sum-head"><strong>f(m)=m²</strong><span>r=0.5 &lt; 1</span></div>
+          <div class="mm-mini-chart" aria-label="256、128、64、32、16 的层工作量">
+            <div class="mm-mini-column"><div class="mm-mini-bar" style="height:100%"></div><small>256</small></div>
+            <div class="mm-mini-column"><div class="mm-mini-bar" style="height:50%"></div><small>128</small></div>
+            <div class="mm-mini-column"><div class="mm-mini-bar" style="height:25%"></div><small>64</small></div>
+            <div class="mm-mini-column"><div class="mm-mini-bar" style="height:12.5%"></div><small>32</small></div>
+            <div class="mm-mini-column"><div class="mm-mini-bar" style="height:6.25%"></div><small>16</small></div>
+          </div>
+          <div class="mm-sum-arithmetic">256 + 128 + 64 + 32 + 16 = <strong>496</strong></div>
+          <p class="mm-sum-verdict">根部一开始就最重 → 根部主导 → Θ(f(n))</p>
+        </article>
+      </div>
+
+      <div class="mm-final-rule" id="sum-rules">
+        <div class="mm-rule-chip"><strong>r &gt; 1</strong><br>条形向下变长：末项决定总量。</div>
+        <div class="mm-rule-chip"><strong>r = 1</strong><br>条形一样长：层数带来 log n。</div>
+        <div class="mm-rule-chip"><strong>r &lt; 1</strong><br>条形向下变短：首项决定总量。</div>
+      </div>
+
+      <p class="mm-static-explanation">所以 $k=\\log_b a$ 不是凭空出现的记号：它决定递归树本身的增长速度；把 $f(m)=m^p$ 代进去后，$r=b^{k-p}$ 决定层工作量是向下增长、保持不变，还是向下衰减。</p>
+    </section>
+
+    <p class="mm-caption" id="mm-caption" role="status" aria-live="polite">点击“播放”，先看 n=16 的每一层为什么都等于 16。</p>
+
+    <details class="mm-details">
+      <summary>只看文字版：这套动画真正展示了什么？</summary>
+      <ol>
+        <li>对 $T(16)=2T(8)+16$，五层的外部工作量是 $16,16,16,16,16$，所以总和是 $5\\times16=80$。</li>
+        <li>一般地，第 $i$ 层是“$a^i$ 个问题 × 每题 $f(n/b^i)$”：$W_i=a^if(n/b^i)$。</li>
+        <li>若 $f(m)=m^p$，则相邻层的比例是 $r=a/b^p=b^{k-p}$；$r>1$、$r=1$、$r<1$ 正好对应叶子、所有层、根部主导。</li>
+      </ol>
+    </details>
+    <p class="mm-fallback">如果 Anime.js 或 CDN 不可用，页面仍会显示完整的递归树、数字表格和三种柱状图；动画只是把数字变化按时间播放。</p>
+    <p class="sr-only">本页面用数字和图形解释主方法：递归树每层的节点数、单节点工作量、层总工作量，以及三种增长情形。</p>
+  </main>
+
+  <noscript>
+    <p>当前浏览器未启用 JavaScript。页面中的三组数字、表格和柱状图仍然可以直接阅读。</p>
+  </noscript>
+
+  <script src="https://cdn.jsdelivr.net/npm/animejs/dist/bundles/anime.umd.min.js"></script>
+  <script>
+    (function () {
+      var root = document.getElementById("master-method-page");
+      var animeApi = window.anime;
+      var playButton = document.getElementById("mm-play");
+      var replayButton = document.getElementById("mm-replay");
+      var progressBar = document.getElementById("mm-progress-bar");
+      var progressTrack = document.getElementById("mm-progress");
+      var caption = document.getElementById("mm-caption");
+      var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var canAnimate = !!(animeApi && typeof animeApi.animate === "function" && typeof animeApi.createTimeline === "function");
+      var currentScene = "tree";
+      var currentCase = "p1";
+      var currentTimeline = null;
+      var currentState = "ready";
+      var finished = false;
+      var caseAnimations = [];
+
+      var CASES = {
+        p0: {
+          p: 0,
+          per: [1, 1, 1, 1, 1],
+          total: [1, 2, 4, 8, 16],
+          ratio: "2",
+          verdict: "r=2>1：每下一层，整层工作翻倍，最后的叶子层最重。",
+          note: "条形向下变长：1→2→4→8→16，最后一层控制总量。",
+          caption: "f(m)=1：问题数翻倍，但单题工作不变，所以整层工作向下翻倍。"
+        },
+        p1: {
+          p: 1,
+          per: [16, 8, 4, 2, 1],
+          total: [16, 16, 16, 16, 16],
+          ratio: "1",
+          verdict: "r=1：问题数翻倍，单题工作减半，两个变化刚好抵消。",
+          note: "五根条一样长：每层都是 16，层数才是额外的增长。",
+          caption: "f(m)=m：节点数 × 单题规模 = 16，每层一样重。"
+        },
+        p2: {
+          p: 2,
+          per: [256, 64, 16, 4, 1],
+          total: [256, 128, 64, 32, 16],
+          ratio: "0.5",
+          verdict: "r=0.5<1：单题工作下降得更快，越往下整层越轻，根部最重。",
+          note: "条形向下变短：256→128→64→32→16，第一层控制总量。",
+          caption: "f(m)=m²：规模减半时，单题工作变成四分之一，压过了节点数翻倍。"
+        }
+      };
+
+      function setCaption(text) { caption.textContent = text; }
+
+      function setProgress(value) {
+        var safeValue = Math.max(0, Math.min(100, Math.round(value || 0)));
+        progressBar.style.width = safeValue + "%";
+        progressTrack.setAttribute("aria-valuenow", String(safeValue));
+      }
+
+      function setButtonState(state) {
+        playButton.dataset.state = state;
+        if (state === "playing") playButton.textContent = "暂停";
+        else if (state === "paused") playButton.textContent = "继续";
+        else playButton.textContent = "播放";
+      }
+
+      function formatNumber(value) {
+        return Math.round(Number(value)).toLocaleString("zh-CN");
+      }
+
+      function resetInline(nodes, transform) {
+        nodes.forEach(function (node) {
+          node.style.opacity = "0";
+          node.style.transform = transform || "translateY(16px)";
+        });
+      }
+
+      function prepareTree() {
+        var scene = document.getElementById("scene-tree");
+        resetInline([document.getElementById("tree-hero")].concat(Array.from(scene.querySelectorAll(".mm-tree-level, .mm-stack-segment, #tree-takeaway"))));
+        scene.querySelectorAll(".mm-node").forEach(function (node) {
+          node.style.opacity = "0";
+          node.style.transform = "scale(.25)";
+        });
+        scene.querySelectorAll(".mm-tree-level").forEach(function (row) { row.classList.remove("is-current"); });
+        document.getElementById("tree-running").textContent = "0";
+        document.getElementById("tree-height").textContent = "0";
+      }
+
+      function prepareCompare() {
+        var scene = document.getElementById("scene-compare");
+        resetInline([document.getElementById("compare-hero"), document.getElementById("ratio-card"), document.querySelector(".mm-chart-card"), document.querySelector(".mm-table-card")]);
+        scene.querySelectorAll(".mm-chart-row").forEach(function (row) {
+          row.style.opacity = "0";
+          row.style.transform = "translateY(13px)";
+          row.querySelector(".mm-bar-fill").style.width = "0%";
+        });
+        document.querySelectorAll("#case-table-body [data-cell]").forEach(function (cell) { cell.style.opacity = "0"; });
+      }
+
+      function prepareSum() {
+        var scene = document.getElementById("scene-sum");
+        resetInline(Array.from(scene.querySelectorAll(".mm-sum-card, .mm-rule-chip, .mm-static-explanation")));
+        scene.querySelectorAll(".mm-mini-bar").forEach(function (bar) {
+          bar.style.opacity = "0";
+          bar.style.transform = "scaleY(.05)";
+        });
+        scene.querySelectorAll(".mm-sum-card").forEach(function (card) { card.classList.remove("is-active"); });
+      }
+
+      function resetScene() {
+        if (currentScene === "tree") prepareTree();
+        else if (currentScene === "compare") prepareCompare();
+        else prepareSum();
+        setProgress(0);
+        setButtonState("ready");
+      }
+
+      function showAll(nodes) {
+        nodes.forEach(function (node) {
+          node.style.opacity = "1";
+          node.style.transform = "none";
+        });
+      }
+
+      function finalTree() {
+        var scene = document.getElementById("scene-tree");
+        showAll([document.getElementById("tree-hero")].concat(Array.from(scene.querySelectorAll(".mm-tree-level, .mm-stack-segment, #tree-takeaway"))));
+        scene.querySelectorAll(".mm-node").forEach(function (node) { node.style.opacity = "1"; node.style.transform = "none"; });
+        scene.querySelectorAll(".mm-tree-level").forEach(function (row) { row.classList.add("is-current"); });
+        document.getElementById("tree-running").textContent = "80";
+        document.getElementById("tree-height").textContent = "4";
+        document.getElementById("tree-depth").textContent = "4";
+        setProgress(100);
+        setCaption("5 层 × 每层 16 = 80：因为每层一样重，所以总量多出 log₂16 这个层数。");
+      }
+
+      function setCaseText(caseId) {
+        var data = CASES[caseId];
+        var rows = Array.from(document.querySelectorAll("#case-chart-rows .mm-chart-row"));
+        var tableRows = Array.from(document.querySelectorAll("#case-table-body tr"));
+        var max = Math.max.apply(null, data.total);
+        document.getElementById("ratio-value").textContent = data.ratio;
+        document.getElementById("ratio-verdict").textContent = data.verdict;
+        document.getElementById("chart-note").textContent = data.note;
+        rows.forEach(function (row, index) {
+          row.querySelector(".value").textContent = formatNumber(data.total[index]);
+          row.querySelector(".mm-bar-fill").dataset.targetWidth = String((data.total[index] / max) * 100);
+        });
+        tableRows.forEach(function (row, index) {
+          row.querySelector('[data-cell="per"]').textContent = formatNumber(data.per[index]);
+          row.querySelector('[data-cell="total"]').textContent = formatNumber(data.total[index]);
+        });
+        document.querySelectorAll(".mm-case-tab").forEach(function (button) {
+          button.setAttribute("aria-pressed", String(button.getAttribute("data-case") === caseId));
+        });
+      }
+
+      function animateNumber(element, from, to, duration) {
+        if (!canAnimate || reducedMotion || from === to) {
+          element.textContent = formatNumber(to);
+          return null;
+        }
+        var state = { value: from };
+        var animation = animeApi.animate(state, {
+          value: to,
+          round: 1,
+          duration: duration || 540,
+          ease: "out(3)",
+          onUpdate: function () { element.textContent = formatNumber(state.value); }
+        });
+        return animation;
+      }
+
+      function renderCase(caseId, animateChange) {
+        var data = CASES[caseId];
+        var previous = CASES[currentCase];
+        caseAnimations.forEach(function (animation) { if (animation && animation.pause) animation.pause(); });
+        caseAnimations = [];
+        setCaseText(caseId);
+        var rows = Array.from(document.querySelectorAll("#case-chart-rows .mm-chart-row"));
+        var tableRows = Array.from(document.querySelectorAll("#case-table-body tr"));
+        var max = Math.max.apply(null, data.total);
+        rows.forEach(function (row, index) {
+          var fill = row.querySelector(".mm-bar-fill");
+          var oldWidth = animateChange ? parseFloat(fill.style.width || "0") : 100;
+          var newWidth = (data.total[index] / max) * 100;
+          if (animateChange && canAnimate && !reducedMotion) {
+            caseAnimations.push(animeApi.animate(fill, { width: [oldWidth + "%", newWidth + "%"], duration: 620, ease: "out(3)" }));
+          } else {
+            fill.style.width = newWidth + "%";
+          }
+        });
+        tableRows.forEach(function (row, index) {
+          var perCell = row.querySelector('[data-cell="per"]');
+          var totalCell = row.querySelector('[data-cell="total"]');
+          var oldPer = Number(previous.per[index]);
+          var oldTotal = Number(previous.total[index]);
+          var perAnimation = animateChange ? animateNumber(perCell, oldPer, data.per[index], 620) : null;
+          var totalAnimation = animateChange ? animateNumber(totalCell, oldTotal, data.total[index], 620) : null;
+          if (perAnimation) caseAnimations.push(perAnimation);
+          if (totalAnimation) caseAnimations.push(totalAnimation);
+        });
+        currentCase = caseId;
+        document.getElementById("ratio-card").style.borderColor = data.p === 0 ? "var(--yellow)" : data.p === 1 ? "var(--blue)" : "var(--orange)";
+      }
+
+      function finalCompare() {
+        var scene = document.getElementById("scene-compare");
+        showAll([document.getElementById("compare-hero"), document.getElementById("ratio-card"), scene.querySelector(".mm-chart-card"), scene.querySelector(".mm-table-card")]);
+        scene.querySelectorAll(".mm-chart-row").forEach(function (row) {
+          row.style.opacity = "1";
+          row.style.transform = "none";
+        });
+        renderCase(currentCase, false);
+        document.querySelectorAll("#case-table-body [data-cell]").forEach(function (cell) { cell.style.opacity = "1"; });
+        setProgress(100);
+        setCaption(CASES[currentCase].caption + " 这就是 r=" + CASES[currentCase].ratio + " 的含义。");
+      }
+
+      function finalSum() {
+        var scene = document.getElementById("scene-sum");
+        showAll(Array.from(scene.querySelectorAll(".mm-sum-card, .mm-rule-chip, .mm-static-explanation")));
+        scene.querySelectorAll(".mm-mini-bar").forEach(function (bar) { bar.style.opacity = "1"; bar.style.transform = "none"; });
+        document.getElementById("summary-p1").classList.add("is-active");
+        setProgress(100);
+        setCaption("三种图形就是三种求和：向下变长看末项，完全一样数层数，向下变短看首项。");
+      }
+
+      function buildTreeTimeline() {
+        var tl = animeApi.createTimeline({
+          autoplay: false,
+          defaults: { ease: "out(3)" },
+          onUpdate: function (self) { setProgress(self.progress * 100); },
+          onComplete: function () { currentState = "ready"; finished = true; setProgress(100); setButtonState("ready"); }
+        });
+        var running = { value: 0 };
+        var levels = Array.from(document.querySelectorAll("#tree-levels .mm-tree-level"));
+        var stack = Array.from(document.querySelectorAll("#tree-stack .mm-stack-segment"));
+        tl.add("#tree-hero", { opacity: [0, 1], y: [-12, 0], duration: 650, onBegin: function () { setCaption("先固定数字：T(16)=2T(8)+16，每个规模 m 的问题做 m 个单位工作。"); } });
+        levels.forEach(function (row, index) {
+          var total = Number(row.getAttribute("data-total"));
+          tl.add(row, { opacity: [0, 1], y: [16, 0], duration: 430, onBegin: function () { row.classList.add("is-current"); document.getElementById("tree-height").textContent = String(index); setCaption("第 " + index + " 层：有 " + row.getAttribute("data-count") + " 个问题，每题规模 " + row.getAttribute("data-size") + "。"); } });
+          tl.add(row.querySelectorAll(".mm-node"), { opacity: [0, 1], scale: [.25, 1], delay: animeApi.stagger(32), duration: 360 });
+          var oldValue = running.value;
+          var newValue = oldValue + total;
+          tl.add(running, { value: [oldValue, newValue], round: 1, duration: 420, onUpdate: function () { document.getElementById("tree-running").textContent = formatNumber(running.value); }, onBegin: function () { setCaption("这一层的总量 = " + row.getAttribute("data-count") + " × " + row.getAttribute("data-size") + " = 16；把它加进累计值。"); } });
+          tl.add(stack[index], { opacity: [0, 1], scaleY: [.15, 1], duration: 300 });
+          running.value = newValue;
+        });
+        tl.add("#tree-depth", { color: [getComputedStyle(document.documentElement).getPropertyValue("--muted"), getComputedStyle(document.documentElement).getPropertyValue("--blue")], duration: 300, onBegin: function () { setCaption("16→8→4→2→1，向下减半 4 次：L=log₂16。"); } });
+        tl.add("#tree-takeaway", { opacity: [0, 1], y: [14, 0], duration: 520, onBegin: function () { setCaption("五层各贡献 16，总量是 5×16；一般 n 越大，层数就越接近 log n。"); } });
+        return tl;
+      }
+
+      function buildCompareTimeline() {
+        var tl = animeApi.createTimeline({
+          autoplay: false,
+          defaults: { ease: "out(3)" },
+          onUpdate: function (self) { setProgress(self.progress * 100); },
+          onComplete: function () { currentState = "ready"; finished = true; setProgress(100); setButtonState("ready"); }
+        });
+        var rows = Array.from(document.querySelectorAll("#case-chart-rows .mm-chart-row"));
+        tl.add("#compare-hero", { opacity: [0, 1], y: [-12, 0], duration: 560, onBegin: function () { setCaption("同一棵树不变，只改变 f(m)：看“问题数 × 单题工作量”。"); } })
+          .add("#ratio-card", { opacity: [0, 1], y: [12, 0], duration: 520, onBegin: function () { setCaption("相邻层的变化倍数 r=2/2^p：它决定条形向下变长还是变短。"); } })
+          .add(rows, { opacity: [0, 1], y: [13, 0], delay: animeApi.stagger(80), duration: 430, onBegin: function () { setCaption("先看中间情形 f(m)=m：节点翻倍，单题规模减半。"); } })
+          .add("#case-chart-rows .mm-bar-fill", { width: ["0%", "100%"], duration: 620, delay: animeApi.stagger(80) })
+          .add(".mm-chart-card", { opacity: [0, 1], y: [12, 0], duration: 420, onBegin: function () { setCaption("五根条都到 16：每层总量完全相同。"); } })
+          .add(".mm-table-card", { opacity: [0, 1], y: [12, 0], duration: 520, onBegin: function () { document.querySelectorAll("#case-table-body [data-cell]").forEach(function (cell) { cell.style.opacity = "1"; }); setCaption("表格把每根条拆成了具体乘法：问题数 × 单题 f(m)。"); } });
+        return tl;
+      }
+
+      function buildSumTimeline() {
+        var tl = animeApi.createTimeline({
+          autoplay: false,
+          defaults: { ease: "out(3)" },
+          onUpdate: function (self) { setProgress(self.progress * 100); },
+          onComplete: function () { currentState = "ready"; finished = true; setProgress(100); setButtonState("ready"); }
+        });
+        var cards = Array.from(document.querySelectorAll(".mm-sum-card"));
+        cards.forEach(function (card, index) {
+          var id = card.getAttribute("data-case");
+          var text = id === "p0" ? "第一张图：1、2、4、8、16，条形向下变长，叶子端最重。" : id === "p1" ? "第二张图：五个 16，所有层一样重，层数带来 log n。" : "第三张图：256、128、64、32、16，条形向下变短，根部最重。";
+          tl.add(card, { opacity: [0, 1], y: [16, 0], duration: 480, onBegin: function () { cards.forEach(function (other) { other.classList.remove("is-active"); }); card.classList.add("is-active"); setCaption(text); } })
+            .add(card.querySelectorAll(".mm-mini-bar"), { opacity: [0, 1], scaleY: [.05, 1], delay: animeApi.stagger(70), duration: 430 })
+            .add(card.querySelector(".mm-sum-arithmetic"), { opacity: [0, 1], y: [10, 0], duration: 400, onBegin: function () { setCaption(id === "p0" ? "1+2+4+8+16=31，最后一个数字最大，所以叶子控制数量级。" : id === "p1" ? "16+16+16+16+16=80，五层都要付出代价，所以多出层数。" : "256+128+64+32+16=496，第一项最大，所以根部控制数量级。"); } });
+          if (index < cards.length - 1) tl.add({}, { duration: 180 });
+        });
+        tl.add("#sum-rules", { opacity: [0, 1], y: [14, 0], duration: 520, onBegin: function () { document.getElementById("summary-p1").classList.add("is-active"); setCaption("主方法三条规则，就是这三种图形：末项、每项、首项。"); } })
+          .add(".mm-static-explanation", { opacity: [0, 1], y: [12, 0], duration: 500 });
+        return tl;
+      }
+
+      function makeTimeline() {
+        if (currentScene === "tree") return buildTreeTimeline();
+        if (currentScene === "compare") return buildCompareTimeline();
+        return buildSumTimeline();
+      }
+
+      function showScene(sceneName) {
+        document.querySelectorAll(".mm-tab").forEach(function (tab) {
+          tab.setAttribute("aria-selected", String(tab.getAttribute("data-scene") === sceneName));
+        });
+        document.querySelectorAll(".mm-scene").forEach(function (scene) {
+          scene.hidden = scene.getAttribute("data-scene-panel") !== sceneName;
+        });
+      }
+
+      function playCurrent() {
+        if (!canAnimate || reducedMotion) {
+          if (currentScene === "tree") finalTree();
+          else if (currentScene === "compare") finalCompare();
+          else finalSum();
+          currentState = "ready";
+          finished = true;
+          setButtonState("ready");
+          return;
+        }
+        if (currentTimeline && currentState === "paused") {
+          currentTimeline.play();
+          currentState = "playing";
+          setButtonState("playing");
+          return;
+        }
+        if (!currentTimeline || finished) {
+          resetScene();
+          currentTimeline = makeTimeline();
+          finished = false;
+        }
+        currentTimeline.play();
+        currentState = "playing";
+        setButtonState("playing");
+      }
+
+      function switchScene(sceneName) {
+        if (currentTimeline) currentTimeline.pause();
+        caseAnimations.forEach(function (animation) { if (animation && animation.pause) animation.pause(); });
+        currentScene = sceneName;
+        currentTimeline = null;
+        currentState = "ready";
+        finished = false;
+        showScene(sceneName);
+        if (sceneName === "compare") {
+          currentCase = "p1";
+          setCaseText("p1");
+        }
+        resetScene();
+        if (sceneName === "tree") setCaption("点击“播放”，看 1×16、2×8、4×4……为什么每层都是 16。");
+        else if (sceneName === "compare") setCaption("点击“播放”，先看中间情形；再点 f(m)=1 或 f(m)=m²，让数字反转。");
+        else setCaption("点击“播放”，把三种层工作量的求和形状并排看清楚。");
+      }
+
+      playButton.addEventListener("click", function () {
+        if (currentTimeline && currentState === "playing") {
+          currentTimeline.pause();
+          currentState = "paused";
+          setButtonState("paused");
+          setCaption("动画已暂停；点击“继续”接着看数字怎样变化。");
+        } else {
+          playCurrent();
+        }
+      });
+
+      replayButton.addEventListener("click", function () {
+        if (currentTimeline) currentTimeline.pause();
+        currentTimeline = null;
+        currentState = "ready";
+        finished = false;
+        resetScene();
+        playCurrent();
+      });
+
+      document.querySelectorAll(".mm-tab").forEach(function (tab, index, tabs) {
+        tab.addEventListener("click", function () {
+          switchScene(tab.getAttribute("data-scene"));
+          playCurrent();
+        });
+        tab.addEventListener("keydown", function (event) {
+          if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+          event.preventDefault();
+          var nextIndex = event.key === "ArrowRight" ? (index + 1) % tabs.length : (index - 1 + tabs.length) % tabs.length;
+          tabs[nextIndex].focus();
+          switchScene(tabs[nextIndex].getAttribute("data-scene"));
+        });
+      });
+
+      document.querySelectorAll(".mm-case-tab").forEach(function (button) {
+        button.addEventListener("click", function () {
+          var nextCase = button.getAttribute("data-case");
+          if (currentScene !== "compare") {
+            currentCase = nextCase;
+            setCaseText(nextCase);
+            return;
+          }
+          if (currentTimeline) currentTimeline.pause();
+          currentTimeline = null;
+          currentState = "ready";
+          finished = false;
+          renderCase(nextCase, true);
+          setProgress(100);
+          setButtonState("ready");
+          setCaption(CASES[nextCase].caption + " 点击另一个按钮，比较条形的变化。");
+        });
+      });
+
+      if (canAnimate) {
+        showScene("tree");
+        resetScene();
+        window.setTimeout(playCurrent, 350);
+      } else {
+        setCaption("动画不可用；请直接阅读页面中的数字、表格和柱状图。");
+        setButtonState("ready");
+      }
+    }());
+  </script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+- generic [ref=f5e3]:
+  - complementary [ref=f5e4]:
+    - generic [ref=f5e10]:
+      - strong [ref=f5e11]: Algorithm
+      - generic [ref=f5e12]: Animation Studio
+    - navigation "站点主题导航" [ref=f5e13]:
+      - button "主页 学习路线与绘制方法" [ref=f5e14] [cursor=pointer]:
+        - generic [ref=f5e19]:
+          - generic [ref=f5e20]: 主页
+          - generic [ref=f5e21]: 学习路线与绘制方法
+      - generic [ref=f5e22]:
+        - button "算法 按《算法导论》章节组织" [expanded] [ref=f5e23] [cursor=pointer]:
+          - generic [ref=f5e29]:
+            - generic [ref=f5e30]: 算法
+            - generic [ref=f5e31]: 按《算法导论》章节组织
+        - generic [ref=f5e34]:
+          - generic [ref=f5e35]:
+            - generic [ref=f5e36]: I · 基础
+            - generic [ref=f5e37]:
+              - generic [ref=f5e38]:
+                - generic [ref=f5e39]: 第 1 章
+                - generic [ref=f5e40]: 算法与计算
+              - button "算法的角色 问题、输入、输出与正确性 DEV" [ref=f5e41] [cursor=pointer]:
+                - generic [ref=f5e47]:
+                  - generic [ref=f5e48]: 算法的角色
+                  - generic [ref=f5e49]: 问题、输入、输出与正确性
+                - generic [ref=f5e50]: DEV
+            - generic [ref=f5e51]:
+              - generic [ref=f5e52]:
+                - generic [ref=f5e53]: 第 2 章
+                - generic [ref=f5e54]: 起步
+              - button "插入排序 循环不变量与逐个插入 DEV" [ref=f5e55] [cursor=pointer]:
+                - generic [ref=f5e61]:
+                  - generic [ref=f5e62]: 插入排序
+                  - generic [ref=f5e63]: 循环不变量与逐个插入
+                - generic [ref=f5e64]: DEV
+              - button "归并排序 2.3 · 拆分、合并与递归树" [active] [ref=f5e65] [cursor=pointer]:
+                - generic [ref=f5e71]:
+                  - generic [ref=f5e72]: 归并排序
+                  - generic [ref=f5e73]: 2.3 · 拆分、合并与递归树
+              - button "二分查找 区间缩小与对数复杂度 DEV" [ref=f5e74] [cursor=pointer]:
+                - generic [ref=f5e80]:
+                  - generic [ref=f5e81]: 二分查找
+                  - generic [ref=f5e82]: 区间缩小与对数复杂度
+                - generic [ref=f5e83]: DEV
+            - generic [ref=f5e84]:
+              - generic [ref=f5e85]:
+                - generic [ref=f5e86]: 第 3 章
+                - generic [ref=f5e87]: 刻画运行时间
+              - button "渐近记号 O、Ω、Θ 的图形比较 DEV" [ref=f5e88] [cursor=pointer]:
+                - generic [ref=f5e94]:
+                  - generic [ref=f5e95]: 渐近记号
+                  - generic [ref=f5e96]: O、Ω、Θ 的图形比较
+                - generic [ref=f5e97]: DEV
+              - button "递归式 从递归树读出运行时间 DEV" [ref=f5e98] [cursor=pointer]:
+                - generic [ref=f5e104]:
+                  - generic [ref=f5e105]: 递归式
+                  - generic [ref=f5e106]: 从递归树读出运行时间
+                - generic [ref=f5e107]: DEV
+            - generic [ref=f5e108]:
+              - generic [ref=f5e109]:
+                - generic [ref=f5e110]: 第 4 章
+                - generic [ref=f5e111]: 分治法
+              - button "最大子数组 跨中点候选与线性合并 DEV" [ref=f5e112] [cursor=pointer]:
+                - generic [ref=f5e118]:
+                  - generic [ref=f5e119]: 最大子数组
+                  - generic [ref=f5e120]: 跨中点候选与线性合并
+                - generic [ref=f5e121]: DEV
+              - button "最近点对 跨界候选与线性合并" [ref=f5e122] [cursor=pointer]:
+                - generic [ref=f5e128]:
+                  - generic [ref=f5e129]: 最近点对
+                  - generic [ref=f5e130]: 跨界候选与线性合并
+              - button "主方法 递归树中谁在主导" [ref=f5e131] [cursor=pointer]:
+                - generic [ref=f5e137]:
+                  - generic [ref=f5e138]: 主方法
+                  - generic [ref=f5e139]: 递归树中谁在主导
+              - button "Strassen 矩阵乘法 减少递归子问题数量 DEV" [ref=f5e140] [cursor=pointer]:
+                - generic [ref=f5e146]:
+                  - generic [ref=f5e147]: Strassen 矩阵乘法
+                  - generic [ref=f5e148]: 减少递归子问题数量
+                - generic [ref=f5e149]: DEV
+            - generic [ref=f5e150]:
+              - generic [ref=f5e151]:
+                - generic [ref=f5e152]: 第 5 章
+                - generic [ref=f5e153]: 概率分析与随机算法
+              - button "随机化算法 随机选择与期望运行时间 DEV" [ref=f5e154] [cursor=pointer]:
+                - generic [ref=f5e160]:
+                  - generic [ref=f5e161]: 随机化算法
+                  - generic [ref=f5e162]: 随机选择与期望运行时间
+                - generic [ref=f5e163]: DEV
+              - button "招聘问题 指示器随机变量与期望 DEV" [ref=f5e164] [cursor=pointer]:
+                - generic [ref=f5e170]:
+                  - generic [ref=f5e171]: 招聘问题
+                  - generic [ref=f5e172]: 指示器随机变量与期望
+                - generic [ref=f5e173]: DEV
+          - generic [ref=f5e174]:
+            - generic [ref=f5e175]: II · 排序与顺序统计
+            - generic [ref=f5e176]:
+              - generic [ref=f5e177]:
+                - generic [ref=f5e178]: 第 6 章
+                - generic [ref=f5e179]: 堆排序
+              - button "堆排序 大根堆、取最大值与原地排序" [ref=f5e180] [cursor=pointer]:
+                - generic [ref=f5e186]:
+                  - generic [ref=f5e187]: 堆排序
+                  - generic [ref=f5e188]: 大根堆、取最大值与原地排序
+              - button "优先队列 插入、取最大值与堆的接口 DEV" [ref=f5e189] [cursor=pointer]:
+                - generic [ref=f5e195]:
+                  - generic [ref=f5e196]: 优先队列
+                  - generic [ref=f5e197]: 插入、取最大值与堆的接口
+                - generic [ref=f5e198]: DEV
+            - generic [ref=f5e199]:
+              - generic [ref=f5e200]:
+                - generic [ref=f5e201]: 第 7 章
+                - generic [ref=f5e202]: 快速排序
+              - button "快速排序 均衡分区与最坏情况" [ref=f5e203] [cursor=pointer]:
+                - generic [ref=f5e209]:
+                  - generic [ref=f5e210]: 快速排序
+                  - generic [ref=f5e211]: 均衡分区与最坏情况
+              - button "随机化快速排序 随机主元与期望复杂度 DEV" [ref=f5e212] [cursor=pointer]:
+                - generic [ref=f5e218]:
+                  - generic [ref=f5e219]: 随机化快速排序
+                  - generic [ref=f5e220]: 随机主元与期望复杂度
+                - generic [ref=f5e221]: DEV
+            - generic [ref=f5e222]:
+              - generic [ref=f5e223]:
+                - generic [ref=f5e224]: 第 8 章
+                - generic [ref=f5e225]: 线性时间排序
+              - button "计数排序 频次数组与稳定输出 DEV" [ref=f5e226] [cursor=pointer]:
+                - generic [ref=f5e232]:
+                  - generic [ref=f5e233]: 计数排序
+                  - generic [ref=f5e234]: 频次数组与稳定输出
+                - generic [ref=f5e235]: DEV
+              - button "基数排序 从低位到高位的稳定排序 DEV" [ref=f5e236] [cursor=pointer]:
+                - generic [ref=f5e242]:
+                  - generic [ref=f5e243]: 基数排序
+                  - generic [ref=f5e244]: 从低位到高位的稳定排序
+                - generic [ref=f5e245]: DEV
+              - button "桶排序 按分布把元素放入桶中 DEV" [ref=f5e246] [cursor=pointer]:
+                - generic [ref=f5e252]:
+                  - generic [ref=f5e253]: 桶排序
+                  - generic [ref=f5e254]: 按分布把元素放入桶中
+                - generic [ref=f5e255]: DEV
+            - generic [ref=f5e256]:
+              - generic [ref=f5e257]:
+                - generic [ref=f5e258]: 第 9 章
+                - generic [ref=f5e259]: 中位数与顺序统计量
+              - button "顺序统计量 选择第 k 小元素 DEV" [ref=f5e260] [cursor=pointer]:
+                - generic [ref=f5e266]:
+                  - generic [ref=f5e267]: 顺序统计量
+                  - generic [ref=f5e268]: 选择第 k 小元素
+                - generic [ref=f5e269]: DEV
+              - button "中位数的中位数 最坏情况线性时间选择 DEV" [ref=f5e270] [cursor=pointer]:
+                - generic [ref=f5e276]:
+                  - generic [ref=f5e277]: 中位数的中位数
+                  - generic [ref=f5e278]: 最坏情况线性时间选择
+                - generic [ref=f5e279]: DEV
+  - main [ref=f5e280]:
+    - generic [ref=f5e282]:
+      - text: 算法动画站
+      - generic [ref=f5e285]: /
+      - text: 算法 / 第 2 章 归并排序
+    - generic [ref=f5e604]:
+      - generic [ref=f5e606]:
+        - paragraph [ref=f5e607]: ANIMATION 01 · MERGE SORT
+        - heading "初始问题：给 8 个数字排序" [level=2] [ref=f5e608]
+        - paragraph [ref=f5e609]: 数字真的被分开、比较、合并；每一层的工作量都能从数组读出来。
+      - group "初始问题：给 8 个数字排序步骤控制" [ref=f5e610]:
+        - tablist "初始问题：给 8 个数字排序步骤" [ref=f5e611]:
+          - tab "01 初始" [selected] [ref=f5e612] [cursor=pointer]
+          - tab "02 拆分" [ref=f5e613] [cursor=pointer]
+          - tab "03 基例" [ref=f5e614] [cursor=pointer]
+          - tab "04 合并" [ref=f5e615] [cursor=pointer]
+          - tab "05 复杂度" [ref=f5e616] [cursor=pointer]
+        - generic [ref=f5e617]:
+          - button "上一步" [disabled] [ref=f5e618]
+          - button "下一步" [ref=f5e621] [cursor=pointer]
+          - button "自动播放" [ref=f5e624] [cursor=pointer]
+          - button "重播" [ref=f5e627] [cursor=pointer]
+      - progressbar "教学进度" [ref=f5e631]
+      - generic [ref=f5e632]:
+        - generic [ref=f5e633]:
+          - generic [ref=f5e634]: 这一步，公式记录了什么？
+          - strong [ref=f5e635]: T(8) = 2T(4) + 8
+        - generic [ref=f5e636]:
+          - generic [ref=f5e637]:
+            - heading "递归树：每一层的实际数字" [level=3] [ref=f5e639]
+            - generic [ref=f5e642]:
+              - generic [ref=f5e643]:
+                - text: 第 0 层
+                - generic [ref=f5e644]: 1 个问题
+              - generic [ref=f5e646]:
+                - generic [ref=f5e647]: "8"
+                - generic [ref=f5e648]: "3"
+                - generic [ref=f5e649]: "7"
+                - generic [ref=f5e650]: "4"
+                - generic [ref=f5e651]: "1"
+                - generic [ref=f5e652]: "6"
+                - generic [ref=f5e653]: "2"
+                - generic [ref=f5e654]: "5"
+              - emphasis [ref=f5e655]: 1 × 8 = 8
+          - generic [ref=f5e656]:
+            - heading "计算台" [level=3] [ref=f5e658]
+            - generic [ref=f5e659]:
+              - generic [ref=f5e660]:
+                - generic [ref=f5e661]:
+                  - generic [ref=f5e662]: 这一层有多少个问题
+                  - strong [ref=f5e663]: "1"
+                - generic [ref=f5e664]:
+                  - generic [ref=f5e665]: 每个问题有多大
+                  - strong [ref=f5e666]: "8"
+                - generic [ref=f5e667]:
+                  - generic [ref=f5e668]: 整层工作量
+                  - strong [ref=f5e669]: "8"
+              - generic [ref=f5e670]: 1 × 8 = 8
+              - paragraph [ref=f5e671]: 先看这一层：问题数 × 单题规模。
+        - generic [ref=f5e672]: 下一步：让第一刀真的发生。

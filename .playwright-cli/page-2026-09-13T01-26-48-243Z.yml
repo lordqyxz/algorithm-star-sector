@@ -1,0 +1,325 @@
+- generic [ref=f16e3]:
+  - complementary [ref=f16e4]:
+    - generic [ref=f16e10]:
+      - strong [ref=f16e11]: Algorithm
+      - generic [ref=f16e12]: Animation Studio
+    - navigation "站点主题导航" [ref=f16e13]:
+      - button "主页 学习路线与绘制方法" [ref=f16e14] [cursor=pointer]:
+        - generic [ref=f16e19]:
+          - generic [ref=f16e20]: 主页
+          - generic [ref=f16e21]: 学习路线与绘制方法
+      - generic [ref=f16e22]:
+        - button "算法 按《算法导论》章节组织" [expanded] [ref=f16e23] [cursor=pointer]:
+          - generic [ref=f16e29]:
+            - generic [ref=f16e30]: 算法
+            - generic [ref=f16e31]: 按《算法导论》章节组织
+        - generic [ref=f16e34]:
+          - generic [ref=f16e35]:
+            - generic [ref=f16e36]: I · 基础
+            - generic [ref=f16e37]:
+              - generic [ref=f16e38]:
+                - generic [ref=f16e39]: 第 1 章
+                - generic [ref=f16e40]: 算法与计算
+              - button "算法的角色 问题、输入、输出与正确性 DEV" [ref=f16e41] [cursor=pointer]:
+                - generic [ref=f16e47]:
+                  - generic [ref=f16e48]: 算法的角色
+                  - generic [ref=f16e49]: 问题、输入、输出与正确性
+                - generic [ref=f16e50]: DEV
+            - generic [ref=f16e51]:
+              - generic [ref=f16e52]:
+                - generic [ref=f16e53]: 第 2 章
+                - generic [ref=f16e54]: 起步
+              - button "插入排序 循环不变量与逐个插入 DEV" [ref=f16e55] [cursor=pointer]:
+                - generic [ref=f16e61]:
+                  - generic [ref=f16e62]: 插入排序
+                  - generic [ref=f16e63]: 循环不变量与逐个插入
+                - generic [ref=f16e64]: DEV
+              - button "归并排序 2.3 · 拆分、合并与递归树" [ref=f16e65] [cursor=pointer]:
+                - generic [ref=f16e71]:
+                  - generic [ref=f16e72]: 归并排序
+                  - generic [ref=f16e73]: 2.3 · 拆分、合并与递归树
+              - button "二分查找 区间缩小与对数复杂度 DEV" [ref=f16e74] [cursor=pointer]:
+                - generic [ref=f16e80]:
+                  - generic [ref=f16e81]: 二分查找
+                  - generic [ref=f16e82]: 区间缩小与对数复杂度
+                - generic [ref=f16e83]: DEV
+            - generic [ref=f16e84]:
+              - generic [ref=f16e85]:
+                - generic [ref=f16e86]: 第 3 章
+                - generic [ref=f16e87]: 刻画运行时间
+              - button "渐近记号 O、Ω、Θ 的图形比较 DEV" [ref=f16e88] [cursor=pointer]:
+                - generic [ref=f16e94]:
+                  - generic [ref=f16e95]: 渐近记号
+                  - generic [ref=f16e96]: O、Ω、Θ 的图形比较
+                - generic [ref=f16e97]: DEV
+              - button "递归式 从递归树读出运行时间 DEV" [ref=f16e98] [cursor=pointer]:
+                - generic [ref=f16e104]:
+                  - generic [ref=f16e105]: 递归式
+                  - generic [ref=f16e106]: 从递归树读出运行时间
+                - generic [ref=f16e107]: DEV
+            - generic [ref=f16e108]:
+              - generic [ref=f16e109]:
+                - generic [ref=f16e110]: 第 4 章
+                - generic [ref=f16e111]: 分治法
+              - button "最大子数组 跨中点候选与线性合并 DEV" [ref=f16e112] [cursor=pointer]:
+                - generic [ref=f16e118]:
+                  - generic [ref=f16e119]: 最大子数组
+                  - generic [ref=f16e120]: 跨中点候选与线性合并
+                - generic [ref=f16e121]: DEV
+              - button "最近点对 跨界候选与线性合并" [ref=f16e122] [cursor=pointer]:
+                - generic [ref=f16e128]:
+                  - generic [ref=f16e129]: 最近点对
+                  - generic [ref=f16e130]: 跨界候选与线性合并
+              - button "主方法 递归树中谁在主导" [ref=f16e131] [cursor=pointer]:
+                - generic [ref=f16e137]:
+                  - generic [ref=f16e138]: 主方法
+                  - generic [ref=f16e139]: 递归树中谁在主导
+              - button "Strassen 矩阵乘法 减少递归子问题数量 DEV" [ref=f16e140] [cursor=pointer]:
+                - generic [ref=f16e146]:
+                  - generic [ref=f16e147]: Strassen 矩阵乘法
+                  - generic [ref=f16e148]: 减少递归子问题数量
+                - generic [ref=f16e149]: DEV
+            - generic [ref=f16e150]:
+              - generic [ref=f16e151]:
+                - generic [ref=f16e152]: 第 5 章
+                - generic [ref=f16e153]: 概率分析与随机算法
+              - button "随机化算法 随机选择与期望运行时间 DEV" [ref=f16e154] [cursor=pointer]:
+                - generic [ref=f16e160]:
+                  - generic [ref=f16e161]: 随机化算法
+                  - generic [ref=f16e162]: 随机选择与期望运行时间
+                - generic [ref=f16e163]: DEV
+              - button "招聘问题 指示器随机变量与期望 DEV" [ref=f16e164] [cursor=pointer]:
+                - generic [ref=f16e170]:
+                  - generic [ref=f16e171]: 招聘问题
+                  - generic [ref=f16e172]: 指示器随机变量与期望
+                - generic [ref=f16e173]: DEV
+          - generic [ref=f16e174]:
+            - generic [ref=f16e175]: II · 排序与顺序统计
+            - generic [ref=f16e176]:
+              - generic [ref=f16e177]:
+                - generic [ref=f16e178]: 第 6 章
+                - generic [ref=f16e179]: 堆排序
+              - button "堆排序 大根堆、取最大值与原地排序" [ref=f16e180] [cursor=pointer]:
+                - generic [ref=f16e186]:
+                  - generic [ref=f16e187]: 堆排序
+                  - generic [ref=f16e188]: 大根堆、取最大值与原地排序
+              - button "优先队列 插入、取最大值与堆的接口 DEV" [ref=f16e189] [cursor=pointer]:
+                - generic [ref=f16e195]:
+                  - generic [ref=f16e196]: 优先队列
+                  - generic [ref=f16e197]: 插入、取最大值与堆的接口
+                - generic [ref=f16e198]: DEV
+            - generic [ref=f16e199]:
+              - generic [ref=f16e200]:
+                - generic [ref=f16e201]: 第 7 章
+                - generic [ref=f16e202]: 快速排序
+              - button "快速排序 均衡分区与最坏情况" [ref=f16e203] [cursor=pointer]:
+                - generic [ref=f16e209]:
+                  - generic [ref=f16e210]: 快速排序
+                  - generic [ref=f16e211]: 均衡分区与最坏情况
+              - button "随机化快速排序 随机主元与期望复杂度 DEV" [ref=f16e212] [cursor=pointer]:
+                - generic [ref=f16e218]:
+                  - generic [ref=f16e219]: 随机化快速排序
+                  - generic [ref=f16e220]: 随机主元与期望复杂度
+                - generic [ref=f16e221]: DEV
+            - generic [ref=f16e222]:
+              - generic [ref=f16e223]:
+                - generic [ref=f16e224]: 第 8 章
+                - generic [ref=f16e225]: 线性时间排序
+              - button "计数排序 频次数组与稳定输出 DEV" [ref=f16e226] [cursor=pointer]:
+                - generic [ref=f16e232]:
+                  - generic [ref=f16e233]: 计数排序
+                  - generic [ref=f16e234]: 频次数组与稳定输出
+                - generic [ref=f16e235]: DEV
+              - button "基数排序 从低位到高位的稳定排序 DEV" [ref=f16e236] [cursor=pointer]:
+                - generic [ref=f16e242]:
+                  - generic [ref=f16e243]: 基数排序
+                  - generic [ref=f16e244]: 从低位到高位的稳定排序
+                - generic [ref=f16e245]: DEV
+              - button "桶排序 按分布把元素放入桶中 DEV" [ref=f16e246] [cursor=pointer]:
+                - generic [ref=f16e252]:
+                  - generic [ref=f16e253]: 桶排序
+                  - generic [ref=f16e254]: 按分布把元素放入桶中
+                - generic [ref=f16e255]: DEV
+            - generic [ref=f16e256]:
+              - generic [ref=f16e257]:
+                - generic [ref=f16e258]: 第 9 章
+                - generic [ref=f16e259]: 中位数与顺序统计量
+              - button "顺序统计量 选择第 k 小元素 DEV" [ref=f16e260] [cursor=pointer]:
+                - generic [ref=f16e266]:
+                  - generic [ref=f16e267]: 顺序统计量
+                  - generic [ref=f16e268]: 选择第 k 小元素
+                - generic [ref=f16e269]: DEV
+              - button "中位数的中位数 最坏情况线性时间选择 DEV" [ref=f16e270] [cursor=pointer]:
+                - generic [ref=f16e276]:
+                  - generic [ref=f16e277]: 中位数的中位数
+                  - generic [ref=f16e278]: 最坏情况线性时间选择
+                - generic [ref=f16e279]: DEV
+  - main [ref=f16e280]:
+    - generic [ref=f16e282]:
+      - text: 算法动画站
+      - generic [ref=f16e285]: /
+      - text: 主页
+    - generic [ref=f16e286]:
+      - generic [ref=f16e288]:
+        - paragraph [ref=f16e289]: ALGORITHM ANIMATION STUDIO · CLRS ROADMAP
+        - heading "把算法的“为什么”画出来" [level=1] [ref=f16e290]
+        - paragraph [ref=f16e291]: 面向课堂的可操作动画：先让数字、点和递归树发生变化，再把变化压缩成公式。
+      - generic [ref=f16e292]:
+        - generic [ref=f16e293]:
+          - generic [ref=f16e294]:
+            - paragraph [ref=f16e295]: CLRS LEARNING ROUTE
+            - heading "按章节从现象走到公式" [level=2] [ref=f16e296]
+          - generic [ref=f16e297]: DEV 表示待开发占位
+        - generic [ref=f16e298]:
+          - heading "I · 基础" [level=3] [ref=f16e299]
+          - generic [ref=f16e300]:
+            - generic [ref=f16e302]:
+              - generic [ref=f16e303]:
+                - strong [ref=f16e304]: 第 1 章 · 算法与计算
+                - generic [ref=f16e305]: 问题、算法与正确性
+              - button "算法的角色 问题、输入、输出与正确性 DEV" [ref=f16e307] [cursor=pointer]:
+                - generic [ref=f16e313]:
+                  - strong [ref=f16e314]: 算法的角色
+                  - generic [ref=f16e315]: 问题、输入、输出与正确性
+                - generic [ref=f16e316]: DEV
+            - generic [ref=f16e318]:
+              - generic [ref=f16e319]:
+                - strong [ref=f16e320]: 第 2 章 · 起步
+                - generic [ref=f16e321]: 从数组操作进入算法
+              - generic [ref=f16e322]:
+                - button "插入排序 循环不变量与逐个插入 DEV" [ref=f16e323] [cursor=pointer]:
+                  - generic [ref=f16e329]:
+                    - strong [ref=f16e330]: 插入排序
+                    - generic [ref=f16e331]: 循环不变量与逐个插入
+                  - generic [ref=f16e332]: DEV
+                - button "归并排序 2.3 · 拆分、合并与递归树" [ref=f16e333] [cursor=pointer]:
+                  - generic [ref=f16e339]:
+                    - strong [ref=f16e340]: 归并排序
+                    - generic [ref=f16e341]: 2.3 · 拆分、合并与递归树
+                - button "二分查找 区间缩小与对数复杂度 DEV" [ref=f16e344] [cursor=pointer]:
+                  - generic [ref=f16e350]:
+                    - strong [ref=f16e351]: 二分查找
+                    - generic [ref=f16e352]: 区间缩小与对数复杂度
+                  - generic [ref=f16e353]: DEV
+            - generic [ref=f16e355]:
+              - generic [ref=f16e356]:
+                - strong [ref=f16e357]: 第 3 章 · 刻画运行时间
+                - generic [ref=f16e358]: 增长率、渐近记号与递归式
+              - generic [ref=f16e359]:
+                - button "渐近记号 O、Ω、Θ 的图形比较 DEV" [ref=f16e360] [cursor=pointer]:
+                  - generic [ref=f16e366]:
+                    - strong [ref=f16e367]: 渐近记号
+                    - generic [ref=f16e368]: O、Ω、Θ 的图形比较
+                  - generic [ref=f16e369]: DEV
+                - button "递归式 从递归树读出运行时间 DEV" [ref=f16e370] [cursor=pointer]:
+                  - generic [ref=f16e376]:
+                    - strong [ref=f16e377]: 递归式
+                    - generic [ref=f16e378]: 从递归树读出运行时间
+                  - generic [ref=f16e379]: DEV
+            - generic [ref=f16e381]:
+              - generic [ref=f16e382]:
+                - strong [ref=f16e383]: 第 4 章 · 分治法
+                - generic [ref=f16e384]: 把大问题拆成可合并的小问题
+              - generic [ref=f16e385]:
+                - button "最大子数组 跨中点候选与线性合并 DEV" [ref=f16e386] [cursor=pointer]:
+                  - generic [ref=f16e392]:
+                    - strong [ref=f16e393]: 最大子数组
+                    - generic [ref=f16e394]: 跨中点候选与线性合并
+                  - generic [ref=f16e395]: DEV
+                - button "最近点对 跨界候选与线性合并" [ref=f16e396] [cursor=pointer]:
+                  - generic [ref=f16e402]:
+                    - strong [ref=f16e403]: 最近点对
+                    - generic [ref=f16e404]: 跨界候选与线性合并
+                - button "主方法 递归树中谁在主导" [ref=f16e407] [cursor=pointer]:
+                  - generic [ref=f16e413]:
+                    - strong [ref=f16e414]: 主方法
+                    - generic [ref=f16e415]: 递归树中谁在主导
+                - button "Strassen 矩阵乘法 减少递归子问题数量 DEV" [ref=f16e418] [cursor=pointer]:
+                  - generic [ref=f16e424]:
+                    - strong [ref=f16e425]: Strassen 矩阵乘法
+                    - generic [ref=f16e426]: 减少递归子问题数量
+                  - generic [ref=f16e427]: DEV
+            - generic [ref=f16e429]:
+              - generic [ref=f16e430]:
+                - strong [ref=f16e431]: 第 5 章 · 概率分析与随机算法
+                - generic [ref=f16e432]: 随机性如何改变平均行为
+              - generic [ref=f16e433]:
+                - button "随机化算法 随机选择与期望运行时间 DEV" [ref=f16e434] [cursor=pointer]:
+                  - generic [ref=f16e440]:
+                    - strong [ref=f16e441]: 随机化算法
+                    - generic [ref=f16e442]: 随机选择与期望运行时间
+                  - generic [ref=f16e443]: DEV
+                - button "招聘问题 指示器随机变量与期望 DEV" [ref=f16e444] [cursor=pointer]:
+                  - generic [ref=f16e450]:
+                    - strong [ref=f16e451]: 招聘问题
+                    - generic [ref=f16e452]: 指示器随机变量与期望
+                  - generic [ref=f16e453]: DEV
+        - generic [ref=f16e454]:
+          - heading "II · 排序与顺序统计" [level=3] [ref=f16e455]
+          - generic [ref=f16e456]:
+            - generic [ref=f16e458]:
+              - generic [ref=f16e459]:
+                - strong [ref=f16e460]: 第 6 章 · 堆排序
+                - generic [ref=f16e461]: 堆、堆化与优先队列
+              - generic [ref=f16e462]:
+                - button "堆排序 大根堆、取最大值与原地排序" [ref=f16e463] [cursor=pointer]:
+                  - generic [ref=f16e469]:
+                    - strong [ref=f16e470]: 堆排序
+                    - generic [ref=f16e471]: 大根堆、取最大值与原地排序
+                - button "优先队列 插入、取最大值与堆的接口 DEV" [ref=f16e474] [cursor=pointer]:
+                  - generic [ref=f16e480]:
+                    - strong [ref=f16e481]: 优先队列
+                    - generic [ref=f16e482]: 插入、取最大值与堆的接口
+                  - generic [ref=f16e483]: DEV
+            - generic [ref=f16e485]:
+              - generic [ref=f16e486]:
+                - strong [ref=f16e487]: 第 7 章 · 快速排序
+                - generic [ref=f16e488]: 主元、分区与递归树形状
+              - generic [ref=f16e489]:
+                - button "快速排序 均衡分区与最坏情况" [ref=f16e490] [cursor=pointer]:
+                  - generic [ref=f16e496]:
+                    - strong [ref=f16e497]: 快速排序
+                    - generic [ref=f16e498]: 均衡分区与最坏情况
+                - button "随机化快速排序 随机主元与期望复杂度 DEV" [ref=f16e501] [cursor=pointer]:
+                  - generic [ref=f16e507]:
+                    - strong [ref=f16e508]: 随机化快速排序
+                    - generic [ref=f16e509]: 随机主元与期望复杂度
+                  - generic [ref=f16e510]: DEV
+            - generic [ref=f16e512]:
+              - generic [ref=f16e513]:
+                - strong [ref=f16e514]: 第 8 章 · 线性时间排序
+                - generic [ref=f16e515]: 利用输入结构突破比较排序下界
+              - generic [ref=f16e516]:
+                - button "计数排序 频次数组与稳定输出 DEV" [ref=f16e517] [cursor=pointer]:
+                  - generic [ref=f16e523]:
+                    - strong [ref=f16e524]: 计数排序
+                    - generic [ref=f16e525]: 频次数组与稳定输出
+                  - generic [ref=f16e526]: DEV
+                - button "基数排序 从低位到高位的稳定排序 DEV" [ref=f16e527] [cursor=pointer]:
+                  - generic [ref=f16e533]:
+                    - strong [ref=f16e534]: 基数排序
+                    - generic [ref=f16e535]: 从低位到高位的稳定排序
+                  - generic [ref=f16e536]: DEV
+                - button "桶排序 按分布把元素放入桶中 DEV" [ref=f16e537] [cursor=pointer]:
+                  - generic [ref=f16e543]:
+                    - strong [ref=f16e544]: 桶排序
+                    - generic [ref=f16e545]: 按分布把元素放入桶中
+                  - generic [ref=f16e546]: DEV
+            - generic [ref=f16e548]:
+              - generic [ref=f16e549]:
+                - strong [ref=f16e550]: 第 9 章 · 中位数与顺序统计量
+                - generic [ref=f16e551]: 不完全排序也能找第 k 小
+              - generic [ref=f16e552]:
+                - button "顺序统计量 选择第 k 小元素 DEV" [ref=f16e553] [cursor=pointer]:
+                  - generic [ref=f16e559]:
+                    - strong [ref=f16e560]: 顺序统计量
+                    - generic [ref=f16e561]: 选择第 k 小元素
+                  - generic [ref=f16e562]: DEV
+                - button "中位数的中位数 最坏情况线性时间选择 DEV" [ref=f16e563] [cursor=pointer]:
+                  - generic [ref=f16e569]:
+                    - strong [ref=f16e570]: 中位数的中位数
+                    - generic [ref=f16e571]: 最坏情况线性时间选择
+                  - generic [ref=f16e572]: DEV
+      - generic [ref=f16e574]:
+        - strong [ref=f16e575]: 绘制方法
+        - generic [ref=f16e576]: 先让数字、点和递归树发生一次有意义的变化，再把变化压缩成公式；每个已实现课程都包含预测、步骤控制和结论。

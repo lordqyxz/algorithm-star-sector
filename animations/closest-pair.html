@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>最近点对：分治法如何找到全局最小距离</title>
+  <link rel="icon" href="data:,">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --ink: light-dark(#172235, #eef4ff);
+      --muted: light-dark(#607087, #aab8cc);
+      --line: light-dark(#d7e0eb, #2c3b50);
+      --surface: light-dark(#ffffff, #121c2b);
+      --surface-2: light-dark(#f3f6f9, #0d1521);
+      --surface-3: light-dark(#e9eef5, #1b293c);
+      --blue: light-dark(#2f60d6, #8eb0ff);
+      --blue-soft: light-dark(#e7edff, #22345b);
+      --orange: light-dark(#d96643, #ff9c7b);
+      --orange-soft: light-dark(#ffe9e1, #4e281f);
+      --yellow: light-dark(#e4aa21, #f2c85d);
+      --yellow-soft: light-dark(#fff3c9, #493c1a);
+      --green: light-dark(#12866d, #6bd8b0);
+      --green-soft: light-dark(#dcf4ec, #183e36);
+      --purple: light-dark(#7659d5, #b9aaff);
+      --shadow: light-dark(rgba(25, 45, 75, .12), rgba(0, 0, 0, .3));
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--surface-2); color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; }
+    button { font: inherit; }
+    button:focus-visible { outline: 3px solid color-mix(in srgb, var(--blue) 35%, transparent); outline-offset: 2px; }
+    h1, h2, h3, p { margin-top: 0; }
+    .cp-page { max-width: 1120px; margin: 0 auto; padding: 28px clamp(16px, 3vw, 40px) 42px; }
+    .cp-kicker { margin-bottom: 10px; color: var(--orange); font-size: .78rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    h1 { max-width: 850px; margin-bottom: 12px; font-size: clamp(2rem, 4.5vw, 3.35rem); font-weight: 550; letter-spacing: -.06em; line-height: 1.05; }
+    .cp-lede { max-width: 900px; margin-bottom: 24px; color: var(--muted); font-size: 1rem; line-height: 1.7; }
+    .cp-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .cp-tabs, .cp-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    .cp-tab, .cp-action { border: 1px solid var(--line); border-radius: 9px; background: var(--surface); color: var(--ink); cursor: pointer; transition: border-color .18s ease, background-color .18s ease, color .18s ease, transform .18s ease; }
+    .cp-tab:hover, .cp-action:hover { border-color: var(--blue); transform: translateY(-1px); }
+    .cp-tab { padding: 9px 12px; font-size: .84rem; }
+    .cp-tab[aria-selected="true"] { border-color: var(--orange); background: var(--orange); color: #fff; }
+    .cp-action { min-width: 68px; padding: 9px 12px; }
+    .cp-action-primary { border-color: var(--orange); background: var(--orange); color: #fff; }
+    .cp-progress { height: 5px; margin: 18px 0 12px; overflow: hidden; border-radius: 999px; background: var(--surface-3); }
+    .cp-progress-bar { width: 0; height: 100%; border-radius: inherit; background: var(--yellow); transition: width .12s linear; }
+    .cp-step-label { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; color: var(--muted); font-size: .8rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+    .cp-step-label strong { color: var(--ink); font-size: 1rem; letter-spacing: -.02em; text-transform: none; }
+    .cp-story { padding: clamp(18px, 3vw, 30px); border: 1px solid var(--line); border-radius: 14px; background: var(--surface); box-shadow: 0 18px 42px var(--shadow); }
+    .cp-formula-band { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(235px, .65fr); gap: 14px; align-items: center; margin-bottom: 18px; padding: 17px 19px; border-left: 4px solid var(--orange); border-radius: 10px; background: var(--orange-soft); }
+    .cp-formula-kicker { margin-bottom: 7px; color: var(--muted); font-size: .75rem; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
+    .cp-formula { min-height: 38px; color: var(--ink); font-family: "SFMono-Regular", Consolas, monospace; font-size: clamp(1.05rem, 2.45vw, 1.65rem); font-weight: 850; letter-spacing: -.055em; }
+    .cp-formula .recursive { color: var(--blue); }
+    .cp-formula .number { color: var(--green); }
+    .cp-formula .candidate { color: var(--orange); }
+    .cp-legend { display: grid; gap: 7px; color: var(--muted); font-size: .78rem; line-height: 1.4; }
+    .cp-legend-item { display: flex; align-items: center; gap: 7px; }
+    .cp-legend-dot { width: 10px; height: 10px; flex: 0 0 auto; border-radius: 50%; background: var(--blue); }
+    .cp-legend-dot.left { background: var(--blue); }
+    .cp-legend-dot.right { background: var(--orange); }
+    .cp-legend-dot.final { background: var(--green); }
+    .cp-main-grid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(270px, .55fr); gap: 15px; }
+    .cp-card { min-width: 0; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+    .cp-card-title { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin-bottom: 13px; color: var(--muted); font-size: .8rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+    .cp-card-title strong { color: var(--ink); font-size: 1rem; letter-spacing: -.02em; text-transform: none; }
+    .cp-canvas { width: 100%; min-height: 290px; display: block; border: 1px solid var(--line); border-radius: 10px; background: var(--surface-2); }
+    .axis { stroke: var(--line); stroke-width: 1; }
+    .split-line { stroke: var(--purple); stroke-width: 2.5; stroke-dasharray: 8 7; }
+    .strip { fill: var(--yellow); opacity: .2; }
+    .point { stroke: var(--surface); stroke-width: 2; }
+    .point.left { fill: var(--blue); }
+    .point.right { fill: var(--orange); }
+    .point.cross { fill: var(--green); }
+    .point-label { fill: var(--ink); font: 700 14px "SFMono-Regular", Consolas, monospace; }
+    .svg-caption { fill: var(--muted); font: 700 13px -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif; }
+    .pair-line { fill: none; stroke-width: 3.5; stroke-linecap: round; }
+    .left-pair { stroke: var(--blue); }
+    .right-pair { stroke: var(--orange); }
+    .cross-pair { stroke: var(--green); stroke-width: 5; }
+    .distance-label { fill: var(--ink); font: 850 13px "SFMono-Regular", Consolas, monospace; paint-order: stroke; stroke: var(--surface-2); stroke-width: 5px; stroke-linejoin: round; }
+    .cp-readout { display: grid; gap: 11px; }
+    .cp-metric { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 9px; padding: 12px; border-radius: 9px; background: var(--surface-2); }
+    .cp-metric span { color: var(--muted); font-size: .78rem; font-weight: 750; }
+    .cp-metric strong { color: var(--blue); font-family: monospace; font-size: 1.45rem; }
+    .cp-metric-green { background: var(--green-soft); }
+    .cp-metric-green strong { color: var(--green); }
+    .cp-metric-orange { background: var(--orange-soft); }
+    .cp-metric-orange strong { color: var(--orange); }
+    .cp-equation { padding: 12px; border-radius: 8px; background: var(--yellow-soft); color: var(--ink); font-family: monospace; font-size: .8rem; font-weight: 850; line-height: 1.55; }
+    .cp-note { margin: 0; color: var(--muted); font-size: .82rem; line-height: 1.6; }
+    .cp-result { margin-top: 15px; padding: 13px 14px; border-radius: 8px; background: var(--green-soft); color: var(--green); font-size: .88rem; font-weight: 800; line-height: 1.6; }
+    .cp-checks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 15px; }
+    .cp-check { padding: 12px; border: 1px solid var(--line); border-radius: 9px; background: var(--surface-2); }
+    .cp-check strong { display: block; margin-bottom: 5px; color: var(--ink); font-family: monospace; font-size: .93rem; }
+    .cp-check span { display: block; color: var(--muted); font-size: .75rem; line-height: 1.45; }
+    .cp-caption, .cp-fallback { color: var(--muted); font-size: .8rem; line-height: 1.6; }
+    .cp-caption { margin: 13px 0 0; }
+    .cp-fallback { margin: 13px 0 0; }
+    .cp-details { margin-top: 14px; color: var(--muted); font-size: .84rem; }
+    .cp-details summary { cursor: pointer; color: var(--blue); font-weight: 800; }
+    .cp-details ol { line-height: 1.7; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+    @media (max-width: 900px) { .cp-main-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 660px) {
+      .cp-page { padding-inline: 12px; }
+      .cp-story { padding: 15px; }
+      .cp-formula-band { grid-template-columns: 1fr; }
+      .cp-checks { grid-template-columns: 1fr; }
+      .cp-tab, .cp-action { padding: 8px 9px; font-size: .8rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="cp-page" id="closest-pair-page">
+    <header>
+      <p class="cp-kicker">Chapter 02 · Divide &amp; Conquer · Animation 02</p>
+      <h1>最近点对：先各自找，再检查边界</h1>
+      <p class="cp-lede">问题是：平面上有很多点，哪两个点距离最近？动画把“局部答案不一定是全局答案”画出来，再展示为什么只需检查分界线附近的少量候选点。</p>
+    </header>
+
+    <div class="cp-toolbar" role="group" aria-label="最近点对步骤控制">
+      <div class="cp-tabs" role="tablist" aria-label="最近点对五个步骤">
+        <button class="cp-tab" id="cp-tab-0" type="button" role="tab" aria-controls="cp-story" aria-selected="true" data-step="0">01 看问题</button>
+        <button class="cp-tab" id="cp-tab-1" type="button" role="tab" aria-controls="cp-story" aria-selected="false" data-step="1">02 一刀分开</button>
+        <button class="cp-tab" id="cp-tab-2" type="button" role="tab" aria-controls="cp-story" aria-selected="false" data-step="2">03 各自求解</button>
+        <button class="cp-tab" id="cp-tab-3" type="button" role="tab" aria-controls="cp-story" aria-selected="false" data-step="3">04 检查条带</button>
+        <button class="cp-tab" id="cp-tab-4" type="button" role="tab" aria-controls="cp-story" aria-selected="false" data-step="4">05 全局答案</button>
+      </div>
+      <div class="cp-actions">
+        <button class="cp-action" id="cp-prev" type="button">上一步</button>
+        <button class="cp-action cp-action-primary" id="cp-next" type="button">下一步</button>
+        <button class="cp-action" id="cp-auto" type="button">自动播放</button>
+        <button class="cp-action" id="cp-replay" type="button">重播</button>
+      </div>
+    </div>
+
+    <div class="cp-progress" id="cp-progress" role="progressbar" aria-label="最近点对教学进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="cp-progress-bar" id="cp-progress-bar"></div></div>
+
+    <section class="cp-story" id="cp-story" role="tabpanel" aria-labelledby="cp-tab-0">
+      <div class="cp-step-label"><strong id="cp-step-title">看问题：从所有点对中找最小距离</strong><span id="cp-step-counter">01 / 05</span></div>
+      <div class="cp-formula-band" id="cp-formula-band">
+        <div>
+          <p class="cp-formula-kicker">这一步，公式记录了图上的什么？</p>
+          <div class="cp-formula" id="cp-formula">目标：min <span class="number">d(Pᵢ,Pⱼ)</span></div>
+        </div>
+        <div class="cp-legend" aria-label="最近点对图例">
+          <div class="cp-legend-item"><span class="cp-legend-dot left"></span><span>蓝色：左半边局部候选</span></div>
+          <div class="cp-legend-item"><span class="cp-legend-dot right"></span><span>橙色：右半边局部候选</span></div>
+          <div class="cp-legend-item"><span class="cp-legend-dot final"></span><span>绿色：跨界后的全局答案</span></div>
+        </div>
+      </div>
+
+      <div class="cp-main-grid">
+        <div class="cp-card">
+          <div class="cp-card-title"><strong>点集：距离是图上的线段</strong><span>8 个点</span></div>
+          <svg class="cp-canvas" id="cp-canvas" viewBox="0 0 600 330" role="img" aria-label="八个点及其最近点对的分治过程">
+            <line class="axis" x1="48" y1="270" x2="565" y2="270"></line>
+            <line class="axis" x1="48" y1="42" x2="48" y2="270"></line>
+            <text class="svg-caption" x="52" y="292">x：按横坐标排序后分成左右两半</text>
+            <rect class="strip" id="cp-strip" x="192" y="42" width="211" height="228" rx="4"></rect>
+            <line class="split-line" id="cp-split" x1="300" y1="34" x2="300" y2="276"></line>
+            <text class="svg-caption" id="cp-split-label" x="306" y="54">中线 x = 5.5</text>
+
+            <line class="pair-line left-pair" id="cp-left-pair" x1="230" y1="196" x2="95" y2="228"></line>
+            <text class="distance-label" id="cp-left-distance" x="145" y="215">δL ≈ 3.16</text>
+            <line class="pair-line right-pair" id="cp-right-pair" x1="455" y1="228" x2="545" y2="100"></line>
+            <text class="distance-label" id="cp-right-distance" x="490" y="176">δR ≈ 3.16</text>
+            <line class="pair-line cross-pair" id="cp-cross-pair" x1="230" y1="196" x2="320" y2="196"></line>
+            <text class="distance-label" id="cp-cross-distance" x="247" y="185">C–E = 2</text>
+
+            <g id="cp-points">
+              <g><circle class="point left" data-point="A" cx="95" cy="228" r="8"></circle><text class="point-label" x="82" y="249">A(1,1)</text></g>
+              <g><circle class="point left" data-point="B" cx="140" cy="100" r="8"></circle><text class="point-label" x="126" y="83">B(2,5)</text></g>
+              <g><circle class="point left" data-point="C" cx="230" cy="196" r="8"></circle><text class="point-label" x="215" y="218">C(4,2)</text></g>
+              <g><circle class="point left" data-point="D" cx="275" cy="68" r="8"></circle><text class="point-label" x="262" y="53">D(5,6)</text></g>
+              <g><circle class="point right" data-point="E" cx="320" cy="196" r="8"></circle><text class="point-label" x="325" y="218">E(6,2)</text></g>
+              <g><circle class="point right" data-point="F" cx="410" cy="36" r="8"></circle><text class="point-label" x="414" y="28">F(8,7)</text></g>
+              <g><circle class="point right" data-point="G" cx="455" cy="228" r="8"></circle><text class="point-label" x="443" y="249">G(9,1)</text></g>
+              <g><circle class="point right" data-point="H" cx="545" cy="100" r="8"></circle><text class="point-label" x="531" y="83">H(11,5)</text></g>
+            </g>
+          </svg>
+        </div>
+
+        <div class="cp-card cp-readout">
+          <div class="cp-card-title"><strong>计算台</strong><span>数字跟着图走</span></div>
+          <div class="cp-metric"><span>左半边最小距离 δL</span><strong id="cp-delta-left">—</strong></div>
+          <div class="cp-metric cp-metric-orange"><span>右半边最小距离 δR</span><strong id="cp-delta-right">—</strong></div>
+          <div class="cp-metric cp-metric-green"><span>当前最好 δ</span><strong id="cp-delta">—</strong></div>
+          <div class="cp-equation" id="cp-equation">先把所有点对看成候选。</div>
+          <p class="cp-note" id="cp-note">最直接的方法是枚举所有点对，但点一多，比较次数会接近 n²。</p>
+        </div>
+      </div>
+
+      <div class="cp-result" id="cp-result">下一步：画出中线，把一个大问题分成左右两个小问题。</div>
+      <div class="cp-checks">
+        <div class="cp-check"><strong>Divide</strong><span id="cp-divide-text">按 x 坐标把点分成左、右两半。</span></div>
+        <div class="cp-check"><strong>Conquer</strong><span id="cp-conquer-text">递归地在两半内部找最近点对。</span></div>
+        <div class="cp-check"><strong>Combine</strong><span id="cp-combine-text">只检查中线附近条带内可能跨界的点。</span></div>
+      </div>
+    </section>
+
+    <p class="cp-caption" id="cp-caption" role="status" aria-live="polite">第一步：先观察“最近”是几何距离，不是点的编号。</p>
+    <details class="cp-details">
+      <summary>只看文字版：为什么还要检查条带？</summary>
+      <ol>
+        <li>左半边和右半边各自递归求出 δL、δR，先取 δ=min(δL,δR)。</li>
+        <li>如果一对点跨过中线却比 δ 更近，那么它们必须都离中线不超过 δ；否则横向距离本身就已经大于 δ。</li>
+        <li>因此只需把注意力放到中线两侧宽度为 δ 的条带，并按 y 坐标检查其中的邻近候选点；合并阶段是线性的。</li>
+        <li>递推式为 T(n)=2T(n/2)+O(n)，所以整体复杂度为 Θ(n log n)。</li>
+      </ol>
+    </details>
+    <p class="cp-fallback">如果 Anime.js 或 CDN 不可用，页面仍会显示点集、分界线、局部距离、条带和最终答案；动画只是把同一条数学因果链按步骤播放。</p>
+    <p class="sr-only">本页面用八个平面点展示最近点对的分治法：左右递归求局部最小距离，再检查中线条带中的跨界候选，最终 C 与 E 的距离 2 最小。</p>
+  </main>
+
+  <noscript><p>当前浏览器未启用 JavaScript。请阅读页面中静态显示的点集、条带和最近点对结论。</p></noscript>
+
+  <script src="https://cdn.jsdelivr.net/npm/animejs/dist/bundles/anime.umd.min.js"></script>
+  <script>
+    (function () {
+      var animeApi = window.anime;
+      var nextButton = document.getElementById("cp-next");
+      var prevButton = document.getElementById("cp-prev");
+      var autoButton = document.getElementById("cp-auto");
+      var replayButton = document.getElementById("cp-replay");
+      var progressBar = document.getElementById("cp-progress-bar");
+      var progressTrack = document.getElementById("cp-progress");
+      var caption = document.getElementById("cp-caption");
+      var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      var canAnimate = !!(animeApi && typeof animeApi.animate === "function" && typeof animeApi.createTimeline === "function");
+      var currentStep = 0;
+      var autoTimer = null;
+      var currentAnimation = null;
+
+      var STEPS = [
+        { title: "看问题：从所有点对中找最小距离", formula: '目标：min <span class="number">d(Pᵢ,Pⱼ)</span>', left: "—", right: "—", delta: "—", equation: "先把所有点对看成候选。", note: "最直接的方法是枚举所有点对，但点一多，比较次数会接近 n²。", result: "下一步：画出中线，把一个大问题分成左右两个小问题。", caption: "第一步：先观察“最近”是几何距离，不是点的编号。", layer: 0 },
+        { title: "一刀分开：把点集分成左、右两半", formula: '<span class="recursive">P = Pₗ ∪ Pᵣ</span>', left: "待求", right: "待求", delta: "待求", equation: "8 个点 → 左 4 个 + 右 4 个", note: "分界线只负责缩小候选范围；真正的最近点对可能在一边，也可能跨过这条线。", result: "中线出现了，但现在还不能宣布答案：跨线的 C–E 还没有被检查。", caption: "第二步：分治的 Divide 不是随便切，而是让两边规模接近。", layer: 1 },
+        { title: "各自求解：先得到两个局部答案", formula: 'δ = min(<span class="number">δₗ=3.16</span>, <span class="number">δᵣ=3.16</span>) = <span class="number">3.16</span>', left: "3.16", right: "3.16", delta: "3.16", equation: "δ = min(δₗ, δᵣ) = min(3.16, 3.16) = 3.16", note: "左边 A–C、右边 G–H 各自是本半边最短；但局部最短不等于全局最短。", result: "局部最好距离是 δ=3.16。接下来只需找：有没有跨过中线、却比 3.16 更短的点对？", caption: "第三步：Conquer 得到两个局部最小值，但答案还可能藏在边界两侧。", layer: 2 },
+        { title: "检查条带：只看可能跨界的候选", formula: '条带宽度 = <span class="candidate">2δ = 6.32</span>；C–E：<span class="number">2 &lt; 3.16</span>', left: "3.16", right: "3.16", delta: "3.16 → 2", equation: "只检查 |x−5.5|≤3.16 的点；d(C,E)=2", note: "若跨界点离中线超过 δ，横向距离就已经不可能小于 δ；所以条带外的点不用比较。", result: "C 和 E 位于条带内，距离 2 小于原来的 δ=3.16；它们推翻了“局部答案就是全局答案”。", caption: "第四步：Combine 的数学本质是几何剪枝——排除不可能更近的点。", layer: 3 },
+        { title: "全局答案：跨界候选赢了", formula: 'δ* = <span class="number">d(C,E)=2</span>；<span class="recursive">T(n)=2T(n/2)+O(n)</span> ⇒ Θ(n log n)', left: "3.16", right: "3.16", delta: "2", equation: "min(δₗ, δᵣ, δcross) = min(3.16, 3.16, 2) = 2", note: "递归树负责两半，条带扫描负责合并；每层合并只做线性筛选，因此是 n log n。", result: "完整链条：分成左右两半 → 各自求解 → 检查条带 → 得到 C–E，最小距离为 2。", caption: "第五步：最近点对把分治法的 Divide、Conquer、Combine 和递推式串成一件事。", layer: 4 }
+      ];
+
+      function setProgress(value) {
+        var safeValue = Math.max(0, Math.min(100, Math.round(value || 0)));
+        progressBar.style.width = safeValue + "%";
+        progressTrack.setAttribute("aria-valuenow", String(safeValue));
+      }
+      function stopAuto() { if (autoTimer) window.clearInterval(autoTimer); autoTimer = null; autoButton.textContent = "自动播放"; }
+      function pauseAnimation() { if (currentAnimation && currentAnimation.pause) currentAnimation.pause(); currentAnimation = null; }
+      function updateTabs() { document.querySelectorAll(".cp-tab").forEach(function (tab) { tab.setAttribute("aria-selected", String(Number(tab.dataset.step) === currentStep)); }); }
+      function updateText(step) {
+        document.getElementById("cp-step-title").textContent = step.title;
+        document.getElementById("cp-step-counter").textContent = String(currentStep + 1).padStart(2, "0") + " / 05";
+        document.getElementById("cp-story").setAttribute("aria-labelledby", "cp-tab-" + currentStep);
+        document.getElementById("cp-formula").innerHTML = step.formula;
+        document.getElementById("cp-delta-left").textContent = step.left;
+        document.getElementById("cp-delta-right").textContent = step.right;
+        document.getElementById("cp-delta").textContent = step.delta;
+        document.getElementById("cp-equation").textContent = step.equation;
+        document.getElementById("cp-note").textContent = step.note;
+        document.getElementById("cp-result").textContent = step.result;
+        caption.textContent = step.caption;
+      }
+      function setSvgState(step, animateChange) {
+        var showSplit = step.layer >= 1;
+        var showLocal = step.layer >= 2;
+        var showStrip = step.layer >= 3;
+        var showCross = step.layer >= 3;
+        var final = step.layer >= 4;
+        var split = document.getElementById("cp-split");
+        var splitLabel = document.getElementById("cp-split-label");
+        var strip = document.getElementById("cp-strip");
+        var leftPair = document.getElementById("cp-left-pair");
+        var rightPair = document.getElementById("cp-right-pair");
+        var crossPair = document.getElementById("cp-cross-pair");
+        var leftDistance = document.getElementById("cp-left-distance");
+        var rightDistance = document.getElementById("cp-right-distance");
+        var crossDistance = document.getElementById("cp-cross-distance");
+        split.style.opacity = showSplit ? "1" : "0";
+        splitLabel.style.opacity = showSplit ? "1" : "0";
+        strip.style.opacity = showStrip ? ".2" : "0";
+        leftPair.style.opacity = showLocal ? "1" : "0";
+        rightPair.style.opacity = showLocal ? "1" : "0";
+        leftDistance.style.opacity = showLocal ? "1" : "0";
+        rightDistance.style.opacity = showLocal ? "1" : "0";
+        crossPair.style.opacity = showCross ? "1" : "0";
+        crossDistance.style.opacity = showCross ? "1" : "0";
+        document.querySelectorAll("#cp-points .point").forEach(function (point) {
+          point.classList.toggle("cross", final && (point.dataset.point === "C" || point.dataset.point === "E"));
+          point.style.r = final && (point.dataset.point === "C" || point.dataset.point === "E") ? "10" : "8";
+        });
+        if (animateChange && canAnimate && !reducedMotion) {
+          var targets = [];
+          if (showSplit) targets.push(split, splitLabel);
+          if (showLocal) targets.push(leftPair, rightPair, leftDistance, rightDistance);
+          if (showStrip) targets.push(strip);
+          if (showCross) targets.push(crossPair, crossDistance);
+          if (targets.length) {
+            targets.forEach(function (target) { target.style.opacity = "0"; });
+            currentAnimation = animeApi.animate(targets, { opacity: [0, 1], duration: 460, delay: animeApi.stagger(70), ease: "out(3)" });
+          }
+        }
+      }
+      function setPointState(step) {
+        var final = step.layer >= 4;
+        document.querySelectorAll("#cp-points g").forEach(function (group) { group.style.opacity = "1"; });
+        if (step.layer === 0) document.querySelectorAll("#cp-left-pair, #cp-right-pair, #cp-cross-pair, #cp-left-distance, #cp-right-distance, #cp-cross-distance").forEach(function (node) { node.style.opacity = "0"; });
+        if (final && canAnimate && !reducedMotion) {
+          currentAnimation = animeApi.animate(document.querySelectorAll("#cp-points .point"), { scale: [{ to: 1.18 }, { to: 1 }], duration: 450, delay: animeApi.stagger(45), ease: "inOut(2)" });
+        }
+      }
+      function resetVisual(step) {
+        pauseAnimation();
+        updateTabs();
+        updateText(STEPS[step]);
+        setSvgState(STEPS[step], false);
+        setPointState(STEPS[step]);
+        setProgress(step / (STEPS.length - 1) * 100);
+        nextButton.disabled = step >= STEPS.length - 1;
+        prevButton.disabled = step <= 0;
+      }
+      function goToStep(step, direction) {
+        var bounded = Math.max(0, Math.min(STEPS.length - 1, step));
+        pauseAnimation();
+        currentStep = bounded;
+        updateTabs();
+        updateText(STEPS[bounded]);
+        setProgress(bounded / (STEPS.length - 1) * 100);
+        nextButton.disabled = bounded >= STEPS.length - 1;
+        prevButton.disabled = bounded <= 0;
+        setSvgState(STEPS[bounded], direction >= 0);
+        setPointState(STEPS[bounded]);
+      }
+      function startAuto() {
+        if (autoTimer) { stopAuto(); return; }
+        autoButton.textContent = "暂停自动";
+        if (currentStep >= STEPS.length - 1) goToStep(0, -1);
+        autoTimer = window.setInterval(function () {
+          if (currentStep >= STEPS.length - 1) stopAuto();
+          else goToStep(currentStep + 1, 1);
+        }, 2100);
+      }
+      nextButton.addEventListener("click", function () { stopAuto(); goToStep(currentStep + 1, 1); });
+      prevButton.addEventListener("click", function () { stopAuto(); goToStep(currentStep - 1, -1); });
+      replayButton.addEventListener("click", function () { stopAuto(); goToStep(0, -1); });
+      autoButton.addEventListener("click", startAuto);
+      document.querySelectorAll(".cp-tab").forEach(function (tab, index, tabs) {
+        tab.addEventListener("click", function () { stopAuto(); goToStep(Number(tab.dataset.step), Number(tab.dataset.step) >= currentStep ? 1 : -1); });
+        tab.addEventListener("keydown", function (event) {
+          if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+          event.preventDefault();
+          var nextIndex = event.key === "ArrowRight" ? (index + 1) % tabs.length : (index - 1 + tabs.length) % tabs.length;
+          tabs[nextIndex].focus();
+          stopAuto();
+          goToStep(nextIndex, nextIndex >= currentStep ? 1 : -1);
+        });
+      });
+
+      if (canAnimate) resetVisual(0);
+      else { updateText(STEPS[0]); setSvgState(STEPS[0], false); setProgress(0); }
+    }());
+  </script>
+</body>
+</html>

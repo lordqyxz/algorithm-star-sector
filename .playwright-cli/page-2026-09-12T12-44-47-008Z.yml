@@ -1,0 +1,109 @@
+- generic [ref=f3e3]:
+  - complementary [ref=f3e4]:
+    - generic [ref=f3e10]:
+      - strong [ref=f3e11]: Algorithm
+      - generic [ref=f3e12]: Animation Studio
+    - generic [ref=f3e13]: LESSONS
+    - navigation "算法课程导航" [ref=f3e14]:
+      - button "分治法 最近点对的跨界候选" [ref=f3e15] [cursor=pointer]:
+        - generic [ref=f3e21]:
+          - generic [ref=f3e22]: 分治法
+          - generic [ref=f3e23]: 最近点对的跨界候选
+      - button "排序算法 归并 + 堆 + 快速" [ref=f3e24] [cursor=pointer]:
+        - generic [ref=f3e30]:
+          - generic [ref=f3e31]: 排序算法
+          - generic [ref=f3e32]: 归并 + 堆 + 快速
+      - button "主方法 看递归树中谁在主导" [active] [ref=f3e33] [cursor=pointer]:
+        - generic [ref=f3e39]:
+          - generic [ref=f3e40]: 主方法
+          - generic [ref=f3e41]: 看递归树中谁在主导
+    - generic [ref=f3e42]: 本地静态站点React 19.3 · Anime.js 4.5
+  - main [ref=f3e44]:
+    - generic [ref=f3e46]:
+      - text: 算法动画站
+      - generic [ref=f3e49]: /
+      - text: Chapter 02
+    - generic [ref=f3e50]:
+      - generic [ref=f3e51]:
+        - paragraph [ref=f3e52]: ALGORITHM ANIMATION STUDIO · CHAPTER 02
+        - heading "把算法的“为什么”画出来" [level=1] [ref=f3e53]
+        - paragraph [ref=f3e54]: 面向课堂的可操作动画：先让数字、点和递归树发生变化，再把变化压缩成公式。
+      - generic [ref=f3e60]: →
+    - generic [ref=f3e66]:
+      - tablist "算法课程" [ref=f3e67]:
+        - tab "分治法" [ref=f3e68] [cursor=pointer]
+        - tab "排序算法" [ref=f3e69] [cursor=pointer]
+        - tab "主方法" [selected] [ref=f3e70] [cursor=pointer]
+      - tabpanel "主方法" [ref=f3e457]:
+        - generic [ref=f3e458]:
+          - generic [ref=f3e459]:
+            - generic [ref=f3e460]:
+              - paragraph [ref=f3e461]: ANIMATION 03 · MASTER METHOD
+              - heading "场景一：每层都有 16 的工作量" [level=2] [ref=f3e462]
+              - paragraph [ref=f3e463]: 先把整层工作量算出来，再看相邻两层的比例 r 决定谁在主导。
+            - generic [ref=f3e464]:
+              - text: LESSON
+              - strong [ref=f3e465]: "01"
+              - generic [ref=f3e466]: / 03
+          - group "场景一：每层都有 16 的工作量步骤控制" [ref=f3e467]:
+            - tablist "场景一：每层都有 16 的工作量步骤" [ref=f3e468]:
+              - tab "01 平衡" [selected] [ref=f3e469] [cursor=pointer]
+              - tab "02 叶子主导" [ref=f3e470] [cursor=pointer]
+              - tab "03 根部主导" [ref=f3e471] [cursor=pointer]
+            - generic [ref=f3e472]:
+              - button "上一步" [disabled] [ref=f3e473]
+              - button "下一步" [ref=f3e476] [cursor=pointer]
+              - button "自动播放" [ref=f3e479] [cursor=pointer]
+              - button "重播" [ref=f3e482] [cursor=pointer]
+          - progressbar "教学进度" [ref=f3e486]
+          - generic [ref=f3e487]:
+            - generic [ref=f3e488]:
+              - generic [ref=f3e489]: 公式不是结论，它是柱状图的读数
+              - strong [ref=f3e490]: T(16)=2T(8)+16
+              - generic [ref=f3e491]: f(m)=m · r=1
+            - generic [ref=f3e492]:
+              - generic [ref=f3e493]:
+                - heading "递归树每层总工作量" [level=3] [ref=f3e495]
+                - generic "递归树每层工作量柱状图" [ref=f3e497]:
+                  - generic [ref=f3e498]:
+                    - generic [ref=f3e499]: "16"
+                    - generic [ref=f3e501]: 第 0 层
+                  - generic [ref=f3e502]:
+                    - generic [ref=f3e503]: "16"
+                    - generic [ref=f3e505]: 第 1 层
+                  - generic [ref=f3e506]:
+                    - generic [ref=f3e507]: "16"
+                    - generic [ref=f3e509]: 第 2 层
+                  - generic [ref=f3e510]:
+                    - generic [ref=f3e511]: "16"
+                    - generic [ref=f3e513]: 第 3 层
+                  - generic [ref=f3e514]:
+                    - generic [ref=f3e515]: "16"
+                    - generic [ref=f3e517]: 第 4 层
+              - generic [ref=f3e518]:
+                - heading "真正要比较的数字" [level=3] [ref=f3e520]
+                - generic [ref=f3e521]:
+                  - generic [ref=f3e522]:
+                    - generic [ref=f3e523]: 整层工作量
+                    - generic [ref=f3e524]: Wᵢ = aⁱ f(n/bⁱ)
+                    - generic [ref=f3e525]: 相邻层比例
+                    - generic [ref=f3e526]: r=1
+                  - paragraph [ref=f3e527]: 保持 a=2、b=2、n=16 不变，只改变 f(m)，柱状图就会改变方向。
+            - region [ref=f3e528]:
+              - generic [ref=f3e533]:
+                - text: 先猜一步
+                - heading "当每层工作量都是 16 时，哪一层会主导总复杂度？" [level=3] [ref=f3e534]
+              - group "预测答案" [ref=f3e535]:
+                - button "A 根部，因为它最先出现" [ref=f3e536] [cursor=pointer]:
+                  - generic [ref=f3e537]: A
+                  - text: 根部，因为它最先出现
+                - button "B 每层贡献相同，要看层数" [ref=f3e538] [cursor=pointer]:
+                  - generic [ref=f3e539]: B
+                  - text: 每层贡献相同，要看层数
+                - button "C 叶子，因为它数量最多" [ref=f3e540] [cursor=pointer]:
+                  - generic [ref=f3e541]: C
+                  - text: 叶子，因为它数量最多
+            - generic [ref=f3e542]: 相邻两层一样长；5 层相加，所以总量是 Θ(n log n)。
+      - generic [ref=f3e151]:
+        - strong [ref=f3e152]: 教学路线
+        - generic [ref=f3e153]: 先看排序算法的真实数据变化，再看最近点对如何保留跨界候选，最后用主方法比较递归树各层的主导关系。
