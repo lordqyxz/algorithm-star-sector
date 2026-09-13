@@ -1,0 +1,249 @@
+import { Container, Graphics, Text } from 'pixi.js'
+import { animate } from 'animejs'
+import type { Game, GameScene } from '../core/app'
+import { C, makeButton, makePanel, makeText, type ButtonHandle } from '../core/ui'
+import { gameLevels } from '../levels'
+import { canExecute, foldExecute, medalFor, medalNames } from '../sim'
+import { loadSave, saveRecord } from '../save'
+import { MapScene } from './MapScene'
+import type { ExecuteCommand, ExecuteLevel as LevelData, LevelVariant, SaveData } from '../types'
+
+type ExecuteStateView = ReturnType<typeof foldExecute>
+
+const CELL = 46
+const GAP = 7
+const RADIUS = 8
+
+const palette = {
+  default: { fill: C.cellBg, stroke: C.cellBorder, text: C.muted },
+  sorted: { fill: C.greenBg, stroke: C.greenBorder, text: C.green },
+  hole: { fill: 0xffffff, stroke: 0xd3dce6, text: 0xffffff },
+  key: { fill: C.yellowBg, stroke: C.yellow, text: C.yellow },
+} as const
+
+type CellView = { container: Container; body: Graphics; label: Text; kind: keyof typeof palette; col: number }
+
+function drawCell(body: Graphics, label: Text, kind: keyof typeof palette, value: number) {
+  const theme = palette[kind]
+  body.clear()
+  body.roundRect(0, 0, CELL, CELL, RADIUS)
+  body.fill({ color: theme.fill })
+  body.stroke({ width: 1, color: theme.stroke })
+  label.text = kind === 'hole' ? '' : String(value)
+  label.style.fill = theme.text
+}
+
+/** 操演关：拿起、比较、右移、放下。规则来自 sim.ts；本场景只做表现与输入。 */
+export class LevelScene implements GameScene {
+  readonly container = new Container()
+  private level: LevelData
+  private variantId: string
+  private commands: ExecuteCommand[] = []
+  private undoCount = 0
+  private answered = new Set<string>()
+  private predictionChoice: { variantId: string; index: number } | null = null
+  private savedKeys = new Set<string>()
+  private cellViews = new Map<string, CellView>()
+  private shelfLayer = new Container()
+  private dynamic = new Container()
+  private chipLayer = new Container()
+  private buttons: Record<'pick' | 'compare' | 'shift' | 'drop' | 'undo', ButtonHandle>
+  private keyHandler: (event: KeyboardEvent) => void
+
+  constructor(private game: Game, private levelIndex: number) {
+    this.level = gameLevels[levelIndex]
+    this.variantId = this.level.variants[0].id
+
+    makeText(this.container, 24, 20, this.level.title, { size: 22, weight: '800' })
+    makeText(this.container, 24, 52, this.level.brief, { size: 12, color: C.muted, wordWrap: 700 })
+    makeButton(this.container, { x: 936 - 96, y: 20, w: 96, label: '返回地图', variant: 'outline', onTap: () => this.backToMap() })
+    this.container.addChild(this.chipLayer)
+    this.container.addChild(this.shelfLayer)
+    this.container.addChild(this.dynamic)
+
+    const y = { chips: 86, hand: 128, shelf: 178, verdict: 244, buttons: 292, counters: 344, keys: 380 }
+    this.buttons = {
+      pick: makeButton(this.container, { x: 24, y: y.buttons, w: 122, label: '拿起下一张 [P]', onTap: () => this.run('pick') }),
+      compare: makeButton(this.container, { x: 154, y: y.buttons, w: 122, label: '与左邻比较 [C]', onTap: () => this.run('compare') }),
+      shift: makeButton(this.container, { x: 284, y: y.buttons, w: 110, label: '右移一格 [S]', onTap: () => this.run('shift') }),
+      drop: makeButton(this.container, { x: 402, y: y.buttons, w: 110, label: '放回洞里 [D]', onTap: () => this.run('drop') }),
+      undo: makeButton(this.container, { x: 520, y: y.buttons, w: 112, label: '撤销 [U]', variant: 'outline', onTap: () => this.undo() }),
+    }
+    makeButton(this.container, { x: 640, y: y.buttons, w: 90, label: '重开 [R]', variant: 'ghost', onTap: () => this.restart() })
+    makeText(this.container, 24, y.keys, '零惩罚：撤销和重开都不影响奖章——奖章只看你是否靠撤销过关。', { size: 11, color: C.faint })
+
+    this.keyHandler = (event: KeyboardEvent) => {
+      if (event.metaKey || event.ctrlKey || event.altKey) return
+      const map: Record<string, () => void> = { p: () => this.run('pick'), c: () => this.run('compare'), s: () => this.run('shift'), d: () => this.run('drop'), u: () => this.undo(), r: () => this.restart() }
+      const action = map[event.key.toLowerCase()]
+      if (action) { event.preventDefault(); action() }
+    }
+    window.addEventListener('keydown', this.keyHandler)
+    this.refresh()
+  }
+
+  private get variant(): LevelVariant {
+    return this.level.variants.find(item => item.id === this.variantId) ?? this.level.variants[0]
+  }
+
+  private get state() {
+    return foldExecute(this.variant, this.commands)
+  }
+
+  private run(command: ExecuteCommand['type']) {
+    if (!canExecute(this.state, command)) return
+    this.commands = [...this.commands, { type: command } as ExecuteCommand]
+    this.refresh()
+  }
+
+  private undo() {
+    if (this.commands.length === 0) return
+    this.commands = this.commands.slice(0, -1)
+    this.undoCount += 1
+    this.refresh()
+  }
+
+  private restart() {
+    this.commands = []
+    this.undoCount = 0
+    this.refresh()
+  }
+
+  private backToMap() {
+    this.game.switch(g => new MapScene(g))
+  }
+
+  private refresh() {
+    const state = this.state
+    const variant = this.variant
+    this.buttons.pick.setEnabled(canExecute(state, 'pick'))
+    this.buttons.compare.setEnabled(canExecute(state, 'compare'))
+    this.buttons.shift.setEnabled(canExecute(state, 'shift'))
+    this.buttons.drop.setEnabled(canExecute(state, 'drop'))
+    this.buttons.undo.setEnabled(this.commands.length > 0)
+    this.buttons.undo.setLabel(`撤销 ${this.undoCount} [U]`)
+
+    this.chipLayer.removeChildren().forEach(child => child.destroy({ children: true }))
+    this.level.variants.forEach(item => {
+      const active = item.id === this.variantId
+      makeButton(this.chipLayer, { x: 24 + this.level.variants.indexOf(item) * 150, y: 86, w: 140, h: 30, label: `${item.label} · ${item.detail}`, variant: active ? 'solid' : 'outline', size: 11, onTap: () => { this.variantId = item.id; this.commands = []; this.undoCount = 0; this.predictionChoice = null; this.refresh() } })
+    })
+
+    this.syncShelf(state)
+
+    this.dynamic.removeChildren().forEach(child => child.destroy({ children: true }))
+    makeText(this.dynamic, 24, 128, '手', { size: 12, color: C.faint, family: 'ui-monospace, Menlo, monospace' })
+    if (state.held) {
+      makePanel(this.dynamic, 46, 118, CELL, CELL, { fill: palette.key.fill, stroke: palette.key.stroke, radius: RADIUS })
+      makeText(this.dynamic, 46 + CELL / 2, 118 + CELL / 2, String(state.held.value), { size: 17, color: palette.key.text, family: 'ui-monospace, Menlo, monospace', anchorX: 0.5, anchorY: 0.5, weight: '800' })
+      makeText(this.dynamic, 102, 130, '暂存的 key；货架上的虚线格是洞', { size: 11, color: C.faint })
+    } else {
+      makePanel(this.dynamic, 46, 118, CELL, CELL, { fill: 0xffffff, stroke: C.cellBorder, radius: RADIUS })
+      makeText(this.dynamic, 46 + CELL / 2, 118 + CELL / 2, '空', { size: 12, color: C.faint, anchorX: 0.5, anchorY: 0.5 })
+      makeText(this.dynamic, 102, 130, '点「拿起下一张」取走绿色区右侧第一张牌', { size: 11, color: C.faint })
+    }
+
+    const holeText = state.verdict === 'greater' && state.hole !== null
+      ? `${state.cells[state.hole - 1].value} > ${state.held?.value}：左邻更大，要给它让位`
+      : state.verdict === 'less-equal' && state.hole !== null
+        ? `${state.cells[state.hole - 1].value} ≤ ${state.held?.value}：找到位置，可以放下`
+        : state.hole === 0 && state.held
+          ? '洞已到最左端：免比较，直接放下（这就是 while i>0 的短路边界）'
+          : '还没有比较结论：先「与左邻比较」，再决定右移还是放下'
+    const verdictColor = state.verdict === 'greater' ? C.orange : state.verdict === 'less-equal' ? C.green : C.muted
+    makeText(this.dynamic, 24, 248, holeText, { size: 13, color: verdictColor, weight: '700', wordWrap: 900, lineHeight: 18 })
+
+    makeText(this.dynamic, 24, 344, `⚡ 步数 ${state.moves} / 最优 ${variant.par.moves}`, { size: 13, color: C.ink, family: 'ui-monospace, Menlo, monospace' })
+    makeText(this.dynamic, 260, 344, `🔍 比较 ${state.compares} / 最优 ${variant.par.compares}`, { size: 13, color: C.ink, family: 'ui-monospace, Menlo, monospace' })
+    makeText(this.dynamic, 520, 344, `已整理 ${state.sortedCount} / ${state.cells.length}`, { size: 13, color: C.green, family: 'ui-monospace, Menlo, monospace' })
+
+    const gate = variant.prediction && !this.answered.has(variant.id) && (variant.prediction.when === 'done' ? state.done : !state.done && state.compares >= 1) ? variant.prediction : null
+    if (state.done) this.drawWin(state, variant)
+    if (gate) this.drawPrediction(variant, state.done)
+  }
+
+  private syncShelf(state: ExecuteStateView) {
+    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    const seen = new Set<string>()
+    state.cells.forEach((cell, index) => {
+      seen.add(cell.id)
+      const isHole = state.hole === index
+      const kind = isHole ? 'hole' : index < state.sortedCount ? 'sorted' : 'default'
+      let view = this.cellViews.get(cell.id)
+      if (!view) {
+        const container = new Container()
+        const body = new Graphics()
+        const label = new Text({ text: '', style: { fontFamily: 'ui-monospace, Menlo, monospace', fontSize: 18, fontWeight: '800' } })
+        label.anchor.set(0.5)
+        label.position.set(CELL / 2, CELL / 2)
+        container.addChild(body, label)
+        container.position.set(24 + index * (CELL + GAP), 178)
+        this.shelfLayer.addChild(container)
+        drawCell(body, label, kind, cell.value)
+        this.cellViews.set(cell.id, { container, body, label, kind, col: index })
+        return
+      }
+      if (view.kind !== kind) { view.kind = kind; drawCell(view.body, view.label, kind, cell.value) }
+      const targetX = 24 + index * (CELL + GAP)
+      if (view.col !== index) {
+        view.col = index
+        if (reduceMotion) view.container.position.set(targetX, 178)
+        else animate(view.container, { x: targetX, duration: 220, ease: 'out(3)' })
+      }
+    })
+    this.cellViews.forEach((view, id) => {
+      if (!seen.has(id)) { view.container.destroy({ children: true }); this.cellViews.delete(id) }
+    })
+  }
+
+  private drawPrediction(variant: LevelVariant, done: boolean) {
+    const prediction = variant.prediction!
+    makePanel(this.dynamic, 0, 0, 960, 600, { fill: C.dim, alpha: 0.35, radius: 0 })
+    makePanel(this.dynamic, 120, 130, 720, 300, { stroke: C.yellow, fill: 0xfffaf0 })
+    makeText(this.dynamic, 148, 152, '先猜一步', { size: 12, color: C.yellow, weight: '800' })
+    makeText(this.dynamic, 148, 176, prediction.prompt, { size: 14, weight: '700', wordWrap: 660, lineHeight: 20 })
+    const choice = this.predictionChoice?.variantId === variant.id ? this.predictionChoice : null
+    prediction.options.forEach((option, index) => {
+      const correct = index === prediction.answer
+      const revealed = choice !== null
+      const label = `${String.fromCharCode(65 + index)}  ${option}`
+      makeButton(this.dynamic, { x: 148, y: 216 + index * 46, w: 664, h: 38, label, variant: revealed ? (correct ? 'outline' : 'ghost') : 'outline', size: 12, onTap: () => { this.predictionChoice = { variantId: variant.id, index }; this.refresh() } })
+    })
+    if (choice) {
+      const correct = choice.index === prediction.answer
+      makeText(this.dynamic, 148, 356, correct ? '✓ 判断正确' : '✗ 再看一眼图上的证据', { size: 13, color: correct ? C.green : C.orange, weight: '800' })
+      makeText(this.dynamic, 148, 378, prediction.explanation, { size: 12, color: C.muted, wordWrap: 660, lineHeight: 18 })
+      makeButton(this.dynamic, { x: 668, y: 374, w: 96, label: done ? '查看结算' : '继续', variant: 'solid', onTap: () => { this.answered.add(variant.id); this.predictionChoice = null; this.refresh() } })
+    }
+  }
+
+  private drawWin(state: ExecuteStateView, variant: LevelVariant) {
+    const medal = medalFor(this.undoCount)
+    const save = loadSave()
+    const previous = save[variant.id]
+    const medalRank = { bronze: 1, silver: 2, gold: 3 } as const
+    if (!previous || medalRank[medal] > medalRank[previous.medal]) {
+      const next: SaveData = { ...save, [variant.id]: { medal, moves: state.moves, compares: state.compares } }
+      saveRecord(next)
+    }
+    if (this.savedKeys.has(variant.id)) return
+    this.savedKeys.add(variant.id)
+    this.game.app.stage.emit('algorithmia-win')
+
+    makePanel(this.dynamic, 0, 0, 960, 600, { fill: C.dim, alpha: 0.35, radius: 0 })
+    makePanel(this.dynamic, 200, 150, 560, 260, { stroke: C.greenBorder, fill: 0xf0fbf6 })
+    makeText(this.dynamic, 232, 178, `${medalNames[medal]}（用了 ${this.undoCount} 次撤销）`, { size: 22, color: C.green, weight: '800' })
+    makeText(this.dynamic, 232, 220, `⚡ ${state.moves} 步（最优 ${variant.par.moves}） · 🔍 ${state.compares} 次比较（最优 ${variant.par.compares}）`, { size: 14, color: C.ink, family: 'ui-monospace, Menlo, monospace' })
+    makeText(this.dynamic, 232, 250, state.moves === variant.par.moves && state.compares === variant.par.compares ? '完美复现标准插入排序的动作数！' : '对照理论最优想一想：差距发生在哪几张牌上？', { size: 12, color: C.muted, wordWrap: 500 })
+    const nextIndex = this.levelIndex + 1
+    const hasNext = nextIndex < gameLevels.length
+    makeButton(this.dynamic, { x: 232, y: 340, w: 120, label: '再玩一次', variant: 'outline', onTap: () => this.restart() })
+    if (hasNext) makeButton(this.dynamic, { x: 368, y: 340, w: 120, label: '下一关', variant: 'solid', onTap: () => { this.game.switch(g => new LevelScene(g, nextIndex)) } })
+    makeButton(this.dynamic, { x: hasNext ? 504 : 368, y: 340, w: 120, label: '返回地图', variant: 'ghost', onTap: () => this.backToMap() })
+  }
+
+  destroy() {
+    window.removeEventListener('keydown', this.keyHandler)
+    this.container.destroy({ children: true })
+  }
+}

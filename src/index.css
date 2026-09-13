@@ -157,48 +157,9 @@
 .bucket-empty { color:#b8c4d4; font:700 .68rem/1 monospace; }
 .bar-unit { color:#9aa8ba; font:750 .66rem/1 monospace; }
 .shape-label { font-family:monospace; font-size:13px; font-weight:750; }
-/* —— 算法王国（游戏模式 M0） —— */
-.game-screen { min-width:0; padding-top:8px; }
-.game-screen-header { display:flex; justify-content:space-between; gap:22px; align-items:start; padding:24px 0 18px; }
-.game-screen-header h2 { margin:0; font-size:clamp(1.3rem,2.5vw,2rem); letter-spacing:-.045em; }
-.game-brief { max-width:700px; margin:8px 0 0; color:#607087; font-size:.9rem; line-height:1.55; }
-.game-header-actions { display:flex; flex:0 0 auto; gap:8px; align-items:center; }
-.game-progress { color:#607087; font:800 .72rem/1 monospace; }
-.game-plaza { margin-bottom:13px; border-color:#c5b9ec; background:#f7f4ff; }
-.game-plaza .ui-card-content { display:grid; gap:7px; }
-.game-plaza-head { display:flex; gap:8px; align-items:center; color:#7659d5; } .game-plaza-head strong { color:#172235; font-size:.86rem; }
-.game-plaza p { margin:0; color:#607087; font-size:.78rem; line-height:1.6; } .game-plaza p b { color:#7659d5; }
-.game-map { display:flex; flex-wrap:wrap; gap:10px; align-items:stretch; margin-top:13px; }
-.game-map-item { display:flex; flex:1 1 200px; gap:10px; align-items:stretch; min-width:0; }
-.game-map-link { align-self:center; color:#9aa8ba; font:850 1.1rem/1 monospace; }
-.game-node { display:grid; flex:1; gap:6px; justify-items:start; width:100%; min-width:0; padding:13px 14px; border:1px solid #d7e0eb; border-radius:11px; background:#fff; box-shadow:0 9px 25px rgba(25,45,75,.07); cursor:pointer; text-align:left; transition:.16s ease; }
-.game-node:hover:not(:disabled) { transform:translateY(-3px); border-color:#9bb1da; }
-.game-node:disabled { cursor:not-allowed; opacity:.55; }
-.game-node-head { display:flex; gap:8px; align-items:center; width:100%; color:#2f60d6; } .game-node-head b { display:grid; place-items:center; width:26px; height:26px; border-radius:7px; background:#e7edff; color:#2f60d6; font:850 .8rem/1 monospace; }
-.game-node strong { color:#172235; font-size:.9rem; } .game-node small { color:#607087; font-size:.7rem; }
-.game-node-medals { display:flex; gap:5px; margin-top:2px; }
-.medal-dot { width:13px; height:13px; border-radius:50%; background:#e1e7ef; border:1px solid #cbd5e2; }
-.medal-dot.gold { background:#f2c85d; border-color:#b27800; } .medal-dot.silver { background:#d9e0ea; border-color:#8a99ad; } .medal-dot.bronze { background:#e0a979; border-color:#a15c24; }
-.game-map-foot { display:flex; gap:7px; align-items:center; margin:13px 0 0; color:#9aa8ba; font-size:.74rem; }
-.game-hand { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:12px; }
-.game-hand-label { color:#9aa8ba; font:800 .68rem/1 monospace; } .game-hand-hint { color:#9aa8ba; font-size:.68rem; }
-.game-shelf { display:flex; flex-wrap:wrap; gap:7px; padding:16px 0 20px; border-bottom:1px solid #d7e0eb; }
-.game-cell { display:grid; place-items:center; width:46px; height:46px; border:1px solid #cbd5e2; border-radius:8px; background:#f3f6f9; color:#607087; font:850 1.05rem/1 monospace; transition:.18s ease; }
-.game-cell.sorted { border-color:#74c9ae; background:#dcf4ec; color:#12866d; }
-.game-cell.key { border-color:#b27800; background:#fff0bf; color:#b27800; box-shadow:0 6px 16px rgba(178,120,0,.25); transform:translateY(-4px); }
-.game-cell.hole { border-style:dashed; background:#fff; color:transparent; }
-.game-cell.empty { border-style:dashed; background:transparent; color:#b8c4d4; }
-.game-verdict { display:inline-flex; margin:12px 0 0; padding:8px 11px; border:1px solid #c9d7ee; border-radius:7px; background:#f5f8ff; color:#607087; font-size:.76rem; font-weight:750; line-height:1.5; }
-.game-verdict.is-greater { border-color:#e6aa97; background:#fff7f3; color:#d96643; }
-.game-verdict.is-less-equal { border-color:#74c9ae; background:#f0fbf6; color:#12866d; }
-.game-controls { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:13px; }
-.game-counters { display:flex; flex-wrap:wrap; gap:9px; margin-top:13px; }
-.game-counters span { display:inline-flex; gap:7px; align-items:baseline; padding:8px 11px; border-radius:7px; background:#f3f6f9; color:#607087; font:750 .78rem/1 monospace; }
-.game-counters b { color:#172235; font-family:inherit; font-size:.72rem; } .game-counters small { color:#9aa8ba; font-size:.64rem; }
-.game-win { display:grid; gap:8px; margin-top:14px; padding:14px 15px; border:1px solid #74c9ae; border-radius:9px; background:#f0fbf6; }
-.game-win-medal { display:flex; gap:8px; align-items:center; color:#12866d; } .game-win-medal strong { font-size:1.05rem; } .game-win-medal span { color:#607087; font-size:.72rem; }
-.game-win p { margin:0; color:#172235; font:800 .8rem/1.4 monospace; } .game-win small { color:#607087; font-size:.72rem; }
-.game-win-actions { display:flex; gap:8px; margin-top:4px; }
+/* —— 算法王国（游戏模式，PixiJS 原生） —— */
+.game-host { width:100%; max-width:960px; aspect-ratio: 960 / 600; margin:0 auto; border:1px solid #d7e0eb; border-radius:12px; background:#eef2f7; overflow:hidden; box-shadow:0 16px 36px rgba(25,45,75,.08); }
+.game-host canvas { width:100% !important; height:100% !important; display:block; }
 /* —— 设计思路面板（课件/游戏共用） —— */
 .design-notes { display:grid; gap:10px; margin-top:13px; padding:13px 14px; border:1px solid #c5b9ec; border-radius:9px; background:#f7f4ff; }
 .design-notes-heading { display:flex; gap:7px; align-items:center; color:#7659d5; font-size:.76rem; font-weight:850; }
@@ -210,19 +171,7 @@
 .design-contrast { display:grid; gap:3px; padding:8px 10px; border:1px solid #ddd4f0; border-radius:7px; background:#fff; }
 .design-contrast > b { display:flex; gap:6px; align-items:center; color:#7659d5; font-size:.72rem; }
 .design-block .prediction-card { margin-top:2px; }
-/* —— 游戏框架（game-framework）：舞台/精灵/输入提示 —— */
-.gf-stage { position:relative; }
-.gf-actor { position:absolute; left:0; top:0; display:grid; place-content:center; justify-items:center; gap:2px; border:1px solid #cbd5e2; border-radius:8px; background:#f3f6f9; color:#607087; font:850 1.05rem/1 monospace; transition:transform .22s cubic-bezier(.2,.7,.3,1.15); will-change:transform; }
-.gf-actor small { font:700 .55rem/1 sans-serif; opacity:.85; }
-.gf-actor.sorted { border-color:#74c9ae; background:#dcf4ec; color:#12866d; }
-.gf-actor.key { border-color:#b27800; background:#fff0bf; color:#b27800; }
-.gf-actor.hole { border-style:dashed; background:#fff; color:transparent; }
-.gf-actor.focus { border-color:#2f60d6; background:#e7edff; color:#2f60d6; box-shadow:0 0 0 3px rgba(47,96,214,.16); }
-.gf-slot { border-style:dashed; background:transparent; color:#b8c4d4; }
-.gf-pixi-host { min-height:46px; }
-.game-keys-hint { margin-top:8px; color:#9aa8ba; font-size:.66rem; }
-.game-keys-hint kbd { display:inline-block; min-width:17px; margin:0 3px; padding:1px 4px; border:1px solid #cbd5e2; border-radius:4px; background:#f8fafc; color:#607087; font:750 .6rem/1.4 monospace; text-align:center; }
-@media (max-width:640px) { .game-cell { width:36px; height:36px; font-size:.9rem; } .game-screen-header { display:block; } .game-header-actions { margin-top:10px; } }
+
 @media (max-width:850px) { .site-shell { grid-template-columns:1fr; height:auto; min-height:100vh; overflow:visible; } .site-sidebar { position:static; height:auto; min-height:0; max-height:none; overflow:visible; padding:15px; } .brand { padding-bottom:14px; } .sidebar-label,.sidebar-footer { display:none; } .lesson-nav { grid-template-columns:1fr; } .site-main { height:auto; max-height:none; overflow:visible; padding-inline:16px; } .intro { padding-top:30px; } .home-course-grid { grid-template-columns:1fr; } }
 @media (max-width:850px) { .complexity-grid { grid-template-columns:1fr; } }
 @media (max-width:640px) { .intro-symbols { display:none; } .intro h1 { font-size:2.7rem; } .lesson-controls,.lesson-header,.placeholder-header { display:block; } .lesson-actions { margin-top:9px; } .lesson-index { display:none; } .lesson-canvas { padding:11px; } .lesson-grid,.master-layout,.heap-layout,.quick-layout { grid-template-columns:1fr; } .tree-row { grid-template-columns:78px minmax(0,1fr); } .tree-row em { grid-column:2; } .heap-level { gap:30px; } .quick-chip { width:35px; height:35px; } .home-hero { min-height:0; } .home-section-heading { display:block; } .home-section-heading > span { display:block; margin-top:7px; } .placeholder-header .dev-badge-large { margin-top:15px; } .placeholder-blank { min-height:260px; } .complexity-heading { display:block; } .complexity-key { display:inline-block; margin-top:10px; } .stability-heading { align-items:start; } .example-picker-heading { display:block; } .example-picker-heading span { display:block; margin-top:5px; } .example-picker-options { grid-template-columns:1fr; } .data-cell { min-height:36px; font-size:.82rem; } .pointer-chip { font-size:.56rem; padding:2px 5px; } .matrix-cell { width:42px; height:38px; font-size:.82rem; } .pseudo-code { font-size:.62rem; } }

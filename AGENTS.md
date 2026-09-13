@@ -1,5 +1,12 @@
 # Algorithm Animation Studio Rules
 
+## Architecture decision principles (2026-09, binding)
+
+- 追求"最优雅地实现最终目的"，不为兼容旧代码/旧架构扭曲新设计。旧实现只有在恰好符合目标架构时才保留；迁移时允许删除，不做双轨兼容层。
+- 技术选型只看主要矛盾（职责边界与状态所有权归属），包体、语料、下载量等次要矛盾在架构定案后再权衡，不得反向扭曲架构结论。
+- 游戏模式（算法王国）的表现层与场景/输入/循环归 PixiJS（`pixi.js`，版本见 package.json）所有：游戏内不得把 React 作为游戏状态的持有者或渲染者，React 只保留学院/沙盘（文档型页面）与站点外壳。
+- 确定性模拟（`src/game/sim.ts` 纯函数 + 命令日志）是玩法规则的唯一权威，独立于任何渲染方案；撤销 = 日志回滚，进度存档走 localStorage。
+
 ## Scope
 
 - `Algorithm/` is a standalone React + Vite static website. Source code belongs in `src/`; build output belongs in `dist/` and is never hand-edited.
