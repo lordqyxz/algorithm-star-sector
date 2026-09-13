@@ -1,0 +1,84 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e10]:
+      - strong [ref=e11]: Algorithm
+      - generic [ref=e12]: Animation Studio
+    - generic [ref=e13]: WORKSPACE
+    - navigation "站点主题导航" [ref=e14]:
+      - button "算法王国 像玩游戏一样学算法" [ref=e15] [cursor=pointer]:
+        - generic [ref=e21]:
+          - generic [ref=e22]: 算法王国
+          - generic [ref=e23]: 像玩游戏一样学算法
+      - button "学院 沙盘推演总览与路线" [ref=e24] [cursor=pointer]:
+        - generic [ref=e29]:
+          - generic [ref=e30]: 学院
+          - generic [ref=e31]: 沙盘推演总览与路线
+      - button "沙盘推演 按《算法导论》章节编排" [ref=e33] [cursor=pointer]:
+        - generic [ref=e39]:
+          - generic [ref=e40]: 沙盘推演
+          - generic [ref=e41]: 按《算法导论》章节编排
+    - generic [ref=e44]: 本地静态站点React 19.3 · Anime.js 4.5 · KaTeX 0.18.7
+  - main [ref=e46]:
+    - generic [ref=e48]:
+      - text: 算法动画站
+      - generic [ref=e51]: /
+      - text: 算法王国
+    - generic [ref=e117]:
+      - generic [ref=e118]:
+        - generic [ref=e119]:
+          - paragraph [ref=e120]: SORTING PLAINS · 第一箱
+          - heading "第一箱" [level=2] [ref=e121]
+          - paragraph [ref=e122]: 绿色货架已经整理好。拿起下一张牌，和左邻比较，决定右移还是放下——这就是插入排序的全部。
+        - generic [ref=e123]:
+          - button "下一关" [ref=e124] [cursor=pointer]
+          - button "返回地图" [ref=e125] [cursor=pointer]
+      - region "选择演示样例" [ref=e126]:
+        - generic [ref=e127]:
+          - generic [ref=e128]:
+            - paragraph [ref=e129]: INPUT LAB
+            - strong [ref=e130]: 换一组输入再看一次
+          - generic [ref=e131]: 4 张牌
+        - group "演示样例" [ref=e132]:
+          - button "新手上路 4 张牌" [pressed] [ref=e133] [cursor=pointer]:
+            - generic [ref=e134]: 新手上路
+            - generic [ref=e135]: 4 张牌
+      - generic [ref=e137]:
+        - generic "手上的牌" [ref=e138]:
+          - generic [ref=e139]: 手
+          - generic [ref=e140]: 空
+          - generic [ref=e141]: 点「拿起下一张」取走绿色区右侧第一张牌
+        - img "货架：绿色区已有序，虚线格是洞" [ref=e142]
+        - paragraph [ref=e144]:
+          - text: 快捷键：
+          - generic [ref=e145]: P
+          - text: 拿起
+          - generic [ref=e146]: C
+          - text: 比较
+          - generic [ref=e147]: S
+          - text: 右移
+          - generic [ref=e148]: D
+          - text: 放下
+          - generic [ref=e149]: U
+          - text: 撤销
+          - generic [ref=e150]: R
+          - text: 重开
+        - status [ref=e151]: 还没有比较结论：先"与左邻比较"，再决定右移还是放下
+        - group "动作" [ref=e152]:
+          - button "拿起下一张" [ref=e153] [cursor=pointer]
+          - button "与左邻比较" [disabled] [ref=e160]
+          - button "右移一格" [disabled] [ref=e165]
+          - button "放回洞里" [disabled] [ref=e168]
+          - button "撤销（0）" [disabled] [ref=e172]
+          - button "重开本关" [ref=e176] [cursor=pointer]
+        - generic [ref=e177]:
+          - generic [ref=e178]:
+            - generic [ref=e179]: ⚡ 步数
+            - text: "0"
+            - generic [ref=e180]: / 最优 5
+          - generic [ref=e181]:
+            - generic [ref=e182]: 🔍 比较
+            - text: "0"
+            - generic [ref=e183]: / 最优 4
+          - generic [ref=e184]:
+            - generic [ref=e185]: 已整理
+            - text: 1 / 4

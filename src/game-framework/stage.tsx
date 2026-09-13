@@ -1,14 +1,14 @@
 /**
- * 算法王国游戏框架 · 舞台层
+ * 算法王国游戏框架 · 舞台（Stage）与 Sprite（精灵）
  *
- * Actor = 身份稳定的格位实体：React 按 id 持久化 DOM 节点，位置变化只改
- * transform，由 CSS transition 自动补间（reduced-motion 时全局媒体查询会把
- * 过渡压到近零）。这就是"移动真实数字"的引擎化落地：状态里只有逻辑位置。
+ * Sprite = 拥有独立身份（id）与坐标（col/row）的图形元素。React 按 id 持久化
+ * DOM 节点，坐标变化只改 transform，帧间过渡由 CSS transition 按缓动曲线生成
+ * （reduced-motion 时全局媒体查询把过渡压到近零）。状态里只存逻辑坐标。
  */
 import type { CSSProperties, ReactNode } from 'react'
 
 export type StageActor = {
-  /** 稳定身份；跨帧相同的 id 会被补间移动而不是重建。 */
+  /** 稳定身份；跨帧相同的 id 移动时由缓动插值生成中间帧，而不是销毁重建。 */
   id: string
   /** 逻辑格位（0 起）。 */
   col: number
@@ -26,7 +26,7 @@ type StageProps = {
   cellSize?: number
   gap?: number
   actors: readonly StageActor[]
-  /** 静态空位（洞）：不参与补间的占位格。 */
+  /** 静态空位（洞）：不参与缓动插值的占位格。 */
   slots?: readonly { col: number; row?: number; kind?: string; label?: ReactNode }[]
   ariaLabel?: string
 }

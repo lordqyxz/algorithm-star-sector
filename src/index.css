@@ -219,6 +219,7 @@
 .gf-actor.hole { border-style:dashed; background:#fff; color:transparent; }
 .gf-actor.focus { border-color:#2f60d6; background:#e7edff; color:#2f60d6; box-shadow:0 0 0 3px rgba(47,96,214,.16); }
 .gf-slot { border-style:dashed; background:transparent; color:#b8c4d4; }
+.gf-pixi-host { min-height:46px; }
 .game-keys-hint { margin-top:8px; color:#9aa8ba; font-size:.66rem; }
 .game-keys-hint kbd { display:inline-block; min-width:17px; margin:0 3px; padding:1px 4px; border:1px solid #cbd5e2; border-radius:4px; background:#f8fafc; color:#607087; font:750 .6rem/1.4 monospace; text-align:center; }
 @media (max-width:640px) { .game-cell { width:36px; height:36px; font-size:.9rem; } .game-screen-header { display:block; } .game-header-actions { margin-top:10px; } }

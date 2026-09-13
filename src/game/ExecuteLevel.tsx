@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { ArrowRight, CornerDownRight, MousePointerClick, RotateCcw, Scale, Trophy } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { DesignNotes } from '@/components/DesignNotes'
 import { ExamplePicker } from '@/components/ExamplePicker'
 import { PredictionPrompt } from '@/components/PredictionPrompt'
-import { Stage } from '@/game-framework/stage'
 import { useGameKeys } from '@/game-framework/keys'
+
+/** 游戏表现层为 PixiJS（独立 chunk，学院/沙盘模式零成本）；加载完成前以空占位。 */
+const PixiShelf = lazy(() => import('@/game/PixiShelf'))
 import type { ExecuteCommand, ExecuteLevel, MedalTone, SaveData, SaveRecord } from '@/game/types'
 import { canExecute, commandLabels, foldExecute, initialExecuteState, medalFor, medalNames } from '@/game/sim'
 
@@ -85,20 +87,16 @@ export function ExecuteLevelScreen({ level, save, onSave, onBack, onNext }: Exec
             : <span className="game-cell empty">空</span>}
           <span className="game-hand-hint">{state.held ? '洞在货架上的虚线格' : '点「拿起下一张」取走绿色区右侧第一张牌'}</span>
         </div>
-        <Stage
-          cols={state.cells.length}
-          ariaLabel="货架：绿色区已有序，虚线格是洞"
-          actors={state.cells.map((cell, index) => {
-            const isHole = state.hole === index
-            return {
+        <Suspense fallback={<div className="gf-pixi-host" aria-label="货架" />}>
+          <PixiShelf
+            ariaLabel="货架：绿色区已有序，虚线格是洞"
+            cells={state.cells.map((cell, index) => ({
               id: cell.id,
-              col: index,
-              kind: isHole ? 'hole' : index < state.sortedCount ? 'sorted' : '',
-              label: isHole ? '' : cell.value,
-              title: `第 ${index + 1} 格${isHole ? '（洞）' : index < state.sortedCount ? '（已整理）' : ''}`,
-            }
-          })}
-        />
+              value: cell.value,
+              kind: state.hole === index ? 'hole' : index < state.sortedCount ? 'sorted' : 'default',
+            }))}
+          />
+        </Suspense>
         <p className="game-keys-hint">快捷键：<kbd>P</kbd>拿起 <kbd>C</kbd>比较 <kbd>S</kbd>右移 <kbd>D</kbd>放下 <kbd>U</kbd>撤销 <kbd>R</kbd>重开</p>
         <p className={`game-verdict ${state.verdict ? `is-${state.verdict}` : ''}`} role="status">{verdictText}</p>
         <div className="game-controls" role="group" aria-label="动作">
