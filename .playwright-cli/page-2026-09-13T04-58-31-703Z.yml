@@ -1,0 +1,205 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e10]:
+      - strong [ref=e11]: Algorithm
+      - generic [ref=e12]: Animation Studio
+    - generic [ref=e13]: WORKSPACE
+    - navigation "站点主题导航" [ref=e14]:
+      - button "主页 学习路线与绘制方法" [ref=e15] [cursor=pointer]:
+        - generic [ref=e20]:
+          - generic [ref=e21]: 主页
+          - generic [ref=e22]: 学习路线与绘制方法
+      - button "王国模式 像玩游戏一样学算法" [ref=e23] [cursor=pointer]:
+        - generic [ref=e29]:
+          - generic [ref=e30]: 王国模式
+          - generic [ref=e31]: 像玩游戏一样学算法
+      - generic [ref=e32]:
+        - button "算法 按《算法导论》章节组织" [expanded] [ref=e33] [cursor=pointer]:
+          - generic [ref=e39]:
+            - generic [ref=e40]: 算法
+            - generic [ref=e41]: 按《算法导论》章节组织
+        - generic [ref=e44]:
+          - generic [ref=e45]:
+            - generic [ref=e46]: I · 基础
+            - generic [ref=e47]:
+              - generic [ref=e48]:
+                - generic [ref=e49]: 第 1 章
+                - generic [ref=e50]: 算法与计算
+              - button "算法的角色 问题、输入、输出与正确性 DEV" [ref=e51] [cursor=pointer]:
+                - generic [ref=e57]:
+                  - generic [ref=e58]: 算法的角色
+                  - generic [ref=e59]: 问题、输入、输出与正确性
+                - generic [ref=e60]: DEV
+            - generic [ref=e61]:
+              - generic [ref=e62]:
+                - generic [ref=e63]: 第 2 章
+                - generic [ref=e64]: 起步
+              - button "插入排序 循环不变量与逐个插入 DEV" [ref=e65] [cursor=pointer]:
+                - generic [ref=e71]:
+                  - generic [ref=e72]: 插入排序
+                  - generic [ref=e73]: 循环不变量与逐个插入
+                - generic [ref=e74]: DEV
+              - button "归并排序 2.3 · 拆分、合并与递归树" [ref=e75] [cursor=pointer]:
+                - generic [ref=e81]:
+                  - generic [ref=e82]: 归并排序
+                  - generic [ref=e83]: 2.3 · 拆分、合并与递归树
+              - button "二分查找 区间缩小与对数复杂度 DEV" [ref=e84] [cursor=pointer]:
+                - generic [ref=e90]:
+                  - generic [ref=e91]: 二分查找
+                  - generic [ref=e92]: 区间缩小与对数复杂度
+                - generic [ref=e93]: DEV
+            - generic [ref=e94]:
+              - generic [ref=e95]:
+                - generic [ref=e96]: 第 3 章
+                - generic [ref=e97]: 刻画运行时间
+              - button "渐近记号 O、Ω、Θ 的图形比较 DEV" [ref=e98] [cursor=pointer]:
+                - generic [ref=e104]:
+                  - generic [ref=e105]: 渐近记号
+                  - generic [ref=e106]: O、Ω、Θ 的图形比较
+                - generic [ref=e107]: DEV
+              - button "递归式 从递归树读出运行时间 DEV" [ref=e108] [cursor=pointer]:
+                - generic [ref=e114]:
+                  - generic [ref=e115]: 递归式
+                  - generic [ref=e116]: 从递归树读出运行时间
+                - generic [ref=e117]: DEV
+            - generic [ref=e118]:
+              - generic [ref=e119]:
+                - generic [ref=e120]: 第 4 章
+                - generic [ref=e121]: 分治法
+              - button "最大子数组 跨中点候选与线性合并 DEV" [ref=e122] [cursor=pointer]:
+                - generic [ref=e128]:
+                  - generic [ref=e129]: 最大子数组
+                  - generic [ref=e130]: 跨中点候选与线性合并
+                - generic [ref=e131]: DEV
+              - button "最近点对 跨界候选与线性合并" [ref=e132] [cursor=pointer]:
+                - generic [ref=e138]:
+                  - generic [ref=e139]: 最近点对
+                  - generic [ref=e140]: 跨界候选与线性合并
+              - button "主方法 递归树中谁在主导" [ref=e141] [cursor=pointer]:
+                - generic [ref=e147]:
+                  - generic [ref=e148]: 主方法
+                  - generic [ref=e149]: 递归树中谁在主导
+              - button "Strassen 矩阵乘法 减少递归子问题数量 DEV" [ref=e150] [cursor=pointer]:
+                - generic [ref=e156]:
+                  - generic [ref=e157]: Strassen 矩阵乘法
+                  - generic [ref=e158]: 减少递归子问题数量
+                - generic [ref=e159]: DEV
+            - generic [ref=e160]:
+              - generic [ref=e161]:
+                - generic [ref=e162]: 第 5 章
+                - generic [ref=e163]: 概率分析与随机算法
+              - button "随机化算法 随机选择与期望运行时间 DEV" [ref=e164] [cursor=pointer]:
+                - generic [ref=e170]:
+                  - generic [ref=e171]: 随机化算法
+                  - generic [ref=e172]: 随机选择与期望运行时间
+                - generic [ref=e173]: DEV
+              - button "招聘问题 指示器随机变量与期望 DEV" [ref=e174] [cursor=pointer]:
+                - generic [ref=e180]:
+                  - generic [ref=e181]: 招聘问题
+                  - generic [ref=e182]: 指示器随机变量与期望
+                - generic [ref=e183]: DEV
+          - generic [ref=e184]:
+            - generic [ref=e185]: II · 排序与顺序统计
+            - generic [ref=e186]:
+              - generic [ref=e187]:
+                - generic [ref=e188]: 第 6 章
+                - generic [ref=e189]: 堆排序
+              - button "堆排序 大根堆、取最大值与原地排序" [ref=e190] [cursor=pointer]:
+                - generic [ref=e196]:
+                  - generic [ref=e197]: 堆排序
+                  - generic [ref=e198]: 大根堆、取最大值与原地排序
+              - button "优先队列 插入、取最大值与堆的接口 DEV" [ref=e199] [cursor=pointer]:
+                - generic [ref=e205]:
+                  - generic [ref=e206]: 优先队列
+                  - generic [ref=e207]: 插入、取最大值与堆的接口
+                - generic [ref=e208]: DEV
+            - generic [ref=e209]:
+              - generic [ref=e210]:
+                - generic [ref=e211]: 第 7 章
+                - generic [ref=e212]: 快速排序
+              - button "快速排序 均衡分区与最坏情况" [ref=e213] [cursor=pointer]:
+                - generic [ref=e219]:
+                  - generic [ref=e220]: 快速排序
+                  - generic [ref=e221]: 均衡分区与最坏情况
+              - button "随机化快速排序 随机主元与期望复杂度 DEV" [ref=e222] [cursor=pointer]:
+                - generic [ref=e228]:
+                  - generic [ref=e229]: 随机化快速排序
+                  - generic [ref=e230]: 随机主元与期望复杂度
+                - generic [ref=e231]: DEV
+            - generic [ref=e232]:
+              - generic [ref=e233]:
+                - generic [ref=e234]: 第 8 章
+                - generic [ref=e235]: 线性时间排序
+              - button "计数排序 频次数组与稳定输出 DEV" [ref=e236] [cursor=pointer]:
+                - generic [ref=e242]:
+                  - generic [ref=e243]: 计数排序
+                  - generic [ref=e244]: 频次数组与稳定输出
+                - generic [ref=e245]: DEV
+              - button "基数排序 从低位到高位的稳定排序 DEV" [ref=e246] [cursor=pointer]:
+                - generic [ref=e252]:
+                  - generic [ref=e253]: 基数排序
+                  - generic [ref=e254]: 从低位到高位的稳定排序
+                - generic [ref=e255]: DEV
+              - button "桶排序 按分布把元素放入桶中 DEV" [ref=e256] [cursor=pointer]:
+                - generic [ref=e262]:
+                  - generic [ref=e263]: 桶排序
+                  - generic [ref=e264]: 按分布把元素放入桶中
+                - generic [ref=e265]: DEV
+            - generic [ref=e266]:
+              - generic [ref=e267]:
+                - generic [ref=e268]: 第 9 章
+                - generic [ref=e269]: 中位数与顺序统计量
+              - button "顺序统计量 选择第 k 小元素 DEV" [ref=e270] [cursor=pointer]:
+                - generic [ref=e276]:
+                  - generic [ref=e277]: 顺序统计量
+                  - generic [ref=e278]: 选择第 k 小元素
+                - generic [ref=e279]: DEV
+              - button "中位数的中位数 最坏情况线性时间选择 DEV" [ref=e280] [cursor=pointer]:
+                - generic [ref=e286]:
+                  - generic [ref=e287]: 中位数的中位数
+                  - generic [ref=e288]: 最坏情况线性时间选择
+                - generic [ref=e289]: DEV
+    - generic [ref=e290]: 本地静态站点React 19.3 · Anime.js 4.5 · KaTeX 0.18.7
+  - main [ref=e292]:
+    - generic [ref=e294]:
+      - text: 算法动画站
+      - generic [ref=e297]: /
+      - text: 算法王国
+    - generic [ref=e820]:
+      - generic [ref=e821]:
+        - generic [ref=e822]:
+          - paragraph [ref=e823]: ALGORITHMIA · SORTING PLAINS
+          - heading "算法王国 · 排序平原" [level=2] [ref=e824]
+          - paragraph [ref=e825]: 你是驿站的新分拣员：亲手把货架整理有序。步数和比较次数就是你的复杂度成绩单。
+        - generic [ref=e826]:
+          - generic [ref=e827]: 进度 1/6
+          - button "清空进度" [ref=e828] [cursor=pointer]
+      - generic [ref=e833]:
+        - strong [ref=e838]: 中央广场 · 算法学院
+        - paragraph [ref=e839]: 绿色货架代表"已整理区"——它就是插入排序的循环不变量：每次拿起新牌、放回正确的洞，不变量都向前长大一格。三枚奖章只看一件事：你有没有靠撤销过关。
+      - generic "区域地图" [ref=e840]:
+        - button "进入关卡 第一箱" [ref=e842] [cursor=pointer]:
+          - generic [ref=e843]: "1"
+          - strong [ref=e847]: 第一箱
+          - generic [ref=e848]: 1 个挑战
+          - generic "新手上路" [ref=e850]
+        - generic [ref=e851]:
+          - generic [aria-hidden] [ref=e852]: →
+          - button "进入关卡 驿站分拣" [ref=e853] [cursor=pointer]:
+            - generic [ref=e854]: "2"
+            - strong [ref=e858]: 驿站分拣
+            - generic [ref=e859]: 3 个挑战
+            - generic [ref=e860]:
+              - generic "课堂混合" [ref=e861]
+              - generic "已经有序" [ref=e862]
+              - generic "完全逆序" [ref=e863]
+        - generic [ref=e864]:
+          - generic [aria-hidden] [ref=e865]: →
+          - button "进入关卡 逆风局" [disabled] [ref=e866]:
+            - generic [ref=e867]: "3"
+            - strong [ref=e872]: 逆风局
+            - generic [ref=e873]: 2 个挑战
+            - generic [ref=e874]:
+              - generic "完全逆序" [ref=e875]
+              - generic "近似有序" [ref=e876]
+      - paragraph [ref=e877]: 更多区域（归并城堡、快速比武场、堆雪山）在后续版本开放。
