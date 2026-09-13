@@ -4,23 +4,51 @@ import { chapterCatalog, algorithmParts } from '@/content'
 import { HomePage } from '@/components/HomePage'
 import { PlaceholderLesson } from '@/components/PlaceholderLesson'
 import { GameHost } from '@/components/GameHost'
+import { AlgorithmRoleLesson } from '@/lessons/algorithm-role'
+import { AsymptoticNotationLesson } from '@/lessons/asymptotic-notation'
 import { BinarySearchLesson } from '@/lessons/binary-search'
+import { BucketSortLesson } from '@/lessons/bucket-sort'
 import { ClosestPairLesson } from '@/lessons/closest-pair'
+import { CountingSortLesson } from '@/lessons/counting-sort'
 import { HeapSortLesson } from '@/lessons/heap-sort'
+import { HiringProblemLesson } from '@/lessons/hiring-problem'
 import { InsertionSortLesson } from '@/lessons/insertion-sort'
 import { MasterMethodLesson } from '@/lessons/master-method'
+import { MaximumSubarrayLesson } from '@/lessons/maximum-subarray'
+import { MedianOfMediansLesson } from '@/lessons/median-of-medians'
 import { MergeSortLesson } from '@/lessons/merge-sort'
+import { OrderStatisticsLesson } from '@/lessons/order-statistics'
+import { PriorityQueueLesson } from '@/lessons/priority-queue'
 import { QuickSortLesson } from '@/lessons/quick-sort'
+import { RadixSortLesson } from '@/lessons/radix-sort'
+import { RandomizedAlgorithmsLesson } from '@/lessons/randomized-algorithms'
+import { RandomizedQuickSortLesson } from '@/lessons/randomized-quicksort'
+import { RecurrenceEquationsLesson } from '@/lessons/recurrence-equations'
+import { StrassenLesson } from '@/lessons/strassen'
 
 /** 沙盘注册表：新沙盘建成后在此登记（content.ts 同步把 status 改为 ready）。 */
 const lessonRegistry: Record<string, ComponentType> = {
+  'algorithm-role': AlgorithmRoleLesson,
+  'asymptotic-notation': AsymptoticNotationLesson,
   'binary-search': BinarySearchLesson,
+  'bucket-sort': BucketSortLesson,
+  'counting-sort': CountingSortLesson,
   'divide-conquer': ClosestPairLesson,
   'heap-sort': HeapSortLesson,
+  'hiring-problem': HiringProblemLesson,
   'insertion-sort': InsertionSortLesson,
   'master-method': MasterMethodLesson,
+  'maximum-subarray': MaximumSubarrayLesson,
+  'median-of-medians': MedianOfMediansLesson,
   'merge-sort': MergeSortLesson,
+  'order-statistics': OrderStatisticsLesson,
+  'priority-queue': PriorityQueueLesson,
   'quick-sort': QuickSortLesson,
+  'radix-sort': RadixSortLesson,
+  'randomized-algorithms': RandomizedAlgorithmsLesson,
+  'randomized-quicksort': RandomizedQuickSortLesson,
+  'recurrence-equations': RecurrenceEquationsLesson,
+  'strassen': StrassenLesson,
 }
 
 export default function App() {

@@ -1,0 +1,26 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e10]:
+      - strong [ref=e11]: Algorithm
+      - generic [ref=e12]: Animation Studio
+    - generic [ref=e13]: WORKSPACE
+    - navigation "站点主题导航" [ref=e14]:
+      - button "算法王国 像玩游戏一样学算法" [ref=e15] [cursor=pointer]:
+        - generic [ref=e21]:
+          - generic [ref=e22]: 算法王国
+          - generic [ref=e23]: 像玩游戏一样学算法
+      - button "学院 沙盘推演总览与路线" [ref=e24] [cursor=pointer]:
+        - generic [ref=e29]:
+          - generic [ref=e30]: 学院
+          - generic [ref=e31]: 沙盘推演总览与路线
+      - button "沙盘推演 按《算法导论》章节编排" [ref=e33] [cursor=pointer]:
+        - generic [ref=e39]:
+          - generic [ref=e40]: 沙盘推演
+          - generic [ref=e41]: 按《算法导论》章节编排
+    - generic [ref=e44]: 本地静态站点React 19.3 · Anime.js 4.5 · KaTeX 0.18.7
+  - main [ref=e46]:
+    - generic [ref=e48]:
+      - text: 算法动画站
+      - generic [ref=e51]: /
+      - text: 算法王国
+    - generic "算法王国游戏画面" [ref=e53]

@@ -1,0 +1,175 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e10]:
+      - strong [ref=e11]: Algorithm
+      - generic [ref=e12]: Animation Studio
+    - generic [ref=e13]: WORKSPACE
+    - navigation "站点主题导航" [ref=e14]:
+      - button "算法王国 像玩游戏一样学算法" [ref=e15] [cursor=pointer]:
+        - generic [ref=e21]:
+          - generic [ref=e22]: 算法王国
+          - generic [ref=e23]: 像玩游戏一样学算法
+      - button "学院 沙盘推演总览与路线" [active] [ref=e24] [cursor=pointer]:
+        - generic [ref=e29]:
+          - generic [ref=e30]: 学院
+          - generic [ref=e31]: 沙盘推演总览与路线
+      - button "沙盘推演 按《算法导论》章节编排" [ref=e33] [cursor=pointer]:
+        - generic [ref=e39]:
+          - generic [ref=e40]: 沙盘推演
+          - generic [ref=e41]: 按《算法导论》章节编排
+    - generic [ref=e44]: 本地静态站点React 19.3 · Anime.js 4.5 · KaTeX 0.18.7
+  - main [ref=e46]:
+    - generic [ref=e48]:
+      - text: 算法动画站
+      - generic [ref=e51]: /
+      - text: 学院 · 沙盘推演
+    - generic [ref=e55]:
+      - generic [ref=e56]:
+        - generic [ref=e57]:
+          - paragraph [ref=e58]: ALGORITHMIA · SANDBOX ROADMAP
+          - heading "把算法的“为什么”打穿" [level=1] [ref=e59]
+          - paragraph [ref=e60]: 在算法王国里先玩关卡、再进沙盘推演：每个概念都可以亲手操作，也可以逐拍观看它的设计与代价。
+        - generic [ref=e66]: →
+      - generic [ref=e72]:
+        - generic [ref=e73]:
+          - generic [ref=e74]:
+            - paragraph [ref=e75]: SANDBOX ROADMAP
+            - heading "推演路线：从现象走到公式" [level=2] [ref=e76]
+          - generic [ref=e77]: 21 个沙盘全部开放
+        - generic [ref=e78]:
+          - heading "I · 基础" [level=3] [ref=e79]
+          - generic [ref=e80]:
+            - generic [ref=e82]:
+              - generic [ref=e83]:
+                - strong [ref=e84]: 第 1 章 · 算法与计算
+                - generic [ref=e85]: 问题、算法与正确性
+              - button "算法的角色 问题、输入、输出与正确性" [ref=e87] [cursor=pointer]:
+                - generic [ref=e93]:
+                  - strong [ref=e94]: 算法的角色
+                  - generic [ref=e95]: 问题、输入、输出与正确性
+            - generic [ref=e99]:
+              - generic [ref=e100]:
+                - strong [ref=e101]: 第 2 章 · 起步
+                - generic [ref=e102]: 从数组操作进入算法
+              - generic [ref=e103]:
+                - button "插入排序 循环不变量与逐个插入" [ref=e104] [cursor=pointer]:
+                  - generic [ref=e110]:
+                    - strong [ref=e111]: 插入排序
+                    - generic [ref=e112]: 循环不变量与逐个插入
+                - button "归并排序 2.3 · 拆分、合并与递归树" [ref=e115] [cursor=pointer]:
+                  - generic [ref=e121]:
+                    - strong [ref=e122]: 归并排序
+                    - generic [ref=e123]: 2.3 · 拆分、合并与递归树
+                - button "二分查找 区间缩小与对数复杂度" [ref=e126] [cursor=pointer]:
+                  - generic [ref=e132]:
+                    - strong [ref=e133]: 二分查找
+                    - generic [ref=e134]: 区间缩小与对数复杂度
+            - generic [ref=e138]:
+              - generic [ref=e139]:
+                - strong [ref=e140]: 第 3 章 · 刻画运行时间
+                - generic [ref=e141]: 增长率、渐近记号与递归式
+              - generic [ref=e142]:
+                - button "渐近记号 O、Ω、Θ 的图形比较" [ref=e143] [cursor=pointer]:
+                  - generic [ref=e149]:
+                    - strong [ref=e150]: 渐近记号
+                    - generic [ref=e151]: O、Ω、Θ 的图形比较
+                - button "递归式 从递归树读出运行时间" [ref=e154] [cursor=pointer]:
+                  - generic [ref=e160]:
+                    - strong [ref=e161]: 递归式
+                    - generic [ref=e162]: 从递归树读出运行时间
+            - generic [ref=e166]:
+              - generic [ref=e167]:
+                - strong [ref=e168]: 第 4 章 · 分治法
+                - generic [ref=e169]: 把大问题拆成可合并的小问题
+              - generic [ref=e170]:
+                - button "最大子数组 跨中点候选与线性合并" [ref=e171] [cursor=pointer]:
+                  - generic [ref=e177]:
+                    - strong [ref=e178]: 最大子数组
+                    - generic [ref=e179]: 跨中点候选与线性合并
+                - button "最近点对 跨界候选与线性合并" [ref=e182] [cursor=pointer]:
+                  - generic [ref=e188]:
+                    - strong [ref=e189]: 最近点对
+                    - generic [ref=e190]: 跨界候选与线性合并
+                - button "主方法 递归树中谁在主导" [ref=e193] [cursor=pointer]:
+                  - generic [ref=e199]:
+                    - strong [ref=e200]: 主方法
+                    - generic [ref=e201]: 递归树中谁在主导
+                - button "Strassen 矩阵乘法 减少递归子问题数量" [ref=e204] [cursor=pointer]:
+                  - generic [ref=e210]:
+                    - strong [ref=e211]: Strassen 矩阵乘法
+                    - generic [ref=e212]: 减少递归子问题数量
+            - generic [ref=e216]:
+              - generic [ref=e217]:
+                - strong [ref=e218]: 第 5 章 · 概率分析与随机算法
+                - generic [ref=e219]: 随机性如何改变平均行为
+              - generic [ref=e220]:
+                - button "随机化算法 随机选择与期望运行时间" [ref=e221] [cursor=pointer]:
+                  - generic [ref=e227]:
+                    - strong [ref=e228]: 随机化算法
+                    - generic [ref=e229]: 随机选择与期望运行时间
+                - button "招聘问题 指示器随机变量与期望" [ref=e232] [cursor=pointer]:
+                  - generic [ref=e238]:
+                    - strong [ref=e239]: 招聘问题
+                    - generic [ref=e240]: 指示器随机变量与期望
+        - generic [ref=e243]:
+          - heading "II · 排序与顺序统计" [level=3] [ref=e244]
+          - generic [ref=e245]:
+            - generic [ref=e247]:
+              - generic [ref=e248]:
+                - strong [ref=e249]: 第 6 章 · 堆排序
+                - generic [ref=e250]: 堆、堆化与优先队列
+              - generic [ref=e251]:
+                - button "堆排序 大根堆、取最大值与原地排序" [ref=e252] [cursor=pointer]:
+                  - generic [ref=e258]:
+                    - strong [ref=e259]: 堆排序
+                    - generic [ref=e260]: 大根堆、取最大值与原地排序
+                - button "优先队列 插入、取最大值与堆的接口" [ref=e263] [cursor=pointer]:
+                  - generic [ref=e269]:
+                    - strong [ref=e270]: 优先队列
+                    - generic [ref=e271]: 插入、取最大值与堆的接口
+            - generic [ref=e275]:
+              - generic [ref=e276]:
+                - strong [ref=e277]: 第 7 章 · 快速排序
+                - generic [ref=e278]: 主元、分区与递归树形状
+              - generic [ref=e279]:
+                - button "快速排序 均衡分区与最坏情况" [ref=e280] [cursor=pointer]:
+                  - generic [ref=e286]:
+                    - strong [ref=e287]: 快速排序
+                    - generic [ref=e288]: 均衡分区与最坏情况
+                - button "随机化快速排序 随机主元与期望复杂度" [ref=e291] [cursor=pointer]:
+                  - generic [ref=e297]:
+                    - strong [ref=e298]: 随机化快速排序
+                    - generic [ref=e299]: 随机主元与期望复杂度
+            - generic [ref=e303]:
+              - generic [ref=e304]:
+                - strong [ref=e305]: 第 8 章 · 线性时间排序
+                - generic [ref=e306]: 利用输入结构突破比较排序下界
+              - generic [ref=e307]:
+                - button "计数排序 频次数组与稳定输出" [ref=e308] [cursor=pointer]:
+                  - generic [ref=e314]:
+                    - strong [ref=e315]: 计数排序
+                    - generic [ref=e316]: 频次数组与稳定输出
+                - button "基数排序 从低位到高位的稳定排序" [ref=e319] [cursor=pointer]:
+                  - generic [ref=e325]:
+                    - strong [ref=e326]: 基数排序
+                    - generic [ref=e327]: 从低位到高位的稳定排序
+                - button "桶排序 按分布把元素放入桶中" [ref=e330] [cursor=pointer]:
+                  - generic [ref=e336]:
+                    - strong [ref=e337]: 桶排序
+                    - generic [ref=e338]: 按分布把元素放入桶中
+            - generic [ref=e342]:
+              - generic [ref=e343]:
+                - strong [ref=e344]: 第 9 章 · 中位数与顺序统计量
+                - generic [ref=e345]: 不完全排序也能找第 k 小
+              - generic [ref=e346]:
+                - button "顺序统计量 选择第 k 小元素" [ref=e347] [cursor=pointer]:
+                  - generic [ref=e353]:
+                    - strong [ref=e354]: 顺序统计量
+                    - generic [ref=e355]: 选择第 k 小元素
+                - button "中位数的中位数 最坏情况线性时间选择" [ref=e358] [cursor=pointer]:
+                  - generic [ref=e364]:
+                    - strong [ref=e365]: 中位数的中位数
+                    - generic [ref=e366]: 最坏情况线性时间选择
+      - generic [ref=e370]:
+        - strong [ref=e371]: 沙盘规则
+        - generic [ref=e372]: 每个沙盘推演都遵循同一套玩法：先预测一步 → 亲手推进每一拍 → 读出公式与复杂度 → 解锁设计思路；王国关卡练手感，学院沙盘看原理。

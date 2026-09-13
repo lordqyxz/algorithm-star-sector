@@ -1,0 +1,434 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e10]:
+      - strong [ref=e11]: Algorithm
+      - generic [ref=e12]: Animation Studio
+    - generic [ref=e13]: WORKSPACE
+    - navigation "站点主题导航" [ref=e14]:
+      - button "算法王国 像玩游戏一样学算法" [ref=e15] [cursor=pointer]:
+        - generic [ref=e21]:
+          - generic [ref=e22]: 算法王国
+          - generic [ref=e23]: 像玩游戏一样学算法
+      - button "学院 沙盘推演总览与路线" [ref=e24] [cursor=pointer]:
+        - generic [ref=e29]:
+          - generic [ref=e30]: 学院
+          - generic [ref=e31]: 沙盘推演总览与路线
+      - generic [ref=e32]:
+        - button "沙盘推演 按《算法导论》章节编排" [expanded] [ref=e33] [cursor=pointer]:
+          - generic [ref=e39]:
+            - generic [ref=e40]: 沙盘推演
+            - generic [ref=e41]: 按《算法导论》章节编排
+        - generic [ref=e373]:
+          - generic [ref=e374]:
+            - generic [ref=e375]: I · 基础
+            - generic [ref=e376]:
+              - generic [ref=e377]:
+                - generic [ref=e378]: 第 1 章
+                - generic [ref=e379]: 算法与计算
+              - button "算法的角色 问题、输入、输出与正确性" [active] [ref=e380] [cursor=pointer]:
+                - generic [ref=e386]:
+                  - generic [ref=e387]: 算法的角色
+                  - generic [ref=e388]: 问题、输入、输出与正确性
+            - generic [ref=e389]:
+              - generic [ref=e390]:
+                - generic [ref=e391]: 第 2 章
+                - generic [ref=e392]: 起步
+              - button "插入排序 循环不变量与逐个插入" [ref=e393] [cursor=pointer]:
+                - generic [ref=e399]:
+                  - generic [ref=e400]: 插入排序
+                  - generic [ref=e401]: 循环不变量与逐个插入
+              - button "归并排序 2.3 · 拆分、合并与递归树" [ref=e402] [cursor=pointer]:
+                - generic [ref=e408]:
+                  - generic [ref=e409]: 归并排序
+                  - generic [ref=e410]: 2.3 · 拆分、合并与递归树
+              - button "二分查找 区间缩小与对数复杂度" [ref=e411] [cursor=pointer]:
+                - generic [ref=e417]:
+                  - generic [ref=e418]: 二分查找
+                  - generic [ref=e419]: 区间缩小与对数复杂度
+            - generic [ref=e420]:
+              - generic [ref=e421]:
+                - generic [ref=e422]: 第 3 章
+                - generic [ref=e423]: 刻画运行时间
+              - button "渐近记号 O、Ω、Θ 的图形比较" [ref=e424] [cursor=pointer]:
+                - generic [ref=e430]:
+                  - generic [ref=e431]: 渐近记号
+                  - generic [ref=e432]: O、Ω、Θ 的图形比较
+              - button "递归式 从递归树读出运行时间" [ref=e433] [cursor=pointer]:
+                - generic [ref=e439]:
+                  - generic [ref=e440]: 递归式
+                  - generic [ref=e441]: 从递归树读出运行时间
+            - generic [ref=e442]:
+              - generic [ref=e443]:
+                - generic [ref=e444]: 第 4 章
+                - generic [ref=e445]: 分治法
+              - button "最大子数组 跨中点候选与线性合并" [ref=e446] [cursor=pointer]:
+                - generic [ref=e452]:
+                  - generic [ref=e453]: 最大子数组
+                  - generic [ref=e454]: 跨中点候选与线性合并
+              - button "最近点对 跨界候选与线性合并" [ref=e455] [cursor=pointer]:
+                - generic [ref=e461]:
+                  - generic [ref=e462]: 最近点对
+                  - generic [ref=e463]: 跨界候选与线性合并
+              - button "主方法 递归树中谁在主导" [ref=e464] [cursor=pointer]:
+                - generic [ref=e470]:
+                  - generic [ref=e471]: 主方法
+                  - generic [ref=e472]: 递归树中谁在主导
+              - button "Strassen 矩阵乘法 减少递归子问题数量" [ref=e473] [cursor=pointer]:
+                - generic [ref=e479]:
+                  - generic [ref=e480]: Strassen 矩阵乘法
+                  - generic [ref=e481]: 减少递归子问题数量
+            - generic [ref=e482]:
+              - generic [ref=e483]:
+                - generic [ref=e484]: 第 5 章
+                - generic [ref=e485]: 概率分析与随机算法
+              - button "随机化算法 随机选择与期望运行时间" [ref=e486] [cursor=pointer]:
+                - generic [ref=e492]:
+                  - generic [ref=e493]: 随机化算法
+                  - generic [ref=e494]: 随机选择与期望运行时间
+              - button "招聘问题 指示器随机变量与期望" [ref=e495] [cursor=pointer]:
+                - generic [ref=e501]:
+                  - generic [ref=e502]: 招聘问题
+                  - generic [ref=e503]: 指示器随机变量与期望
+          - generic [ref=e504]:
+            - generic [ref=e505]: II · 排序与顺序统计
+            - generic [ref=e506]:
+              - generic [ref=e507]:
+                - generic [ref=e508]: 第 6 章
+                - generic [ref=e509]: 堆排序
+              - button "堆排序 大根堆、取最大值与原地排序" [ref=e510] [cursor=pointer]:
+                - generic [ref=e516]:
+                  - generic [ref=e517]: 堆排序
+                  - generic [ref=e518]: 大根堆、取最大值与原地排序
+              - button "优先队列 插入、取最大值与堆的接口" [ref=e519] [cursor=pointer]:
+                - generic [ref=e525]:
+                  - generic [ref=e526]: 优先队列
+                  - generic [ref=e527]: 插入、取最大值与堆的接口
+            - generic [ref=e528]:
+              - generic [ref=e529]:
+                - generic [ref=e530]: 第 7 章
+                - generic [ref=e531]: 快速排序
+              - button "快速排序 均衡分区与最坏情况" [ref=e532] [cursor=pointer]:
+                - generic [ref=e538]:
+                  - generic [ref=e539]: 快速排序
+                  - generic [ref=e540]: 均衡分区与最坏情况
+              - button "随机化快速排序 随机主元与期望复杂度" [ref=e541] [cursor=pointer]:
+                - generic [ref=e547]:
+                  - generic [ref=e548]: 随机化快速排序
+                  - generic [ref=e549]: 随机主元与期望复杂度
+            - generic [ref=e550]:
+              - generic [ref=e551]:
+                - generic [ref=e552]: 第 8 章
+                - generic [ref=e553]: 线性时间排序
+              - button "计数排序 频次数组与稳定输出" [ref=e554] [cursor=pointer]:
+                - generic [ref=e560]:
+                  - generic [ref=e561]: 计数排序
+                  - generic [ref=e562]: 频次数组与稳定输出
+              - button "基数排序 从低位到高位的稳定排序" [ref=e563] [cursor=pointer]:
+                - generic [ref=e569]:
+                  - generic [ref=e570]: 基数排序
+                  - generic [ref=e571]: 从低位到高位的稳定排序
+              - button "桶排序 按分布把元素放入桶中" [ref=e572] [cursor=pointer]:
+                - generic [ref=e578]:
+                  - generic [ref=e579]: 桶排序
+                  - generic [ref=e580]: 按分布把元素放入桶中
+            - generic [ref=e581]:
+              - generic [ref=e582]:
+                - generic [ref=e583]: 第 9 章
+                - generic [ref=e584]: 中位数与顺序统计量
+              - button "顺序统计量 选择第 k 小元素" [ref=e585] [cursor=pointer]:
+                - generic [ref=e591]:
+                  - generic [ref=e592]: 顺序统计量
+                  - generic [ref=e593]: 选择第 k 小元素
+              - button "中位数的中位数 最坏情况线性时间选择" [ref=e594] [cursor=pointer]:
+                - generic [ref=e600]:
+                  - generic [ref=e601]: 中位数的中位数
+                  - generic [ref=e602]: 最坏情况线性时间选择
+    - generic [ref=e44]: 本地静态站点React 19.3 · Anime.js 4.5 · KaTeX 0.18.7
+  - main [ref=e46]:
+    - generic [ref=e48]:
+      - text: 算法动画站
+      - generic [ref=e51]: /
+      - text: 沙盘推演 / 第 1 章 算法的角色
+    - generic [ref=e1298]:
+      - generic [ref=e1299]:
+        - generic [ref=e1300]:
+          - paragraph [ref=e1301]: SANDBOX 18 · ALGORITHM CORRECTNESS
+          - heading "问题的规格：输入、输出与正确性" [level=2] [ref=e1302]
+          - paragraph [ref=e1303]: 同一个"求最大值"规格，三个版本逐拍执行：正确版靠不变量赢，两个 bug 版各断一根支柱——正确性是证出来的，不是测出来的。
+        - generic [ref=e1304]:
+          - text: STEP
+          - strong [ref=e1305]: "01"
+          - generic [ref=e1306]: / 16
+      - group "问题的规格：输入、输出与正确性步骤控制" [ref=e1307]:
+        - tablist "问题的规格：输入、输出与正确性步骤" [ref=e1308]:
+          - tab "01 规格" [selected] [ref=e1309] [cursor=pointer]
+          - tab "02 初始化" [ref=e1310] [cursor=pointer]
+          - tab "03 A[2]" [ref=e1311] [cursor=pointer]
+          - tab "04 A[3]" [ref=e1312] [cursor=pointer]
+          - tab "05 A[4]" [ref=e1313] [cursor=pointer]
+          - tab "06 A[5]" [ref=e1314] [cursor=pointer]
+          - tab "07 A[6]" [ref=e1315] [cursor=pointer]
+          - tab "08 A[7]" [ref=e1316] [cursor=pointer]
+          - tab "09 A[8] 终" [ref=e1317] [cursor=pointer]
+          - tab "10 bug A" [ref=e1318] [cursor=pointer]
+          - tab "11 反例上桌" [ref=e1319] [cursor=pointer]
+          - tab "12 bugA 输错" [ref=e1320] [cursor=pointer]
+          - tab "13 bug B" [ref=e1321] [cursor=pointer]
+          - tab "14 全负落选" [ref=e1322] [cursor=pointer]
+          - tab "15 bugB 输错" [ref=e1323] [cursor=pointer]
+          - tab "16 总结" [ref=e1324] [cursor=pointer]
+        - generic [ref=e1325]:
+          - button "上一步" [disabled] [ref=e1326]
+          - button "下一步" [ref=e1329] [cursor=pointer]
+          - button "自动播放" [ref=e1332] [cursor=pointer]
+          - button "切换播放速度" [ref=e1335] [cursor=pointer]: 1×
+          - button "重播" [ref=e1339] [cursor=pointer]
+      - progressbar "教学进度" [ref=e1343]
+      - region "选择演示样例" [ref=e1344]:
+        - generic [ref=e1345]:
+          - generic [ref=e1346]:
+            - paragraph [ref=e1347]: INPUT LAB
+            - strong [ref=e1348]: 换一组输入再看一次
+          - generic [ref=e1349]: "[3,1,4,1,5,9,2,6]"
+        - group "演示样例" [ref=e1350]:
+          - button "课堂混合 [3,1,4,1,5,9,2,6]" [pressed] [ref=e1351] [cursor=pointer]:
+            - generic [ref=e1352]: 课堂混合
+            - generic [ref=e1353]: "[3,1,4,1,5,9,2,6]"
+          - button "全负数组 [-3,-1,-4,-1,-5] 暴露 bug B" [ref=e1354] [cursor=pointer]:
+            - generic [ref=e1355]: 全负数组
+            - generic [ref=e1356]: "[-3,-1,-4,-1,-5] 暴露 bug B"
+          - button "单元素边界 [7] 循环一次都不跑" [ref=e1357] [cursor=pointer]:
+            - generic [ref=e1358]: 单元素边界
+            - generic [ref=e1359]: "[7] 循环一次都不跑"
+      - generic [ref=e1360]:
+        - generic [ref=e1361]:
+          - generic [ref=e1362]: 一个问题由什么定义？
+          - generic [ref=e1365]:
+            - math [ref=e1367]:
+              - generic [ref=e1369]:
+                - generic [ref=e1370]: MAXIMUM
+                - generic [ref=e1371]: (
+                - generic [ref=e1372]: A
+                - generic [ref=e1373]: )
+                - generic [ref=e1374]: ":"
+                - generic [ref=e1375]: 输入
+                - generic [ref=e1376]: A
+                - generic [ref=e1377]: "["
+                - generic [ref=e1378]: 1..8
+                - generic [ref=e1379]: "]"
+                - generic [ref=e1380]: ⟶
+                - generic [ref=e1381]: 输出
+                - generic [ref=e1382]: max
+                - generic: ⁡
+                - generic [ref=e1383]: "{"
+                - generic [ref=e1384]:
+                  - generic [ref=e1385]: A
+                  - generic [ref=e1386]: "1"
+                - generic [ref=e1387]: ","
+                - generic [ref=e1388]: …
+                - generic [ref=e1389]: ","
+                - generic [ref=e1390]:
+                  - generic [ref=e1391]: A
+                  - generic [ref=e1392]: "n"
+                - generic [ref=e1393]: "}"
+            - generic [aria-hidden] [ref=e1394]:
+              - generic [ref=e1395]:
+                - generic [ref=e1396]: MAXIMUM
+                - text: "(A) :"
+              - generic [ref=e1398]:
+                - generic [ref=e1399]: 输入
+                - text: A[1..8] ⟶
+              - generic [ref=e1402]:
+                - generic [ref=e1403]: 输出
+                - text: "max{"
+                - generic [ref=e1404]:
+                  - text: A
+                  - generic [ref=e1405]: "1"
+                - text: ", … ,"
+                - generic [ref=e1415]:
+                  - text: A
+                  - generic [ref=e1416]: "n"
+                - text: "}"
+          - generic [ref=e1424]: 三卡式规格：输入（n 个数的数组）｜输出（最大元素）｜正确性（对每个合法输入都输出正确答案）。
+        - generic [ref=e1425]:
+          - generic [ref=e1426]:
+            - heading "输入数组：规格说清\"什么算对\"，代码才有对错可言" [level=3] [ref=e1428]
+            - generic [ref=e1429]:
+              - img "输入数组：规格说清\"什么算对\"，代码才有对错可言" [ref=e1430]:
+                - generic [ref=e1431]:
+                  - generic [ref=e1432]: "3"
+                  - generic [ref=e1433]: "1"
+                  - generic [ref=e1434]: "4"
+                  - generic [ref=e1435]: "1"
+                  - generic [ref=e1436]: "5"
+                  - generic [ref=e1437]: "9"
+                  - generic [ref=e1438]: "2"
+                  - generic [ref=e1439]: "6"
+                - generic [ref=e1440]:
+                  - generic [ref=e1441]: "1"
+                  - generic [ref=e1442]: "2"
+                  - generic [ref=e1443]: "3"
+                  - generic [ref=e1444]: "4"
+                  - generic [ref=e1445]: "5"
+                  - generic [ref=e1446]: "6"
+                  - generic [ref=e1447]: "7"
+                  - generic [ref=e1448]: "8"
+              - list "颜色语义" [ref=e1449]:
+                - listitem [ref=e1450]: max-so-far（不变量）
+                - listitem [ref=e1452]: 正在比较
+                - listitem [ref=e1454]: 被漏掉的格子
+                - listitem [ref=e1456]: 已比较落选
+          - generic [ref=e1458]:
+            - heading "计算台" [level=3] [ref=e1460]
+            - generic [ref=e1461]:
+              - generic [ref=e1462]:
+                - generic [ref=e1463]:
+                  - generic [ref=e1464]: 输入规模 n
+                  - strong [ref=e1465]: "8"
+                - generic [ref=e1466]:
+                  - generic [ref=e1467]: 要求的输出
+                  - strong [ref=e1468]: max(A)
+                - generic [ref=e1469]:
+                  - generic [ref=e1470]: 不变量校验
+                  - strong [ref=e1471]: 待建立
+              - generic [ref=e1474]:
+                - math [ref=e1476]:
+                  - generic [ref=e1478]:
+                    - generic [ref=e1479]: 正确
+                    - generic [ref=e1480]: ≡
+                    - generic [ref=e1481]: ∀
+                    - generic [ref=e1482]: 合法输入
+                    - generic [ref=e1483]: A
+                    - generic [ref=e1484]: ":"
+                    - generic [ref=e1485]: 输出
+                    - generic [ref=e1486]: =
+                    - generic [ref=e1487]: max
+                    - generic: ⁡
+                    - generic [ref=e1488]: "{"
+                    - generic [ref=e1489]:
+                      - generic [ref=e1490]: A
+                      - generic [ref=e1491]: "1"
+                    - generic [ref=e1492]: ","
+                    - generic [ref=e1493]: …
+                    - generic [ref=e1494]: ","
+                    - generic [ref=e1495]:
+                      - generic [ref=e1496]: A
+                      - generic [ref=e1497]: "n"
+                    - generic [ref=e1498]: "}"
+                - generic [aria-hidden] [ref=e1499]:
+                  - generic [ref=e1500]:
+                    - generic [ref=e1501]: 正确
+                    - text: ≡
+                  - generic [ref=e1504]:
+                    - text: ∀
+                    - generic [ref=e1506]: 合法输入
+                    - text: "A :"
+                  - generic [ref=e1509]:
+                    - generic [ref=e1510]: 输出
+                    - text: =
+                  - generic [ref=e1511]:
+                    - text: "max{"
+                    - generic [ref=e1512]:
+                      - text: A
+                      - generic [ref=e1513]: "1"
+                    - text: ", … ,"
+                    - generic [ref=e1521]:
+                      - text: A
+                      - generic [ref=e1522]: "n"
+                    - text: "}"
+              - paragraph [ref=e1530]:
+                - generic [ref=e1531]: 不变量
+                - text: 正确性是"对所有合法输入"的断言，不是对某一次运行结果的满意度。
+              - img "伪代码：当前执行到哪一行" [ref=e1532]:
+                - generic "初始化：不变量从这里成立" [ref=e1533]:
+                  - generic [ref=e1534]: "01"
+                  - code [ref=e1535]: max ← A[1]
+                - generic "逐个检查剩余元素" [ref=e1536]:
+                  - generic [ref=e1537]: "02"
+                  - code [ref=e1538]: for i ← 2 to n
+                - generic "比较并按需更新 max-so-far" [ref=e1539]:
+                  - generic [ref=e1540]: "03"
+                  - code [ref=e1541]: if max < A[i] then max ← A[i]
+                - generic "终止：不变量蕴含输出正确" [ref=e1542]:
+                  - generic [ref=e1543]: "04"
+                  - code [ref=e1544]: return max
+              - paragraph [ref=e1545]: 算法的角色：把问题规格变成逐步执行的机械过程。接下来三个版本执行同一个规格——一个正确版、两个带 bug 的版本，看正确性如何被建立、又如何被打破。
+        - generic [ref=e1546]: 先看正确版 MAXIMUM 怎么跑。
+      - region "设计思路" [ref=e1547]:
+        - generic [ref=e1548]: 设计思路：为什么这样设计
+        - generic [ref=e1557]:
+          - generic [ref=e1558]:
+            - generic [ref=e1559]: "01"
+            - text: 关键观察
+          - paragraph [ref=e1560]: 正确性不是测出来的，是证出来的：循环不变量 + 终止 = 输出正确。
+        - generic [ref=e1561]:
+          - generic [ref=e1562]:
+            - generic [ref=e1563]: "02"
+            - text: 换个设计会怎样
+          - generic [ref=e1564]:
+            - generic [ref=e1565]:
+              - generic [ref=e1566]: 若改用 只靠多跑测试
+              - paragraph [ref=e1571]: 测试只能证明存在 bug，不能证明没有——Dijkstra；不变量给出对所有输入的保证。
+            - generic [ref=e1572]:
+              - generic [ref=e1573]: 若改用 换一个"看起来更稳"的初值（如 max=-∞）
+              - paragraph [ref=e1578]: 能修 bug B，但仍是约定而非证明；max ← A[1] 让初值来自输入自身，不变量从第一步就踩在真实数据上。
+        - generic [ref=e1579]:
+          - generic [ref=e1580]:
+            - generic [ref=e1581]: "03"
+            - text: 带走这一招
+          - region [ref=e1585]:
+            - generic [ref=e1590]:
+              - text: 先猜一步
+              - heading "插入排序的不变量是什么？" [level=3] [ref=e1591]
+            - group "预测答案" [ref=e1592]:
+              - button "A 前 j-1 个元素已排序" [ref=e1593] [cursor=pointer]:
+                - generic [ref=e1594]: A
+                - text: 前 j-1 个元素已排序
+              - button "B 数组已经有序" [ref=e1595] [cursor=pointer]:
+                - generic [ref=e1596]: B
+                - text: 数组已经有序
+              - button "C key 是最大值" [ref=e1597] [cursor=pointer]:
+                - generic [ref=e1598]: C
+                - text: key 是最大值
+      - region [ref=e1599]:
+        - generic [ref=e1600]:
+          - generic [ref=e1601]:
+            - paragraph [ref=e1602]: COMPLEXITY MAP
+            - heading "算法的角色：规格、不变量、反例" [level=3] [ref=e1603]
+            - paragraph [ref=e1604]: 概念课没有最好/平均/最差——三张卡是正确性工作的三件套。
+          - generic [ref=e1605]: 条件 → 复杂度
+        - generic [ref=e1606]:
+          - generic [ref=e1608]:
+            - generic [ref=e1609]:
+              - generic [ref=e1610]: 规格
+              - strong [ref=e1611]: 输入 → 输出
+            - paragraph [ref=e1612]:
+              - generic [ref=e1613]: 条件
+              - text: 先说清楚合法输入长什么样、输出必须是什么。
+            - paragraph [ref=e1614]:
+              - generic [ref=e1615]: 例子
+              - code [ref=e1616]: MAXIMUM：n 个数的数组 → 最大元素
+            - generic [ref=e1617]: 没有规格，"正确"无从谈起——测试和证明都需要先知道"对"的定义。
+          - generic [ref=e1619]:
+            - generic [ref=e1620]:
+              - generic [ref=e1621]: 不变量
+              - strong [ref=e1622]: 正确性工具
+            - paragraph [ref=e1623]:
+              - generic [ref=e1624]: 条件
+              - text: 初始化成立 + 每步保持 + 终止时蕴含输出正确。
+            - paragraph [ref=e1625]:
+              - generic [ref=e1626]: 例子
+              - code [ref=e1627]: max-so-far = 前 i 个元素的最大值
+            - generic [ref=e1628]: 归纳证明的算法版：把"对所有前缀都对"压缩成一条可局部检查的性质。
+          - generic [ref=e1630]:
+            - generic [ref=e1631]:
+              - generic [ref=e1632]: 反例
+              - strong [ref=e1633]: 暴露 bug 的输入
+            - paragraph [ref=e1634]:
+              - generic [ref=e1635]: 条件
+              - text: 专挑代码覆盖不到的角落：末元素、全负、单元素。
+            - paragraph [ref=e1636]:
+              - generic [ref=e1637]: 例子
+              - code [ref=e1638]: "[3,1,4,1,5,2,6,9] 让 bug A 输出 6"
+            - generic [ref=e1639]: 一个反例足以否证；找不到反例也不等于正确——证明才能保证。
+        - generic [ref=e1640]: 别只背结论测试与证明互补：测试找反例便宜但不完备，不变量证明完备但要花力气——核心算法两样都要。
