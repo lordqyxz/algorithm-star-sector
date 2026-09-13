@@ -5,6 +5,8 @@ import { Card, CardContent } from '@/components/ui/card'
 import { DesignNotes } from '@/components/DesignNotes'
 import { ExamplePicker } from '@/components/ExamplePicker'
 import { PredictionPrompt } from '@/components/PredictionPrompt'
+import { Stage } from '@/game-framework/stage'
+import { useGameKeys } from '@/game-framework/keys'
 import type { ExecuteCommand, ExecuteLevel, MedalTone, SaveData, SaveRecord } from '@/game/types'
 import { canExecute, commandLabels, foldExecute, initialExecuteState, medalFor, medalNames } from '@/game/sim'
 
@@ -44,6 +46,14 @@ export function ExecuteLevelScreen({ level, save, onSave, onBack, onNext }: Exec
     setUndoCount(count => count + 1)
   }
   const restart = () => { setCommands([]); setUndoCount(0) }
+  useGameKeys([
+    { key: 'p', run: () => run('pick') },
+    { key: 'c', run: () => run('compare') },
+    { key: 's', run: () => run('shift') },
+    { key: 'd', run: () => run('drop') },
+    { key: 'u', run: undo },
+    { key: 'r', run: restart },
+  ])
   const gateVisible = variant.prediction && !answeredPredictions.includes(variant.id) && (variant.prediction.when === 'done' ? state.done : state.compares >= 1)
   const verdictText = state.verdict === 'greater'
     ? `${state.cells[(state.hole ?? 1) - 1].value} > ${state.held?.value}：左邻更大，要给它让位`
@@ -75,13 +85,21 @@ export function ExecuteLevelScreen({ level, save, onSave, onBack, onNext }: Exec
             : <span className="game-cell empty">空</span>}
           <span className="game-hand-hint">{state.held ? '洞在货架上的虚线格' : '点「拿起下一张」取走绿色区右侧第一张牌'}</span>
         </div>
-        <div className="game-shelf" aria-label="货架">
-          {state.cells.map((cell, index) => {
+        <Stage
+          cols={state.cells.length}
+          ariaLabel="货架：绿色区已有序，虚线格是洞"
+          actors={state.cells.map((cell, index) => {
             const isHole = state.hole === index
-            const isSorted = index < state.sortedCount && !isHole
-            return <span key={cell.id} className={['game-cell', isHole ? 'hole' : isSorted ? 'sorted' : ''].filter(Boolean).join(' ')} aria-label={`第 ${index + 1} 格${isHole ? '（洞）' : isSorted ? '（已整理）' : ''}`}>{isHole ? '' : cell.value}</span>
+            return {
+              id: cell.id,
+              col: index,
+              kind: isHole ? 'hole' : index < state.sortedCount ? 'sorted' : '',
+              label: isHole ? '' : cell.value,
+              title: `第 ${index + 1} 格${isHole ? '（洞）' : index < state.sortedCount ? '（已整理）' : ''}`,
+            }
           })}
-        </div>
+        />
+        <p className="game-keys-hint">快捷键：<kbd>P</kbd>拿起 <kbd>C</kbd>比较 <kbd>S</kbd>右移 <kbd>D</kbd>放下 <kbd>U</kbd>撤销 <kbd>R</kbd>重开</p>
         <p className={`game-verdict ${state.verdict ? `is-${state.verdict}` : ''}`} role="status">{verdictText}</p>
         <div className="game-controls" role="group" aria-label="动作">
           <Button size="sm" disabled={!canExecute(state, 'pick')} onClick={() => run('pick')}><MousePointerClick size={15} />{commandLabels.pick}</Button>

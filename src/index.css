@@ -210,6 +210,17 @@
 .design-contrast { display:grid; gap:3px; padding:8px 10px; border:1px solid #ddd4f0; border-radius:7px; background:#fff; }
 .design-contrast > b { display:flex; gap:6px; align-items:center; color:#7659d5; font-size:.72rem; }
 .design-block .prediction-card { margin-top:2px; }
+/* —— 游戏框架（game-framework）：舞台/精灵/输入提示 —— */
+.gf-stage { position:relative; }
+.gf-actor { position:absolute; left:0; top:0; display:grid; place-content:center; justify-items:center; gap:2px; border:1px solid #cbd5e2; border-radius:8px; background:#f3f6f9; color:#607087; font:850 1.05rem/1 monospace; transition:transform .22s cubic-bezier(.2,.7,.3,1.15); will-change:transform; }
+.gf-actor small { font:700 .55rem/1 sans-serif; opacity:.85; }
+.gf-actor.sorted { border-color:#74c9ae; background:#dcf4ec; color:#12866d; }
+.gf-actor.key { border-color:#b27800; background:#fff0bf; color:#b27800; }
+.gf-actor.hole { border-style:dashed; background:#fff; color:transparent; }
+.gf-actor.focus { border-color:#2f60d6; background:#e7edff; color:#2f60d6; box-shadow:0 0 0 3px rgba(47,96,214,.16); }
+.gf-slot { border-style:dashed; background:transparent; color:#b8c4d4; }
+.game-keys-hint { margin-top:8px; color:#9aa8ba; font-size:.66rem; }
+.game-keys-hint kbd { display:inline-block; min-width:17px; margin:0 3px; padding:1px 4px; border:1px solid #cbd5e2; border-radius:4px; background:#f8fafc; color:#607087; font:750 .6rem/1.4 monospace; text-align:center; }
 @media (max-width:640px) { .game-cell { width:36px; height:36px; font-size:.9rem; } .game-screen-header { display:block; } .game-header-actions { margin-top:10px; } }
 @media (max-width:850px) { .site-shell { grid-template-columns:1fr; height:auto; min-height:100vh; overflow:visible; } .site-sidebar { position:static; height:auto; min-height:0; max-height:none; overflow:visible; padding:15px; } .brand { padding-bottom:14px; } .sidebar-label,.sidebar-footer { display:none; } .lesson-nav { grid-template-columns:1fr; } .site-main { height:auto; max-height:none; overflow:visible; padding-inline:16px; } .intro { padding-top:30px; } .home-course-grid { grid-template-columns:1fr; } }
 @media (max-width:850px) { .complexity-grid { grid-template-columns:1fr; } }
