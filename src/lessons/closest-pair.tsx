@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { animate } from 'animejs'
 import { CalcDesk } from '@/components/CalcDesk'
+import { DesignNotes, type DesignInsight } from '@/components/DesignNotes'
 import { ExamplePicker, type ExampleOption } from '@/components/ExamplePicker'
 import { FormulaReadout, ConclusionBox } from '@/components/FormulaReadout'
 import { LegendStrip } from '@/components/LegendStrip'
@@ -100,6 +101,15 @@ function buildPointSteps(example: PointExample): PointStep[] {
   ]
 }
 
+const closestPairInsight: DesignInsight = {
+  observation: '几何性质替算法干活：距离超过 δ 的点对不可能更近，于是中线条带把跨界候选压缩到寥寥几个——合并阶段从"全比"变成"只查必要的"。',
+  contrasts: [
+    { alternative: '暴力枚举所有点对', whyNot: 'Θ(n²) 在 n 大时不可行；分治压到 Θ(n log n)，代价是预处理要按 x 排序、条带内还要按 y 扫描。' },
+    { alternative: '只算左右两半的答案', whyNot: '会漏掉跨界最近对（本课数据集就是反例）——分治的正确性永远在"合并"这一步补全。' },
+  ],
+  transfer: { prompt: '条带宽度为什么取 2δ 而不是 δ？', options: ['最近点对可能分居中线两侧，两端点各自到中线的距离都可能达到 δ', '条带越宽越保险', 'δ 是点的直径'], answer: 0, explanation: '跨界点对的两个端点分属两侧，各自离中线最多 δ；以中线为中心、两侧各 δ 的 2δ 条带才不漏候选。' },
+}
+
 const closestPairComplexity: ComplexityProfileData = {
   title: '最近点对：数据形状不改变分治的阶数',
   subtitle: '以下是标准分治版本：先排序，再递归求左右答案，最后检查中线条带。',
@@ -137,7 +147,7 @@ function PointLesson({ steps, step, setStep, playing, onTogglePlaying, onReplay,
   const stripWidth = Math.min(480, state.deltaNumber * 2 * 43)
   const finalIds = show(4) && state.finalPair ? new Set([state.finalPair.first.id, state.finalPair.second.id]) : new Set<string>()
   return (
-    <LessonShell eyebrow="ANIMATION 04 · CLOSEST PAIR" title={state.title} description="局部答案还不够：只有检查中线附近的候选，才能得到全局最近点对。" steps={['看问题', '分开', '局部解', '条带', '答案']} step={step} onStepChange={setStep} playing={playing} onTogglePlaying={onTogglePlaying} onReplay={onReplay} complexity={closestPairComplexity} speed={speed} onCycleSpeed={onCycleSpeed} examplePicker={examplePicker}>
+    <LessonShell eyebrow="SANDBOX 04 · CLOSEST PAIR" title={state.title} description="局部答案还不够：只有检查中线附近的候选，才能得到全局最近点对。" steps={['看问题', '分开', '局部解', '条带', '答案']} step={step} onStepChange={setStep} playing={playing} onTogglePlaying={onTogglePlaying} onReplay={onReplay} complexity={closestPairComplexity} speed={speed} onCycleSpeed={onCycleSpeed} examplePicker={examplePicker}>
       <div ref={scopeRef} className="lesson-canvas">
         <FormulaReadout question="这一步，公式记录了图上的什么？" latex={state.formula} className="point-visual" />
         <div className="lesson-grid">
@@ -163,6 +173,7 @@ function PointLesson({ steps, step, setStep, playing, onTogglePlaying, onReplay,
           <CalcDesk metrics={[{ label: '左半边最小距离 δL', value: state.left }, { label: '右半边最小距离 δR', value: state.right }, { label: '当前最好 δ', value: state.delta, tone: 'green' }]} equation={state.equation} invariant={state.invariant} pseudocode={{ lines: closestCode, active: step === 1 ? [0] : step === 2 ? [1] : step >= 3 ? [2] : [] }} note={state.note} />
         </div>
         {state.prediction ? <PredictionPrompt {...state.prediction} /> : null}
+        <DesignNotes insight={closestPairInsight} />
         <ConclusionBox>{state.conclusion}</ConclusionBox>
       </div>
     </LessonShell>

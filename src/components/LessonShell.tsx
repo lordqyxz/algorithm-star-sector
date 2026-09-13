@@ -50,7 +50,7 @@ export function LessonShell({ eyebrow, title, description, steps, step, onStepCh
     <section className="lesson-shell">
       <div className="lesson-header">
         <div><p className="eyebrow">{eyebrow}</p><h2>{title}</h2><p className="lesson-description">{description}</p></div>
-        <div className="lesson-index"><span>LESSON</span><strong>{String(step + 1).padStart(2, '0')}</strong><small>/ {String(steps.length).padStart(2, '0')}</small></div>
+        <div className="lesson-index"><span>STEP</span><strong>{String(step + 1).padStart(2, '0')}</strong><small>/ {String(steps.length).padStart(2, '0')}</small></div>
       </div>
       <div className="lesson-controls" role="group" aria-label={`${title}步骤控制`}>
         <div className="lesson-step-list" role="tablist" aria-label={`${title}步骤`}>

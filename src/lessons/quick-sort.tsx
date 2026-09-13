@@ -4,6 +4,7 @@ import { animate, stagger } from 'animejs'
 import { ArrayView, type DataCell, type PointerTag, type RegionLabel } from '@/components/ArrayView'
 import { CalcDesk } from '@/components/CalcDesk'
 import { CompareJudge, type CompareEntry } from '@/components/CompareJudge'
+import { DesignNotes, type DesignInsight } from '@/components/DesignNotes'
 import { ExamplePicker, type ExampleOption } from '@/components/ExamplePicker'
 import { FormulaReadout, ConclusionBox } from '@/components/FormulaReadout'
 import { LegendStrip } from '@/components/LegendStrip'
@@ -105,6 +106,15 @@ function buildQuickSteps(values: number[]): QuickStep[] {
   ]
 }
 
+const quickSortInsight: DesignInsight = {
+  observation: '分区只需要一次线性扫描，就能让一个元素（主元）落到它的最终位置——"排序全部"被化归为"确定一个 + 排左右两半"。',
+  contrasts: [
+    { alternative: '归并排序（先递归后合并）', whyNot: '归并的合并需要 O(n) 辅助数组；快排用原地交换省掉它，代价是相等键可能被交换跨过（不稳定）。' },
+    { alternative: '固定取末尾做主元', whyNot: '已排序输入会让分区每次切成 0 和 n−1，退化成 Θ(n²)；随机化主元用小成本把最坏情况变成小概率事件。' },
+  ],
+  transfer: { prompt: '快排和归并都把问题分成两半，线性工作量的花法有什么本质不同？', options: ['快排花在递归前的"分"（分区），归并花在递归后的"合"（合并）', '快排不需要做任何工作', '归并不需要比较'], answer: 0, explanation: '两者都是 Θ(n log n)，但线性成本的位置不同：分区在递归前、合并在递归后——这决定了空间、稳定性与缓存表现的差异。' },
+}
+
 const quickSortComplexity: ComplexityProfileData = {
   title: '快速排序：主元条件决定递归树高度',
   subtitle: '每一层都要做 Θ(n) 的分区；最好、平均、最差的差异来自子问题是否均衡。',
@@ -148,7 +158,7 @@ function QuickSortScene({ steps, step, setStep, playing, onTogglePlaying, onRepl
   ] : []
   const judge: CompareEntry[] = state.left.slice(0, 1).map(token => ({ left: label(token), op: '≤', right: String(state.pivotValue), holds: true, action: `${label(token)} 进左区` })).concat(state.right.slice(0, 1).map(token => ({ left: label(token), op: '>', right: String(state.pivotValue), holds: false, action: `${label(token)} 留右区` })))
   return (
-    <LessonShell eyebrow="ANIMATION 03 · QUICK SORT" title={state.title} description="主元把一次线性扫描变成两个递归子问题；真正决定复杂度的是分区是否均衡，同值元素的身份也会被检查。" steps={['选主元', '分区', '主元归位', '继续递归', '复杂度']} step={step} onStepChange={setStep} playing={playing} onTogglePlaying={onTogglePlaying} onReplay={onReplay} complexity={quickSortComplexity} speed={speed} onCycleSpeed={onCycleSpeed} examplePicker={examplePicker}>
+    <LessonShell eyebrow="SANDBOX 03 · QUICK SORT" title={state.title} description="主元把一次线性扫描变成两个递归子问题；真正决定复杂度的是分区是否均衡，同值元素的身份也会被检查。" steps={['选主元', '分区', '主元归位', '继续递归', '复杂度']} step={step} onStepChange={setStep} playing={playing} onTogglePlaying={onTogglePlaying} onReplay={onReplay} complexity={quickSortComplexity} speed={speed} onCycleSpeed={onCycleSpeed} examplePicker={examplePicker}>
       <div ref={scopeRef} className="lesson-canvas">
         <FormulaReadout question="这一步，公式记录了哪次分区？" latex={state.formula} />
         <div className="quick-layout">
@@ -167,6 +177,7 @@ function QuickSortScene({ steps, step, setStep, playing, onTogglePlaying, onRepl
           <CalcDesk metrics={[{ label: '本轮扫描元素', value: state.tokens.length }, { label: '主元位置', value: step < 2 ? '待定' : `第 ${state.pivot + 1} 位`, tone: step < 2 ? 'blue' : 'green' }, { label: '分区比较次数', value: step === 0 ? 0 : state.comparisons, tone: 'orange' }]} equation={state.equation} invariant={state.invariant} pseudocode={{ lines: partitionCode, active: step === 0 ? [0] : step === 1 ? [2, 3] : step === 2 ? [6] : [] }} note={state.note} />
         </div>
         {state.prediction ? <PredictionPrompt {...state.prediction} /> : null}
+        <DesignNotes insight={quickSortInsight} />
         <ConclusionBox>{state.conclusion}</ConclusionBox>
       </div>
     </LessonShell>

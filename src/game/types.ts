@@ -3,6 +3,8 @@
  * 模拟层 simulate(state, command) 是唯一权威；本文件只有数据，没有规则。
  */
 
+import type { DesignInsight } from '@/components/DesignNotes'
+
 export type MedalTone = 'gold' | 'silver' | 'bronze'
 
 /** 操演关的玩家命令（Command 模式：命令日志即可完整重放/撤销）。 */
@@ -34,6 +36,8 @@ export type LevelVariant = {
   cells: number[]
   /** 理论最优（标准插入排序）：用于结算页对比。 */
   par: { moves: number; compares: number }
+  /** 通关后解锁的设计思路（关键观察/取舍/迁移题）。 */
+  insight?: DesignInsight
   prediction?: { prompt: string; options: string[]; answer: number; explanation: string; when: 'first-compare' | 'done' }
 }
 

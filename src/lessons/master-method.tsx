@@ -1,6 +1,7 @@
 import { useRef } from 'react'
 import { animate, stagger } from 'animejs'
 import { CalcDesk } from '@/components/CalcDesk'
+import { DesignNotes, type DesignInsight } from '@/components/DesignNotes'
 import { FormulaReadout, ConclusionBox } from '@/components/FormulaReadout'
 import { LegendStrip } from '@/components/LegendStrip'
 import { LessonShell } from '@/components/LessonShell'
@@ -17,6 +18,14 @@ const scenes: readonly MasterScene[] = [
   { title: '场景二：改变 f(m)，看柱子改变方向', formula: 'W_i=a^i f(n/b^i)', levels: [1, 2, 4, 8, 16], label: 'f(m)=1', ratio: 'r=2', note: '柱高序列 1→2→4→8→16：每往下一层，工作量乘 2。', invariant: 'a、b、n 固定，只改变 f(m)，每层工作量序列随之改变。', conclusion: '越往下越大，叶子层主导，答案接近 Θ(n)。', prediction: { prompt: '相邻层比例 r=2，意味着从上一层到下一层发生了什么？', options: ['工作量减半', '工作量保持不变', '工作量翻倍'], answer: 2, explanation: '柱高序列 1→2→4→8→16，每往下一层工作量都乘 2，因此叶子层主导。' } },
   { title: '场景三：根部开始主导', formula: 'W_i=a^i(n/b^i)^2', levels: [256, 128, 64, 32, 16], label: 'f(m)=m^2', ratio: 'r=0.5', note: '柱高序列 256→128→64→32→16：每往下一层，工作量减半。', invariant: 'a、b、n 固定，只改变 f(m)，每层工作量序列随之改变。', conclusion: '越往下越小，根部主导，答案接近 Θ(n²)。' },
 ]
+
+const masterInsight: DesignInsight = {
+  observation: '无数层的求和被压缩成一个比值：相邻层工作量之比 r 与 1 的关系，一眼定出"根部 / 每层 / 叶子"谁主导。',
+  contrasts: [
+    { alternative: '逐层展开硬算求和', whyNot: '通用但每个递归式都要重算一遍；主方法把常见形态变成 O(1) 分类——代价是有适用边界（多项式差距与正则条件）。' },
+  ],
+  transfer: { prompt: 'a=1 的递归式（如 T(n)=T(n/2)+n）还能用主方法吗？', options: ['能：n^log₂1=1，f(n)=n 大一个多项式量级，情形 3 适用 → Θ(n)', '不能，a 必须 > 1', '只能画递归树'], answer: 0, explanation: 'a=1 完全合法：叶子层总量是常数，非递归工作 n 主导，整体 Θ(n)——二分查找的代价正是这个形态。' },
+}
 
 const masterMethodComplexity: ComplexityProfileData = {
   title: '主方法本身不定义最好、平均、最差',
@@ -41,7 +50,7 @@ function MasterMethodScene({ steps, step, setStep, playing, onTogglePlaying, onR
     if (scopeRef.current?.querySelector('.master-bar')) animate('.master-bar', { scaleY: [0.35, 1], duration: 500, delay: stagger(60), ease: 'out(3)' })
   }, [step])
   return (
-    <LessonShell eyebrow="ANIMATION 05 · MASTER METHOD" title={state.title} description="先把整层工作量算出来，再看相邻两层的比例 r 决定谁在主导。" steps={['平衡', '叶子主导', '根部主导']} step={step} onStepChange={setStep} playing={playing} onTogglePlaying={onTogglePlaying} onReplay={onReplay} complexity={masterMethodComplexity} speed={speed} onCycleSpeed={onCycleSpeed}>
+    <LessonShell eyebrow="SANDBOX 05 · MASTER METHOD" title={state.title} description="先把整层工作量算出来，再看相邻两层的比例 r 决定谁在主导。" steps={['平衡', '叶子主导', '根部主导']} step={step} onStepChange={setStep} playing={playing} onTogglePlaying={onTogglePlaying} onReplay={onReplay} complexity={masterMethodComplexity} speed={speed} onCycleSpeed={onCycleSpeed}>
       <div ref={scopeRef} className="lesson-canvas">
         <FormulaReadout question="公式不是结论，它是柱状图的读数" latex={state.formula} hint={`${state.label} · ${state.ratio}`} className="master-formula" />
         <div className="master-layout">
@@ -57,6 +66,7 @@ function MasterMethodScene({ steps, step, setStep, playing, onTogglePlaying, onR
           <CalcDesk metrics={[{ label: '本场景的 f(m)', value: state.label }, { label: '根部工作量 W₀', value: state.levels[0], tone: 'blue' }, { label: '叶子层工作量', value: state.levels[state.levels.length - 1], tone: 'orange' }, { label: '相邻层比例', value: state.ratio, tone: 'green' }]} equation={String.raw`W_i = a^i f(n / b^i);\quad ${state.ratio}`} invariant={state.invariant} note={state.note} />
         </div>
         {state.prediction ? <PredictionPrompt {...state.prediction} /> : null}
+        <DesignNotes insight={masterInsight} />
         <ConclusionBox>{state.conclusion}</ConclusionBox>
       </div>
     </LessonShell>

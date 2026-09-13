@@ -199,6 +199,17 @@
 .game-win-medal { display:flex; gap:8px; align-items:center; color:#12866d; } .game-win-medal strong { font-size:1.05rem; } .game-win-medal span { color:#607087; font-size:.72rem; }
 .game-win p { margin:0; color:#172235; font:800 .8rem/1.4 monospace; } .game-win small { color:#607087; font-size:.72rem; }
 .game-win-actions { display:flex; gap:8px; margin-top:4px; }
+/* —— 设计思路面板（课件/游戏共用） —— */
+.design-notes { display:grid; gap:10px; margin-top:13px; padding:13px 14px; border:1px solid #c5b9ec; border-radius:9px; background:#f7f4ff; }
+.design-notes-heading { display:flex; gap:7px; align-items:center; color:#7659d5; font-size:.76rem; font-weight:850; }
+.design-block { display:grid; gap:5px; }
+.design-block > b { display:flex; gap:7px; align-items:center; color:#172235; font-size:.75rem; }
+.design-no { display:grid; place-items:center; width:19px; height:19px; border-radius:5px; background:#e7e0f8; color:#7659d5; font:850 .6rem/1 monospace; }
+.design-block p { margin:0; color:#607087; font-size:.74rem; line-height:1.65; }
+.design-contrasts { display:grid; gap:6px; }
+.design-contrast { display:grid; gap:3px; padding:8px 10px; border:1px solid #ddd4f0; border-radius:7px; background:#fff; }
+.design-contrast > b { display:flex; gap:6px; align-items:center; color:#7659d5; font-size:.72rem; }
+.design-block .prediction-card { margin-top:2px; }
 @media (max-width:640px) { .game-cell { width:36px; height:36px; font-size:.9rem; } .game-screen-header { display:block; } .game-header-actions { margin-top:10px; } }
 @media (max-width:850px) { .site-shell { grid-template-columns:1fr; height:auto; min-height:100vh; overflow:visible; } .site-sidebar { position:static; height:auto; min-height:0; max-height:none; overflow:visible; padding:15px; } .brand { padding-bottom:14px; } .sidebar-label,.sidebar-footer { display:none; } .lesson-nav { grid-template-columns:1fr; } .site-main { height:auto; max-height:none; overflow:visible; padding-inline:16px; } .intro { padding-top:30px; } .home-course-grid { grid-template-columns:1fr; } }
 @media (max-width:850px) { .complexity-grid { grid-template-columns:1fr; } }

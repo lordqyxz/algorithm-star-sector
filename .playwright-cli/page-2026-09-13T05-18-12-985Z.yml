@@ -1,0 +1,429 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e10]:
+      - strong [ref=e11]: Algorithm
+      - generic [ref=e12]: Animation Studio
+    - generic [ref=e13]: WORKSPACE
+    - navigation "站点主题导航" [ref=e14]:
+      - button "算法王国 像玩游戏一样学算法" [ref=e15] [cursor=pointer]:
+        - generic [ref=e21]:
+          - generic [ref=e22]: 算法王国
+          - generic [ref=e23]: 像玩游戏一样学算法
+      - button "学院 沙盘推演总览与路线" [ref=e24] [cursor=pointer]:
+        - generic [ref=e29]:
+          - generic [ref=e30]: 学院
+          - generic [ref=e31]: 沙盘推演总览与路线
+      - generic [ref=e32]:
+        - button "沙盘推演 按《算法导论》章节编排" [expanded] [ref=e33] [cursor=pointer]:
+          - generic [ref=e39]:
+            - generic [ref=e40]: 沙盘推演
+            - generic [ref=e41]: 按《算法导论》章节编排
+        - generic [ref=e419]:
+          - generic [ref=e420]:
+            - generic [ref=e421]: I · 基础
+            - generic [ref=e422]:
+              - generic [ref=e423]:
+                - generic [ref=e424]: 第 1 章
+                - generic [ref=e425]: 算法与计算
+              - button "算法的角色 问题、输入、输出与正确性 DEV" [ref=e426] [cursor=pointer]:
+                - generic [ref=e432]:
+                  - generic [ref=e433]: 算法的角色
+                  - generic [ref=e434]: 问题、输入、输出与正确性
+                - generic [ref=e435]: DEV
+            - generic [ref=e436]:
+              - generic [ref=e437]:
+                - generic [ref=e438]: 第 2 章
+                - generic [ref=e439]: 起步
+              - button "插入排序 循环不变量与逐个插入 DEV" [ref=e440] [cursor=pointer]:
+                - generic [ref=e446]:
+                  - generic [ref=e447]: 插入排序
+                  - generic [ref=e448]: 循环不变量与逐个插入
+                - generic [ref=e449]: DEV
+              - button "归并排序 2.3 · 拆分、合并与递归树" [ref=e450] [cursor=pointer]:
+                - generic [ref=e456]:
+                  - generic [ref=e457]: 归并排序
+                  - generic [ref=e458]: 2.3 · 拆分、合并与递归树
+              - button "二分查找 区间缩小与对数复杂度 DEV" [ref=e459] [cursor=pointer]:
+                - generic [ref=e465]:
+                  - generic [ref=e466]: 二分查找
+                  - generic [ref=e467]: 区间缩小与对数复杂度
+                - generic [ref=e468]: DEV
+            - generic [ref=e469]:
+              - generic [ref=e470]:
+                - generic [ref=e471]: 第 3 章
+                - generic [ref=e472]: 刻画运行时间
+              - button "渐近记号 O、Ω、Θ 的图形比较 DEV" [ref=e473] [cursor=pointer]:
+                - generic [ref=e479]:
+                  - generic [ref=e480]: 渐近记号
+                  - generic [ref=e481]: O、Ω、Θ 的图形比较
+                - generic [ref=e482]: DEV
+              - button "递归式 从递归树读出运行时间 DEV" [ref=e483] [cursor=pointer]:
+                - generic [ref=e489]:
+                  - generic [ref=e490]: 递归式
+                  - generic [ref=e491]: 从递归树读出运行时间
+                - generic [ref=e492]: DEV
+            - generic [ref=e493]:
+              - generic [ref=e494]:
+                - generic [ref=e495]: 第 4 章
+                - generic [ref=e496]: 分治法
+              - button "最大子数组 跨中点候选与线性合并 DEV" [ref=e497] [cursor=pointer]:
+                - generic [ref=e503]:
+                  - generic [ref=e504]: 最大子数组
+                  - generic [ref=e505]: 跨中点候选与线性合并
+                - generic [ref=e506]: DEV
+              - button "最近点对 跨界候选与线性合并" [ref=e507] [cursor=pointer]:
+                - generic [ref=e513]:
+                  - generic [ref=e514]: 最近点对
+                  - generic [ref=e515]: 跨界候选与线性合并
+              - button "主方法 递归树中谁在主导" [ref=e516] [cursor=pointer]:
+                - generic [ref=e522]:
+                  - generic [ref=e523]: 主方法
+                  - generic [ref=e524]: 递归树中谁在主导
+              - button "Strassen 矩阵乘法 减少递归子问题数量 DEV" [ref=e525] [cursor=pointer]:
+                - generic [ref=e531]:
+                  - generic [ref=e532]: Strassen 矩阵乘法
+                  - generic [ref=e533]: 减少递归子问题数量
+                - generic [ref=e534]: DEV
+            - generic [ref=e535]:
+              - generic [ref=e536]:
+                - generic [ref=e537]: 第 5 章
+                - generic [ref=e538]: 概率分析与随机算法
+              - button "随机化算法 随机选择与期望运行时间 DEV" [ref=e539] [cursor=pointer]:
+                - generic [ref=e545]:
+                  - generic [ref=e546]: 随机化算法
+                  - generic [ref=e547]: 随机选择与期望运行时间
+                - generic [ref=e548]: DEV
+              - button "招聘问题 指示器随机变量与期望 DEV" [ref=e549] [cursor=pointer]:
+                - generic [ref=e555]:
+                  - generic [ref=e556]: 招聘问题
+                  - generic [ref=e557]: 指示器随机变量与期望
+                - generic [ref=e558]: DEV
+          - generic [ref=e559]:
+            - generic [ref=e560]: II · 排序与顺序统计
+            - generic [ref=e561]:
+              - generic [ref=e562]:
+                - generic [ref=e563]: 第 6 章
+                - generic [ref=e564]: 堆排序
+              - button "堆排序 大根堆、取最大值与原地排序" [ref=e565] [cursor=pointer]:
+                - generic [ref=e571]:
+                  - generic [ref=e572]: 堆排序
+                  - generic [ref=e573]: 大根堆、取最大值与原地排序
+              - button "优先队列 插入、取最大值与堆的接口 DEV" [ref=e574] [cursor=pointer]:
+                - generic [ref=e580]:
+                  - generic [ref=e581]: 优先队列
+                  - generic [ref=e582]: 插入、取最大值与堆的接口
+                - generic [ref=e583]: DEV
+            - generic [ref=e584]:
+              - generic [ref=e585]:
+                - generic [ref=e586]: 第 7 章
+                - generic [ref=e587]: 快速排序
+              - button "快速排序 均衡分区与最坏情况" [ref=e588] [cursor=pointer]:
+                - generic [ref=e594]:
+                  - generic [ref=e595]: 快速排序
+                  - generic [ref=e596]: 均衡分区与最坏情况
+              - button "随机化快速排序 随机主元与期望复杂度 DEV" [ref=e597] [cursor=pointer]:
+                - generic [ref=e603]:
+                  - generic [ref=e604]: 随机化快速排序
+                  - generic [ref=e605]: 随机主元与期望复杂度
+                - generic [ref=e606]: DEV
+            - generic [ref=e607]:
+              - generic [ref=e608]:
+                - generic [ref=e609]: 第 8 章
+                - generic [ref=e610]: 线性时间排序
+              - button "计数排序 频次数组与稳定输出 DEV" [ref=e611] [cursor=pointer]:
+                - generic [ref=e617]:
+                  - generic [ref=e618]: 计数排序
+                  - generic [ref=e619]: 频次数组与稳定输出
+                - generic [ref=e620]: DEV
+              - button "基数排序 从低位到高位的稳定排序 DEV" [ref=e621] [cursor=pointer]:
+                - generic [ref=e627]:
+                  - generic [ref=e628]: 基数排序
+                  - generic [ref=e629]: 从低位到高位的稳定排序
+                - generic [ref=e630]: DEV
+              - button "桶排序 按分布把元素放入桶中 DEV" [ref=e631] [cursor=pointer]:
+                - generic [ref=e637]:
+                  - generic [ref=e638]: 桶排序
+                  - generic [ref=e639]: 按分布把元素放入桶中
+                - generic [ref=e640]: DEV
+            - generic [ref=e641]:
+              - generic [ref=e642]:
+                - generic [ref=e643]: 第 9 章
+                - generic [ref=e644]: 中位数与顺序统计量
+              - button "顺序统计量 选择第 k 小元素 DEV" [ref=e645] [cursor=pointer]:
+                - generic [ref=e651]:
+                  - generic [ref=e652]: 顺序统计量
+                  - generic [ref=e653]: 选择第 k 小元素
+                - generic [ref=e654]: DEV
+              - button "中位数的中位数 最坏情况线性时间选择 DEV" [ref=e655] [cursor=pointer]:
+                - generic [ref=e661]:
+                  - generic [ref=e662]: 中位数的中位数
+                  - generic [ref=e663]: 最坏情况线性时间选择
+                - generic [ref=e664]: DEV
+    - generic [ref=e44]: 本地静态站点React 19.3 · Anime.js 4.5 · KaTeX 0.18.7
+  - main [ref=e46]:
+    - generic [ref=e48]:
+      - text: 算法动画站
+      - generic [ref=e51]: /
+      - text: 沙盘推演 / 第 7 章 快速排序
+    - generic [ref=e666]:
+      - generic [ref=e667]:
+        - generic [ref=e668]:
+          - paragraph [ref=e669]: SANDBOX 03 · QUICK SORT
+          - heading "先选主元：把“全部比较”变成一次扫描" [level=2] [ref=e670]
+          - paragraph [ref=e671]: 主元把一次线性扫描变成两个递归子问题；真正决定复杂度的是分区是否均衡，同值元素的身份也会被检查。
+        - generic [ref=e672]:
+          - text: STEP
+          - strong [ref=e673]: "01"
+          - generic [ref=e674]: / 05
+      - group "先选主元：把“全部比较”变成一次扫描步骤控制" [ref=e675]:
+        - tablist "先选主元：把“全部比较”变成一次扫描步骤" [ref=e676]:
+          - tab "01 选主元" [selected] [ref=e677] [cursor=pointer]
+          - tab "02 分区" [ref=e678] [cursor=pointer]
+          - tab "03 主元归位" [ref=e679] [cursor=pointer]
+          - tab "04 继续递归" [ref=e680] [cursor=pointer]
+          - tab "05 复杂度" [ref=e681] [cursor=pointer]
+        - generic [ref=e682]:
+          - button "上一步" [disabled] [ref=e683]
+          - button "下一步" [ref=e686] [cursor=pointer]
+          - button "自动播放" [ref=e689] [cursor=pointer]
+          - button "切换播放速度" [ref=e692] [cursor=pointer]: 1×
+          - button "重播" [ref=e696] [cursor=pointer]
+      - progressbar "教学进度" [ref=e700]
+      - region "选择演示样例" [ref=e701]:
+        - generic [ref=e702]:
+          - generic [ref=e703]:
+            - paragraph [ref=e704]: INPUT LAB
+            - strong [ref=e705]: 换一组输入再看一次
+          - generic [ref=e706]: "[7,2,1,6,8,5,3,4]"
+        - group "演示样例" [ref=e707]:
+          - button "课堂混合序列 [7,2,1,6,8,5,3,4]" [pressed] [ref=e708] [cursor=pointer]:
+            - generic [ref=e709]: 课堂混合序列
+            - generic [ref=e710]: "[7,2,1,6,8,5,3,4]"
+          - button "已排序·坏主元 [1,2,3,4,5,6,7,8]" [ref=e711] [cursor=pointer]:
+            - generic [ref=e712]: 已排序·坏主元
+            - generic [ref=e713]: "[1,2,3,4,5,6,7,8]"
+          - button "逆序·坏主元 [8,7,6,5,4,3,2,1]" [ref=e714] [cursor=pointer]:
+            - generic [ref=e715]: 逆序·坏主元
+            - generic [ref=e716]: "[8,7,6,5,4,3,2,1]"
+          - button "重复键·查身份 [4,2,7,4,1,4,3]" [ref=e717] [cursor=pointer]:
+            - generic [ref=e718]: 重复键·查身份
+            - generic [ref=e719]: "[4,2,7,4,1,4,3]"
+      - generic [ref=e720]:
+        - generic [ref=e721]:
+          - generic [ref=e722]: 这一步，公式记录了哪次分区？
+          - generic [ref=e725]:
+            - math [ref=e727]:
+              - generic [ref=e729]:
+                - generic [ref=e730]: 主元
+                - generic [ref=e731]: p
+                - generic [ref=e732]: =
+                - generic [ref=e733]: "4"
+                - generic [ref=e734]: ，扫描其余
+                - generic [ref=e735]: "7"
+                - generic [ref=e736]: 个元素
+            - generic [aria-hidden] [ref=e737]:
+              - generic [ref=e738]:
+                - generic [ref=e739]: 主元
+                - text: p =
+              - generic [ref=e740]:
+                - text: "4"
+                - generic [ref=e741]: ，扫描其余
+                - text: "7"
+                - generic [ref=e742]: 个元素
+        - generic [ref=e743]:
+          - generic [ref=e744]:
+            - heading "数组分区：对象保留身份" [level=3] [ref=e746]
+            - generic [ref=e747]:
+              - img "快速排序数组状态" [ref=e748]:
+                - generic [ref=e749]:
+                  - generic [ref=e750]: 扫描
+                  - generic [ref=e758]: 主元
+                - generic [ref=e760]:
+                  - generic [ref=e761]: "7"
+                  - generic [ref=e762]: "2"
+                  - generic [ref=e763]: "1"
+                  - generic [ref=e764]: "6"
+                  - generic [ref=e765]: "8"
+                  - generic [ref=e766]: "5"
+                  - generic [ref=e767]: "3"
+                  - generic [ref=e768]: "4"
+              - list "颜色语义" [ref=e769]:
+                - listitem [ref=e770]: 主元
+                - listitem [ref=e772]: 扫描中
+                - listitem [ref=e774]: 位置已确定
+          - generic [ref=e776]:
+            - heading "计算台" [level=3] [ref=e778]
+            - generic [ref=e779]:
+              - generic [ref=e780]:
+                - generic [ref=e781]:
+                  - generic [ref=e782]: 本轮扫描元素
+                  - strong [ref=e783]: "8"
+                - generic [ref=e784]:
+                  - generic [ref=e785]: 主元位置
+                  - strong [ref=e786]: 待定
+                - generic [ref=e787]:
+                  - generic [ref=e788]: 分区比较次数
+                  - strong [ref=e789]: "0"
+              - generic [ref=e792]:
+                - math [ref=e794]:
+                  - generic [ref=e796]:
+                    - generic [ref=e797]: T
+                    - generic [ref=e798]: (
+                    - generic [ref=e799]: "n"
+                    - generic [ref=e800]: )
+                    - generic [ref=e801]: =
+                    - generic [ref=e802]: T
+                    - generic [ref=e803]: (
+                    - generic [ref=e804]: k
+                    - generic [ref=e805]: )
+                    - generic [ref=e806]: +
+                    - generic [ref=e807]: T
+                    - generic [ref=e808]: (
+                    - generic [ref=e809]: "n"
+                    - generic [ref=e810]: −
+                    - generic [ref=e811]: k
+                    - generic [ref=e812]: −
+                    - generic [ref=e813]: "1"
+                    - generic [ref=e814]: )
+                    - generic [ref=e815]: +
+                    - generic [ref=e816]: O
+                    - generic [ref=e817]: (
+                    - generic [ref=e818]: "n"
+                    - generic [ref=e819]: )
+                - generic [aria-hidden] [ref=e820]:
+                  - generic [ref=e821]: T(n) =
+                  - generic [ref=e822]: T(k) +
+                  - generic [ref=e823]: T(n −
+                  - generic [ref=e824]: k −
+                  - generic [ref=e825]: 1) +
+                  - generic [ref=e826]: O(n)
+              - paragraph [ref=e827]:
+                - generic [ref=e828]: 不变量
+                - text: 主元 4 尚未移动，整组数字还在原位。
+              - img "伪代码：当前执行到哪一行" [ref=e829]:
+                - generic "取最后一个元素作为主元" [ref=e830]:
+                  - generic [ref=e831]: "01"
+                  - code [ref=e832]: x = A[r]
+                - generic [ref=e833]:
+                  - generic [ref=e834]: "02"
+                  - code [ref=e835]: i = p - 1
+                - generic [ref=e836]:
+                  - generic [ref=e837]: "03"
+                  - code [ref=e838]: for j = p to r - 1
+                - generic "移动依据：A[j] 是否不大于主元" [ref=e839]:
+                  - generic [ref=e840]: "04"
+                  - code [ref=e841]: if A[j] ≤ x
+                - generic [ref=e842]:
+                  - generic [ref=e843]: "05"
+                  - code [ref=e844]: i = i + 1
+                - generic [ref=e845]:
+                  - generic [ref=e846]: "06"
+                  - code [ref=e847]: exchange A[i] with A[j]
+                - generic "主元落到左右区的分界" [ref=e848]:
+                  - generic [ref=e849]: "07"
+                  - code [ref=e850]: exchange A[i+1] with A[r]
+              - paragraph [ref=e851]: 主元会把数组分成“小于 p”和“大于 p”两侧；本轮扫描成本是线性的。
+        - region [ref=e852]:
+          - generic [ref=e857]:
+            - text: 先猜一步
+            - heading "以 4 为主元时，哪些数字应该进入左分区？" [level=3] [ref=e858]
+          - group "预测答案" [ref=e859]:
+            - button "A 2、1、3" [ref=e860] [cursor=pointer]:
+              - generic [ref=e861]: A
+              - text: 2、1、3
+            - button "B 8、5、7、6" [ref=e862] [cursor=pointer]:
+              - generic [ref=e863]: B
+              - text: 8、5、7、6
+            - button "C 全部数字都要交换" [ref=e864] [cursor=pointer]:
+              - generic [ref=e865]: C
+              - text: 全部数字都要交换
+        - region "设计思路" [ref=e866]:
+          - generic [ref=e867]: 设计思路：为什么这样设计
+          - generic [ref=e876]:
+            - generic [ref=e877]:
+              - generic [ref=e878]: "01"
+              - text: 关键观察
+            - paragraph [ref=e879]: 分区只需要一次线性扫描，就能让一个元素（主元）落到它的最终位置——"排序全部"被化归为"确定一个 + 排左右两半"。
+          - generic [ref=e880]:
+            - generic [ref=e881]:
+              - generic [ref=e882]: "02"
+              - text: 换个设计会怎样
+            - generic [ref=e883]:
+              - generic [ref=e884]:
+                - generic [ref=e885]: 若改用 归并排序（先递归后合并）
+                - paragraph [ref=e890]: 归并的合并需要 O(n) 辅助数组；快排用原地交换省掉它，代价是相等键可能被交换跨过（不稳定）。
+              - generic [ref=e891]:
+                - generic [ref=e892]: 若改用 固定取末尾做主元
+                - paragraph [ref=e897]: 已排序输入会让分区每次切成 0 和 n−1，退化成 Θ(n²)；随机化主元用小成本把最坏情况变成小概率事件。
+          - generic [ref=e898]:
+            - generic [ref=e899]:
+              - generic [ref=e900]: "03"
+              - text: 带走这一招
+            - region [ref=e904]:
+              - generic [ref=e909]:
+                - text: 先猜一步
+                - heading "快排和归并都把问题分成两半，线性工作量的花法有什么本质不同？" [level=3] [ref=e910]
+              - group "预测答案" [ref=e911]:
+                - button "A 快排花在递归前的\"分\"（分区），归并花在递归后的\"合\"（合并）" [ref=e912] [cursor=pointer]:
+                  - generic [ref=e913]: A
+                  - text: 快排花在递归前的"分"（分区），归并花在递归后的"合"（合并）
+                - button "B 快排不需要做任何工作" [ref=e914] [cursor=pointer]:
+                  - generic [ref=e915]: B
+                  - text: 快排不需要做任何工作
+                - button "C 归并不需要比较" [ref=e916] [cursor=pointer]:
+                  - generic [ref=e917]: C
+                  - text: 归并不需要比较
+        - generic [ref=e918]: 下一步逐个判断：谁应该留在 4 的左边？
+      - region [ref=e919]:
+        - generic [ref=e920]:
+          - generic [ref=e921]:
+            - paragraph [ref=e922]: COMPLEXITY MAP
+            - heading "快速排序：主元条件决定递归树高度" [level=3] [ref=e923]
+            - paragraph [ref=e924]: 每一层都要做 Θ(n) 的分区；最好、平均、最差的差异来自子问题是否均衡。
+          - generic [ref=e925]: 条件 → 复杂度
+        - generic [ref=e926]:
+          - generic [ref=e928]:
+            - generic [ref=e929]:
+              - generic [ref=e930]: 最好
+              - strong [ref=e931]: Θ(n log n)
+            - paragraph [ref=e932]:
+              - generic [ref=e933]: 条件
+              - text: 每次主元都接近中位数，左右各约一半。
+            - paragraph [ref=e934]:
+              - generic [ref=e935]: 例子
+              - code [ref=e936]: 中位主元：4 | [1,2,3] [5,6,7,8]
+            - generic [ref=e937]: 递归树高度约 log₂n，每层合计扫描 n 个元素。
+          - generic [ref=e939]:
+            - generic [ref=e940]:
+              - generic [ref=e941]: 平均
+              - strong [ref=e942]: Θ(n log n)
+            - paragraph [ref=e943]:
+              - generic [ref=e944]: 条件
+              - text: 随机排列，或随机选择主元；这是期望复杂度。
+            - paragraph [ref=e945]:
+              - generic [ref=e946]: 例子
+              - code [ref=e947]: 随机输入：[7,2,1,6,8,5,3,4]
+            - generic [ref=e948]: 极端不平衡会被多数较平衡的分区抵消，期望树高为对数级。
+          - generic [ref=e950]:
+            - generic [ref=e951]:
+              - generic [ref=e952]: 最差
+              - strong [ref=e953]: Θ(n²)
+            - paragraph [ref=e954]:
+              - generic [ref=e955]: 条件
+              - text: 主元每次都是最小或最大，切成 0 和 n−1。
+            - paragraph [ref=e956]:
+              - generic [ref=e957]: 例子
+              - code [ref=e958]: 已排序：[1,2,3,4,5,6,7,8]
+            - generic [ref=e959]: 递归树退化成链：n+(n−1)+…+1。
+        - generic [ref=e960]:
+          - generic [ref=e961]:
+            - generic [ref=e962]:
+              - generic [ref=e963]: STABILITY CHECK
+              - strong [ref=e964]: 通常不稳定
+            - generic [ref=e965]: 相等键可能换位
+          - paragraph [ref=e966]: 分区时的交换可能让相等键跨过彼此；除非额外设计稳定分区和辅助空间。
+          - generic [ref=e967]:
+            - code [ref=e968]: 4A → 4B
+            - generic [ref=e969]: →
+            - code [ref=e970]: 4B → 4A
+        - generic [ref=e971]: 别只背结论随机化快速排序把最坏输入变成低概率事件，但单次运行仍可能出现不平衡分区。

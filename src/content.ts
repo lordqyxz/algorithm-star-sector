@@ -1,7 +1,7 @@
 export const siteIntro = {
-  eyebrow: 'ALGORITHM ANIMATION STUDIO · CLRS ROADMAP',
-  title: '把算法的“为什么”画出来',
-  description: '面向课堂的可操作动画：先让数字、点和递归树发生变化，再把变化压缩成公式。',
+  eyebrow: 'ALGORITHMIA · SANDBOX ROADMAP',
+  title: '把算法的“为什么”打穿',
+  description: '在算法王国里先玩关卡、再进沙盘推演：每个概念都可以亲手操作，也可以逐拍观看它的设计与代价。',
 }
 
 export type LessonStatus = 'ready' | 'dev'

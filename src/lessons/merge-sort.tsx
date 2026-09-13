@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { animate, stagger } from 'animejs'
 import { CalcDesk } from '@/components/CalcDesk'
+import { DesignNotes, type DesignInsight } from '@/components/DesignNotes'
 import { ExamplePicker, type ExampleOption } from '@/components/ExamplePicker'
 import { FormulaReadout, ConclusionBox } from '@/components/FormulaReadout'
 import { LegendStrip } from '@/components/LegendStrip'
@@ -62,6 +63,15 @@ function buildSortSteps(values: number[]): MergeStep[] {
   ]
 }
 
+const mergeSortInsight: DesignInsight = {
+  observation: '整个算法的地基是一句话：合并两个有序数组只需线性扫描。把"排序"化归为"合并"，分治才有意义。',
+  contrasts: [
+    { alternative: '快速排序', whyNot: '省掉 O(n) 辅助空间且更缓存友好，代价是不稳定、最坏 Θ(n²)；归并对任何输入都封顶 Θ(n log n) 且稳定。' },
+    { alternative: '插入排序直接排大数组', whyNot: '逆序输入 Θ(n²)；归并用 log₂n 层线性合并把最坏情况压到 Θ(n log n)。' },
+  ],
+  transfer: { prompt: '归并排序在链表上比在数组上更有优势，为什么？', options: ['链表合并只需改指针，不需要 O(n) 辅助数组', '链表天然有序', '数组不能归并'], answer: 0, explanation: '数组合并要开辅助数组；链表的拆分与合并都是指针操作——所以归并是链表排序的主流选择。' },
+}
+
 const mergeSortComplexity: ComplexityProfileData = {
   title: '归并排序：三种输入都保持同一个阶数',
   subtitle: '这里指标准自顶向下归并排序；每次都拆分，并把每层子数组线性合并。',
@@ -93,7 +103,7 @@ function MergeSortScene({ steps, step, setStep, playing, onTogglePlaying, onRepl
   const mergeLeft = state.rows[1].groups[0].slice().sort((a, b) => a - b).join(', ')
   const mergeRight = state.rows[1].groups[1].slice().sort((a, b) => a - b).join(', ')
   return (
-    <LessonShell eyebrow="ANIMATION 01 · MERGE SORT" title={state.title} description="数字真的被分开、比较、合并；每一层的工作量都能从数组读出来，相等键还会保留身份顺序。" steps={['初始', '拆分', '基例', '合并', '复杂度']} step={step} onStepChange={setStep} playing={playing} onTogglePlaying={onTogglePlaying} onReplay={onReplay} complexity={mergeSortComplexity} speed={speed} onCycleSpeed={onCycleSpeed} examplePicker={examplePicker}>
+    <LessonShell eyebrow="SANDBOX 01 · MERGE SORT" title={state.title} description="数字真的被分开、比较、合并；每一层的工作量都能从数组读出来，相等键还会保留身份顺序。" steps={['初始', '拆分', '基例', '合并', '复杂度']} step={step} onStepChange={setStep} playing={playing} onTogglePlaying={onTogglePlaying} onReplay={onReplay} complexity={mergeSortComplexity} speed={speed} onCycleSpeed={onCycleSpeed} examplePicker={examplePicker}>
       <div ref={scopeRef} className="lesson-canvas">
         <FormulaReadout question="这一步，公式记录了什么？" latex={state.formula} className="sort-formula" />
         <div className="lesson-grid">
@@ -126,6 +136,7 @@ function MergeSortScene({ steps, step, setStep, playing, onTogglePlaying, onRepl
           <CalcDesk metrics={[{ label: '这一层有多少个问题', value: state.count }, { label: '每个问题有多大', value: state.size }, { label: '整层工作量', value: state.total, tone: 'green' }]} equation={state.equation} invariant={state.invariant} pseudocode={{ lines: mergeCode, active: step === 3 ? [0, 1, 2, 3] : [] }} note={state.note} />
         </div>
         {state.prediction ? <PredictionPrompt {...state.prediction} /> : null}
+        <DesignNotes insight={mergeSortInsight} />
         <ConclusionBox>{state.conclusion}</ConclusionBox>
       </div>
     </LessonShell>

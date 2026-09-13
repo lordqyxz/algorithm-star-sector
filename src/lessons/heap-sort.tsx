@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 import { animate, stagger } from 'animejs'
 import { ArrayView, type DataCell } from '@/components/ArrayView'
 import { CalcDesk } from '@/components/CalcDesk'
+import { DesignNotes, type DesignInsight } from '@/components/DesignNotes'
 import { ExamplePicker, type ExampleOption } from '@/components/ExamplePicker'
 import { FormulaReadout, ConclusionBox } from '@/components/FormulaReadout'
 import { LegendStrip } from '@/components/LegendStrip'
@@ -84,6 +85,15 @@ function buildHeapSteps(values: number[]): HeapStep[] {
   ]
 }
 
+const heapSortInsight: DesignInsight = {
+  observation: '"反复取最大值"这个朴素需求被改写成"维护堆序"：建一次堆 Θ(n)，之后每次取最大只修复一条对数长度的路径。',
+  contrasts: [
+    { alternative: '无序数组每次线性找最大', whyNot: '每次 Θ(n)、共 n 次合计 Θ(n²)；堆把"找"的成本摊到"维护"上，一次堆化只走一条路径。' },
+    { alternative: '维护一个有序数组', whyNot: '取最大 O(1) 很快，但插入新元素要整体挪动 Θ(n)；堆让插入和取出都是 O(log n)。' },
+  ],
+  transfer: { prompt: '自底向上建堆是 Θ(n) 而不是 n·log n，为什么？', options: ['一半以上是叶子、根本不下沉，按高度加权求和收敛到 O(n)', '建堆不需要比较', '因为数组已经有序'], answer: 0, explanation: '一半节点是叶子（下沉 0 步），只有少数节点走全高；Σ(节点数×高度) 对 log n 收敛，总量仍是 O(n)。' },
+}
+
 const heapSortComplexity: ComplexityProfileData = {
   title: '堆排序：建堆快，但反复取最大值决定阶数',
   subtitle: '标准原地堆排序的建堆是 Θ(n)，后续 n 次取最大值和堆化把总时间推到 Θ(n log n)。',
@@ -118,7 +128,7 @@ function HeapSortScene({ steps, step, setStep, playing, onTogglePlaying, onRepla
   const cellTone = (index: number): DataCell['tone'] => state.active.includes(index) ? 'focus' : index >= state.array.length - state.sorted ? 'sorted' : 'default'
   const cells: DataCell[] = state.array.map((value, index) => ({ id: `${value}#${index}`, label: value, tone: cellTone(index) }))
   return (
-    <LessonShell eyebrow="ANIMATION 02 · HEAP SORT" title={state.title} description="把数组看成完全二叉树：根节点负责交付当前最大值，堆化负责修复被交换破坏的局部关系；同值元素的身份也会被单独检查。" steps={['看数组', '建堆', '取最大值', '再堆化', '完成']} step={step} onStepChange={setStep} playing={playing} onTogglePlaying={onTogglePlaying} onReplay={onReplay} complexity={heapSortComplexity} speed={speed} onCycleSpeed={onCycleSpeed} examplePicker={examplePicker}>
+    <LessonShell eyebrow="SANDBOX 02 · HEAP SORT" title={state.title} description="把数组看成完全二叉树：根节点负责交付当前最大值，堆化负责修复被交换破坏的局部关系；同值元素的身份也会被单独检查。" steps={['看数组', '建堆', '取最大值', '再堆化', '完成']} step={step} onStepChange={setStep} playing={playing} onTogglePlaying={onTogglePlaying} onReplay={onReplay} complexity={heapSortComplexity} speed={speed} onCycleSpeed={onCycleSpeed} examplePicker={examplePicker}>
       <div ref={scopeRef} className="lesson-canvas">
         <FormulaReadout question="这一步，公式记录了哪条堆序关系？" latex={state.formula} />
         <div className="heap-layout">
@@ -149,6 +159,7 @@ function HeapSortScene({ steps, step, setStep, playing, onTogglePlaying, onRepla
           <CalcDesk metrics={[{ label: '未排序区间', value: state.array.length - state.sorted }, { label: '已固定最大值', value: state.sorted, tone: 'green' }]} equation={state.equation} invariant={state.invariant} pseudocode={{ lines: heapCode, active: step === 0 ? [0] : step === 1 ? [1, 2, 3, 4, 5] : step === 2 ? [5] : step === 3 ? [6] : [] }} note={state.note} />
         </div>
         {state.prediction ? <PredictionPrompt {...state.prediction} /> : null}
+        <DesignNotes insight={heapSortInsight} />
         <ConclusionBox>{state.conclusion}</ConclusionBox>
       </div>
     </LessonShell>

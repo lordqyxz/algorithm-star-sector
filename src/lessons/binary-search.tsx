@@ -4,6 +4,7 @@ import { animate, stagger } from 'animejs'
 import { ArrayView, type DataCell, type PointerTag, type RegionLabel } from '@/components/ArrayView'
 import { CalcDesk } from '@/components/CalcDesk'
 import { CompareJudge, type CompareEntry } from '@/components/CompareJudge'
+import { DesignNotes, type DesignInsight } from '@/components/DesignNotes'
 import { ExamplePicker, type ExampleOption } from '@/components/ExamplePicker'
 import { FormulaReadout, ConclusionBox } from '@/components/FormulaReadout'
 import { LegendStrip } from '@/components/LegendStrip'
@@ -121,6 +122,15 @@ function buildSearchSteps(example: SearchExample): SearchStep[] {
   return steps
 }
 
+const binarySearchInsight: DesignInsight = {
+  observation: '有序性是预付成本：先付一次 Θ(n log n) 排序，之后每次查询只付 Θ(log n)——数据结构设计的本质是把成本搬到付得最少的地方。',
+  contrasts: [
+    { alternative: '哈希表查找', whyNot: '平均 O(1) 更快，但要付哈希函数与额外空间，且不支持"第 k 小/范围查询"——有序数组顺带就能做。' },
+    { alternative: '在链表上二分', whyNot: '取中点要 O(n)，对数优势全部消失——随机访问能力是二分的前提，设计时要检查数据结构是否支撑算法假设。' },
+  ],
+  transfer: { prompt: '数据还要支持频繁插入，二分还合适吗？', options: ['不合适：有序数组插入要整体挪动 Θ(n)', '合适：查询还是 log n', '换无序数组更好'], answer: 0, explanation: '查询多、数据静 → 二分；插入删除多 → 平衡树或哈希更合适——按操作配比选结构，而不是背"哪个最快"。' },
+}
+
 const binarySearchComplexity: ComplexityProfileData = {
   title: '二分查找：有序性换来对数级比较次数',
   subtitle: '每次比较排除一半区间；代价是输入必须有序（或先付一次排序成本）。',
@@ -177,7 +187,7 @@ function BinarySearchScene({ example, steps, step, setStep, playing, onTogglePla
     action: state.result === 'left' ? '中点右侧整段排除，只留左半' : state.result === 'right' ? '中点左侧整段排除，只留右半' : '直接命中',
   }]
   return (
-    <LessonShell eyebrow="ANIMATION 14 · BINARY SEARCH" title={state.title} description="有序数组允许一次比较排除一半区间：查找的代价从 n 次压到 log₂n 次，依据全部来自有序性。" steps={steps.map(item => item.title.startsWith('在 ') ? '问题' : item.finished ? '结论' : `第 ${item.probes} 次比较`)} step={step} onStepChange={setStep} playing={playing} onTogglePlaying={onTogglePlaying} onReplay={onReplay} complexity={binarySearchComplexity} speed={speed} onCycleSpeed={onCycleSpeed} examplePicker={examplePicker}>
+    <LessonShell eyebrow="SANDBOX 14 · BINARY SEARCH" title={state.title} description="有序数组允许一次比较排除一半区间：查找的代价从 n 次压到 log₂n 次，依据全部来自有序性。" steps={steps.map(item => item.title.startsWith('在 ') ? '问题' : item.finished ? '结论' : `第 ${item.probes} 次比较`)} step={step} onStepChange={setStep} playing={playing} onTogglePlaying={onTogglePlaying} onReplay={onReplay} complexity={binarySearchComplexity} speed={speed} onCycleSpeed={onCycleSpeed} examplePicker={examplePicker}>
       <div ref={scopeRef} className="lesson-canvas">
         <FormulaReadout question="这一步，公式记录了哪次排除？" latex={state.formula} />
         <div className="lesson-grid">
@@ -193,6 +203,7 @@ function BinarySearchScene({ example, steps, step, setStep, playing, onTogglePla
           <CalcDesk metrics={[{ label: '当前区间长度', value: Math.max(0, state.high - state.low + 1) }, { label: '已用比较次数', value: state.probes, tone: 'orange' }, { label: '线性扫描最坏', value: n, tone: 'purple' }]} equation={state.equation} invariant={state.invariant} pseudocode={{ lines: searchCode, active: state.finished && state.foundIndex === undefined ? [0, 5] : state.finished ? [0, 1, 2] : [0, 1, state.result === 'left' ? 3 : 4] }} note={state.note} />
         </div>
         {state.prediction ? <PredictionPrompt {...state.prediction} /> : null}
+        <DesignNotes insight={binarySearchInsight} />
         <ConclusionBox>{state.conclusion}</ConclusionBox>
       </div>
     </LessonShell>

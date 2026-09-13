@@ -8,7 +8,7 @@ import { loadSave, saveRecord } from '@/game/save'
 import type { SaveData, SaveRecord } from '@/game/types'
 
 /** 《算法王国》M0：地图 + 操演关。世界层只是壳，规则全部在模拟层。 */
-export function GameApp() {
+export function GameApp({ onOpenCodex }: { onOpenCodex?: () => void }) {
   const [save, setSave] = useState<SaveData>(() => loadSave())
   const [activeLevel, setActiveLevel] = useState<string | null>(null)
   const levelIndex = gameLevels.findIndex(item => item.id === activeLevel)
@@ -46,7 +46,8 @@ export function GameApp() {
     <Card className="game-plaza">
       <CardContent>
         <div className="game-plaza-head"><Sparkles size={17} /><strong>中央广场 · 算法学院</strong></div>
-        <p>绿色货架代表"已整理区"——它就是插入排序的<b>循环不变量</b>：每次拿起新牌、放回正确的洞，不变量都向前长大一格。三枚奖章只看一件事：你有没有靠撤销过关。</p>
+        <p>绿色货架代表"已整理区"——它就是插入排序的<b>循环不变量</b>：每次拿起新牌、放回正确的洞，不变量都向前长大一格。奖章只看一件事：你有没有靠撤销过关。想看算法的逐拍推演与设计思路，去学院的<b>沙盘推演</b>室。</p>
+        {onOpenCodex ? <Button variant="outline" size="sm" onClick={onOpenCodex}>进入学院 · 打开沙盘推演</Button> : null}
       </CardContent>
     </Card>
     <div className="game-map" aria-label="区域地图">

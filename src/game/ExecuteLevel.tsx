@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { ArrowRight, CornerDownRight, MousePointerClick, RotateCcw, Scale, Trophy } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
+import { DesignNotes } from '@/components/DesignNotes'
 import { ExamplePicker } from '@/components/ExamplePicker'
 import { PredictionPrompt } from '@/components/PredictionPrompt'
 import type { ExecuteCommand, ExecuteLevel, MedalTone, SaveData, SaveRecord } from '@/game/types'
@@ -96,6 +97,7 @@ export function ExecuteLevelScreen({ level, save, onSave, onBack, onNext }: Exec
           <span><b>已整理</b>{state.sortedCount} / {state.cells.length}</span>
         </div>
         {gateVisible && variant.prediction ? <PredictionPrompt {...variant.prediction} /> : null}
+        {state.done && variant.insight ? <DesignNotes insight={variant.insight} /> : null}
         {state.done ? (
           <div className="game-win" role="status">
             <div className="game-win-medal"><Trophy size={18} /><strong>{medalNames[medalFor(undoCount)]}</strong><span>用了 {undoCount} 次撤销</span></div>
