@@ -49,7 +49,7 @@ export const algorithmParts: readonly AlgorithmPart[] = [
         title: '起步',
         detail: '从数组操作进入算法',
         lessons: [
-          { id: 'insertion-sort', label: '插入排序', detail: '循环不变量与逐个插入', color: 'slate', status: 'dev' },
+          { id: 'insertion-sort', label: '插入排序', detail: '循环不变量与逐个插入', color: 'slate', status: 'ready' },
           { id: 'merge-sort', label: '归并排序', detail: '2.3 · 拆分、合并与递归树', color: 'yellow', status: 'ready' },
           { id: 'binary-search', label: '二分查找', detail: '区间缩小与对数复杂度', color: 'slate', status: 'dev' },
         ],

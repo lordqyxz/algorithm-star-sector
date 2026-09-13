@@ -1,0 +1,64 @@
+- generic [ref=f2e3]:
+  - complementary [ref=f2e4]:
+    - generic [ref=f2e10]:
+      - strong [ref=f2e11]: Algorithm
+      - generic [ref=f2e12]: Animation Studio
+    - generic [ref=f2e13]: WORKSPACE
+    - navigation "站点主题导航" [ref=f2e14]:
+      - button "算法王国 像玩游戏一样学算法" [ref=f2e15] [cursor=pointer]:
+        - generic [ref=f2e21]:
+          - generic [ref=f2e22]: 算法王国
+          - generic [ref=f2e23]: 像玩游戏一样学算法
+      - button "学院 沙盘推演总览与路线" [ref=f2e24] [cursor=pointer]:
+        - generic [ref=f2e29]:
+          - generic [ref=f2e30]: 学院
+          - generic [ref=f2e31]: 沙盘推演总览与路线
+      - button "沙盘推演 按《算法导论》章节编排" [ref=f2e33] [cursor=pointer]:
+        - generic [ref=f2e39]:
+          - generic [ref=f2e40]: 沙盘推演
+          - generic [ref=f2e41]: 按《算法导论》章节编排
+    - generic [ref=f2e44]: 本地静态站点React 19.3 · Anime.js 4.5 · KaTeX 0.18.7
+  - main [ref=f2e46]:
+    - generic [ref=f2e48]:
+      - text: 算法动画站
+      - generic [ref=f2e51]: /
+      - text: 算法王国
+    - generic [ref=f2e53]:
+      - generic [ref=f2e54]:
+        - generic [ref=f2e55]:
+          - paragraph [ref=f2e56]: ALGORITHMIA · SORTING PLAINS
+          - heading "算法王国 · 排序平原" [level=2] [ref=f2e57]
+          - paragraph [ref=f2e58]: 你是驿站的新分拣员：亲手把货架整理有序。步数和比较次数就是你的复杂度成绩单。
+        - generic [ref=f2e59]:
+          - generic [ref=f2e60]: 进度 0/6
+          - button "清空进度" [ref=f2e61] [cursor=pointer]
+      - generic [ref=f2e66]:
+        - strong [ref=f2e71]: 中央广场 · 算法学院
+        - paragraph [ref=f2e72]: 绿色货架代表"已整理区"——它就是插入排序的循环不变量：每次拿起新牌、放回正确的洞，不变量都向前长大一格。奖章只看一件事：你有没有靠撤销过关。想看算法的逐拍推演与设计思路，去学院的沙盘推演室。
+        - button "进入学院 · 打开沙盘推演" [ref=f2e73] [cursor=pointer]
+      - generic "区域地图" [ref=f2e74]:
+        - button "进入关卡 第一箱" [ref=f2e76] [cursor=pointer]:
+          - generic [ref=f2e77]: "1"
+          - strong [ref=f2e81]: 第一箱
+          - generic [ref=f2e82]: 1 个挑战
+          - generic "新手上路" [ref=f2e84]
+        - generic [ref=f2e85]:
+          - generic [aria-hidden] [ref=f2e86]: →
+          - button "进入关卡 驿站分拣" [disabled] [ref=f2e87]:
+            - generic [ref=f2e88]: "2"
+            - strong [ref=f2e93]: 驿站分拣
+            - generic [ref=f2e94]: 3 个挑战
+            - generic [ref=f2e95]:
+              - generic "课堂混合" [ref=f2e96]
+              - generic "已经有序" [ref=f2e97]
+              - generic "完全逆序" [ref=f2e98]
+        - generic [ref=f2e99]:
+          - generic [aria-hidden] [ref=f2e100]: →
+          - button "进入关卡 逆风局" [disabled] [ref=f2e101]:
+            - generic [ref=f2e102]: "3"
+            - strong [ref=f2e107]: 逆风局
+            - generic [ref=f2e108]: 2 个挑战
+            - generic [ref=f2e109]:
+              - generic "完全逆序" [ref=f2e110]
+              - generic "近似有序" [ref=f2e111]
+      - paragraph [ref=f2e112]: 更多区域（归并城堡、快速比武场、堆雪山）在后续版本开放。
