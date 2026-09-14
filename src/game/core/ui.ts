@@ -67,6 +67,8 @@ export const C = {
   cellBg: 0xf3f6f9,
   cellBorder: 0xcbd5e2,
   dim: 0x172235,
+  disabled: 0x2a3a55,
+  disabledBorder: 0x51637f,
 } as const
 
 export const SANS = 'Inter, "PingFang SC", "Microsoft YaHei", sans-serif'
@@ -102,7 +104,109 @@ export function makePanel(parent: Container, x: number, y: number, w: number, h:
 
 export type ButtonHandle = { container: Container; setEnabled: (enabled: boolean) => void; setLabel: (label: string) => void }
 
-export function makeButton(parent: Container, opts: { x: number; y: number; w: number; h?: number; label: string; variant?: 'solid' | 'outline' | 'ghost'; size?: number; onTap: () => void }): ButtonHandle {
+/** 动作字形：给按钮一个"一眼看懂"的图形暗示（箭头/天平/探测环/循环等）。 */
+export type GlyphKind = 'pick' | 'compare' | 'shift' | 'drop' | 'probe' | 'merge' | 'loop' | 'undo'
+
+export function drawGlyph(g: Graphics, kind: GlyphKind, x: number, y: number, color: number): void {
+  switch (kind) {
+    case 'pick':
+      g.moveTo(x + 7, y)
+      g.lineTo(x + 1, y + 8)
+      g.lineTo(x + 5, y + 8)
+      g.lineTo(x + 5, y + 13)
+      g.lineTo(x + 9, y + 13)
+      g.lineTo(x + 9, y + 8)
+      g.lineTo(x + 13, y + 8)
+      g.closePath()
+      g.fill({ color })
+      break
+    case 'compare':
+      g.moveTo(x + 1, y + 4)
+      g.lineTo(x + 13, y + 4)
+      g.moveTo(x + 1, y + 10)
+      g.lineTo(x + 13, y + 10)
+      g.stroke({ width: 2, color })
+      g.circle(x + 3.5, y + 4, 2.6)
+      g.circle(x + 10.5, y + 10, 2.6)
+      g.fill({ color })
+      break
+    case 'shift':
+      g.rect(x, y + 5.5, 8, 3)
+      g.fill({ color })
+      g.moveTo(x + 8, y + 1.5)
+      g.lineTo(x + 14, y + 7)
+      g.lineTo(x + 8, y + 12.5)
+      g.closePath()
+      g.fill({ color })
+      break
+    case 'drop':
+      g.moveTo(x + 7, y)
+      g.lineTo(x + 1, y + 6)
+      g.lineTo(x + 5, y + 6)
+      g.lineTo(x + 5, y + 10)
+      g.lineTo(x + 9, y + 10)
+      g.lineTo(x + 9, y + 6)
+      g.lineTo(x + 13, y + 6)
+      g.closePath()
+      g.fill({ color })
+      g.rect(x - 1, y + 12, 16, 2.5)
+      g.fill({ color })
+      break
+    case 'probe':
+      g.circle(x + 7, y + 7, 5.5)
+      g.stroke({ width: 2, color })
+      g.moveTo(x + 7, y)
+      g.lineTo(x + 7, y + 3.5)
+      g.moveTo(x + 7, y + 10.5)
+      g.lineTo(x + 7, y + 14)
+      g.moveTo(x, y + 7)
+      g.lineTo(x + 3.5, y + 7)
+      g.moveTo(x + 10.5, y + 7)
+      g.lineTo(x + 14, y + 7)
+      g.stroke({ width: 2, color })
+      break
+    case 'merge':
+      g.moveTo(x, y + 2)
+      g.lineTo(x + 5, y + 2)
+      g.lineTo(x + 5, y + 5)
+      g.lineTo(x + 9, y + 5)
+      g.lineTo(x + 9, y + 2)
+      g.lineTo(x + 14, y + 2)
+      g.moveTo(x, y + 12)
+      g.lineTo(x + 5, y + 12)
+      g.lineTo(x + 5, y + 9)
+      g.lineTo(x + 9, y + 9)
+      g.lineTo(x + 9, y + 12)
+      g.lineTo(x + 14, y + 12)
+      g.stroke({ width: 2, color })
+      g.moveTo(x + 5.5, y + 6)
+      g.lineTo(x + 8.5, y + 6)
+      g.lineTo(x + 7, y + 8.5)
+      g.closePath()
+      g.fill({ color })
+      break
+    case 'loop':
+      g.arc(x + 7, y + 7, 5.5, -2.4, 3.6)
+      g.stroke({ width: 2, color })
+      g.moveTo(x + 11, y + 0.5)
+      g.lineTo(x + 14.5, y + 3.5)
+      g.lineTo(x + 9.5, y + 5)
+      g.closePath()
+      g.fill({ color })
+      break
+    case 'undo':
+      g.arc(x + 7, y + 7, 5.5, -0.8, 3.4)
+      g.stroke({ width: 2, color })
+      g.moveTo(x + 0.5, y + 1)
+      g.lineTo(x + 4.5, y + 3)
+      g.lineTo(x + 0.5, y + 5.5)
+      g.closePath()
+      g.fill({ color })
+      break
+  }
+}
+
+export function makeButton(parent: Container, opts: { x: number; y: number; w: number; h?: number; label: string; variant?: 'solid' | 'outline' | 'ghost'; size?: number; icon?: GlyphKind; onTap: () => void }): ButtonHandle {
   const h = opts.h ?? 34
   const variant = opts.variant ?? 'solid'
   const container = new Container()
@@ -112,27 +216,41 @@ export function makeButton(parent: Container, opts: { x: number; y: number; w: n
     bg.clear()
     bg.roundRect(0, 0, opts.w, h, 7)
     if (variant === 'solid') {
-      bg.fill({ color: C.blue, alpha: enabled ? 1 : 0.35 })
+      bg.fill({ color: enabled ? C.blue : C.disabled })
     } else if (variant === 'outline') {
-      bg.fill({ color: 0xffffff })
-      bg.stroke({ width: 1, color: enabled ? 0xcbd5e2 : 0xe1e7ef })
+      bg.fill({ color: 0xffffff, alpha: enabled ? 1 : 0.45 })
+      bg.stroke({ width: 1, color: enabled ? 0xcbd5e2 : C.disabledBorder })
     } else {
       bg.fill({ color: 0xffffff, alpha: enabled ? 0.7 : 0.25 })
     }
   }
-  const label = new Text({ text: opts.label, style: { fontFamily: SANS, fontSize: opts.size ?? 13, fontWeight: '700', fill: variant === 'solid' ? 0xffffff : variant === 'ghost' ? C.muted : C.ink } })
-  label.anchor.set(0.5)
-  label.position.set(opts.w / 2, h / 2)
-  container.addChild(bg, label)
+  const label = new Text({ text: opts.label, resolution: 3, style: { fontFamily: SANS, fontSize: opts.size ?? 13, fontWeight: '700', fill: variant === 'solid' ? 0xffffff : variant === 'ghost' ? C.muted : C.ink } })
+  label.anchor.set(0.5, 0.5)
+  const iconColor = variant === 'solid' ? 0xffffff : variant === 'ghost' ? C.muted : C.blue
+  if (opts.icon) {
+    const glyph = new Graphics()
+    drawGlyph(glyph, opts.icon, 11, h / 2 - 7.5, iconColor)
+    container.addChild(bg, glyph, label)
+    label.position.set(opts.w / 2 + 9, h / 2)
+  } else {
+    container.addChild(bg, label)
+    label.position.set(opts.w / 2, h / 2)
+  }
   let enabled = true
   container.eventMode = 'static'
   container.cursor = 'pointer'
   container.on('pointerdown', () => { if (enabled) opts.onTap() })
-  draw(enabled)
+  const applyEnabled = (value: boolean) => {
+    draw(value)
+    label.alpha = value ? 1 : 0.55
+    if (opts.icon) label.position.set(opts.w / 2 + 9, h / 2)
+    container.cursor = value ? 'pointer' : 'default'
+  }
+  applyEnabled(true)
   parent.addChild(container)
   return {
     container,
-    setEnabled: (value: boolean) => { enabled = value; draw(value); container.cursor = value ? 'pointer' : 'default' },
+    setEnabled: (value: boolean) => { enabled = value; applyEnabled(value) },
     setLabel: (value: string) => { label.text = value },
   }
 }

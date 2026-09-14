@@ -2,7 +2,9 @@ import { Container, Graphics, Text } from 'pixi.js'
 import { animate } from 'animejs'
 import type { Game, GameScene } from '../core/app'
 import { C, makeButton, makePanel, makeText, SPACE, type ButtonHandle } from '../core/ui'
+import { ShelfView } from '../core/level-ui'
 import { executeLevels } from '../levels'
+import { openLevel } from '../core/open'
 import type { GameLevel } from '../types'
 import { canExecute, foldExecute, medalFor, medalNames } from '../sim'
 import { loadSave, saveRecord } from '../save'
@@ -46,22 +48,23 @@ export class LevelScene implements GameScene {
   private predictionChoice: { variantId: string; index: number } | null = null
   private savedKeys = new Set<string>()
   private cellViews = new Map<string, CellView>()
-  private shelfLayer = new Container()
+  private shelf: ShelfView
   private controls = new Container()
   private dynamic = new Container()
   private chipLayer = new Container()
   private buttons: Record<'pick' | 'compare' | 'shift' | 'drop' | 'undo', ButtonHandle>
   private keyHandler: (event: KeyboardEvent) => void
 
-  constructor(private game: Game, level: LevelData, private next: GameLevel | null) {
+  constructor(private game: Game, level: LevelData, private rest: readonly GameLevel[]) {
     this.level = level
     this.variantId = this.level.variants[0].id
 
     makeText(this.container, 24, 20, `${this.level.title} · ${this.level.destination}`, { size: 20, weight: '800', color: SPACE.text })
     makeText(this.container, 24, 52, this.level.brief, { size: 12, color: SPACE.muted, wordWrap: 700 })
     makeButton(this.container, { x: 936 - 96, y: 20, w: 96, label: '返回地图', variant: 'outline', onTap: () => this.backToMap() })
+    this.shelf = new ShelfView({ x: 24, y: 178 })
     this.container.addChild(this.chipLayer)
-    this.container.addChild(this.shelfLayer)
+    this.container.addChild(this.shelf.container)
     this.controls = new Container()
     this.container.addChild(this.controls)
     // dynamic 最后加入：预测门/结算覆盖层永远压在货架与按钮之上
@@ -69,13 +72,13 @@ export class LevelScene implements GameScene {
 
     const y = { chips: 86, hand: 128, shelf: 178, verdict: 244, buttons: 292, counters: 344, keys: 380 }
     this.buttons = {
-      pick: makeButton(this.controls, { x: 24, y: y.buttons, w: 122, label: '拿起下一张 [P]', onTap: () => this.run('pick') }),
-      compare: makeButton(this.controls, { x: 154, y: y.buttons, w: 122, label: '与左邻比较 [C]', onTap: () => this.run('compare') }),
-      shift: makeButton(this.controls, { x: 284, y: y.buttons, w: 110, label: '右移一格 [S]', onTap: () => this.run('shift') }),
-      drop: makeButton(this.controls, { x: 402, y: y.buttons, w: 110, label: '放回洞里 [D]', onTap: () => this.run('drop') }),
-      undo: makeButton(this.controls, { x: 520, y: y.buttons, w: 112, label: '撤销 [U]', variant: 'outline', onTap: () => this.undo() }),
+      pick: makeButton(this.controls, { x: 24, y: y.buttons, w: 132, label: '拿起下一张 [P]', icon: 'pick', onTap: () => this.run('pick') }),
+      compare: makeButton(this.controls, { x: 164, y: y.buttons, w: 132, label: '与左邻比较 [C]', icon: 'compare', onTap: () => this.run('compare') }),
+      shift: makeButton(this.controls, { x: 304, y: y.buttons, w: 118, label: '右移一格 [S]', icon: 'shift', onTap: () => this.run('shift') }),
+      drop: makeButton(this.controls, { x: 430, y: y.buttons, w: 118, label: '放回洞里 [D]', icon: 'drop', onTap: () => this.run('drop') }),
+      undo: makeButton(this.controls, { x: 556, y: y.buttons, w: 118, label: `撤销 ${this.undoCount} [U]`, variant: 'outline', icon: 'undo', onTap: () => this.undo() }),
     }
-    makeButton(this.controls, { x: 640, y: y.buttons, w: 90, label: '重开 [R]', variant: 'ghost', onTap: () => this.restart() })
+    makeButton(this.controls, { x: 682, y: y.buttons, w: 96, label: '重开 [R]', variant: 'ghost', onTap: () => this.restart() })
     makeText(this.controls, 24, y.keys, '零惩罚：撤销和重开都不影响奖章——奖章只看你是否靠撤销过关。', { size: 11, color: SPACE.faint })
 
     this.keyHandler = (event: KeyboardEvent) => {
@@ -169,37 +172,11 @@ export class LevelScene implements GameScene {
   }
 
   private syncShelf(state: ExecuteStateView) {
-    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-    const seen = new Set<string>()
-    state.cells.forEach((cell, index) => {
-      seen.add(cell.id)
-      const isHole = state.hole === index
-      const kind = isHole ? 'hole' : index < state.sortedCount ? 'sorted' : 'default'
-      let view = this.cellViews.get(cell.id)
-      if (!view) {
-        const container = new Container()
-        const body = new Graphics()
-        const label = new Text({ text: '', resolution: 3, style: { fontFamily: 'ui-monospace, Menlo, monospace', fontSize: 18, fontWeight: '800' } })
-        label.anchor.set(0.5)
-        label.position.set(CELL / 2, CELL / 2)
-        container.addChild(body, label)
-        container.position.set(24 + index * (CELL + GAP), 178)
-        this.shelfLayer.addChild(container)
-        drawCell(body, label, kind, cell.value)
-        this.cellViews.set(cell.id, { container, body, label, kind, col: index })
-        return
-      }
-      if (view.kind !== kind) { view.kind = kind; drawCell(view.body, view.label, kind, cell.value) }
-      const targetX = 24 + index * (CELL + GAP)
-      if (view.col !== index) {
-        view.col = index
-        if (reduceMotion) view.container.position.set(targetX, 178)
-        else animate(view.container, { x: targetX, duration: 220, ease: 'out(3)' })
-      }
-    })
-    this.cellViews.forEach((view, id) => {
-      if (!seen.has(id)) { view.container.destroy({ children: true }); this.cellViews.delete(id) }
-    })
+    this.shelf.setState(state.cells.map((cell, index) => ({
+      id: cell.id,
+      value: cell.value,
+      tone: state.hole === index ? 'hole' : index < state.sortedCount ? 'sorted' : 'default',
+    })), { holeAt: state.hole })
   }
 
   private drawPrediction(variant: LevelVariant, done: boolean) {
@@ -228,7 +205,7 @@ export class LevelScene implements GameScene {
     const save = loadSave()
     const previous = save[variant.id]
     const medalRank = { bronze: 1, silver: 2, gold: 3 } as const
-    if (!previous || medalRank[medal] > medalRank[previous.medal]) {
+    if (!previous || medalRank[medal] >= medalRank[previous.medal]) {
       const next: SaveData = { ...save, [variant.id]: { medal, moves: state.moves, compares: state.compares } }
       saveRecord(next)
     }
@@ -242,8 +219,8 @@ export class LevelScene implements GameScene {
     makeText(this.dynamic, 232, 220, `⚡ ${state.moves} 步（最优 ${variant.par.moves}） · 🔍 ${state.compares} 次比较（最优 ${variant.par.compares}）`, { size: 14, color: C.ink, family: 'ui-monospace, Menlo, monospace' })
     makeText(this.dynamic, 232, 250, state.moves === variant.par.moves && state.compares === variant.par.compares ? '完美复现标准插入排序的动作数！' : '对照理论最优想一想：差距发生在哪几张牌上？', { size: 12, color: C.muted, wordWrap: 500 })
     makeButton(this.dynamic, { x: 232, y: 340, w: 120, label: '再玩一次', variant: 'outline', onTap: () => this.restart() })
-    if (this.next) makeButton(this.dynamic, { x: 368, y: 340, w: 120, label: '下一关', variant: 'solid', onTap: () => { const target = this.next!; this.game.switch(g => target.kind === 'execute' ? new LevelScene(g, target, null) : new CommandScene(g, target, null)) } })
-    makeButton(this.dynamic, { x: this.next ? 504 : 368, y: 340, w: 120, label: '返回地图', variant: 'ghost', onTap: () => this.backToMap() })
+    if (this.rest.length > 0) makeButton(this.dynamic, { x: 368, y: 340, w: 120, label: '下一关', variant: 'solid', onTap: () => openLevel(this.game, this.rest[0], this.rest.slice(1)) })
+    makeButton(this.dynamic, { x: this.rest.length > 0 ? 504 : 368, y: 340, w: 120, label: '返回地图', variant: 'ghost', onTap: () => this.backToMap() })
   }
 
   destroy() {

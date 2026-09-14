@@ -192,9 +192,9 @@
 @media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior:auto !important; transition-duration:.01ms !important; animation-duration:.01ms !important; animation-iteration-count:1 !important; } }
 /* —— 深空外壳覆盖：内容浮于星野之上 —— */
 .site-main { flex:1; height:auto; overflow:visible; position:relative; z-index:1; padding:0 0 20px; }
-.game-page { width:100%; }
+.game-page { width:100%; display:flex; justify-content:center; }
 .lesson-canvas { background:transparent; border:1px solid rgba(139,163,192,.22); box-shadow:none; }
-.game-host { width:100%; max-width:none; border:0; border-radius:0; background:transparent; box-shadow:none; }
+.game-host { width:min(100%, calc((100vh - 210px) * 1.6)); min-width:min(100%, 640px); aspect-ratio: 960 / 600; max-width:none; border:0; border-radius:0; background:transparent; box-shadow:none; }
 .lesson-controls { border-color:rgba(139,163,192,.22); }
 .lesson-header h2, .summary-hero h3, .home-section-heading h2, .intro h1, .placeholder-header h1, .complexity-heading h3 { color:#eef4ff; }
 .lesson-description, .lesson-index, .home-section-heading > span, .home-part > h3, .intro p:last-child, .placeholder-header p:last-child, .complexity-heading p:last-child, .crumb, .crumb span { color:#8fa3c0; }

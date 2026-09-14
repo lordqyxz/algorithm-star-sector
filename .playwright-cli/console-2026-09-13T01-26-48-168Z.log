@@ -81,3 +81,6 @@
 %s
  An error occurred in the <App> component. Consider adding an error boundary to your tree to customize error handling behavior.
 Visit https://react.dev/link/error-boundaries to learn more about error boundaries. @ http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=76631a5a:5450
+[99304635ms] [LOG] [vite] server connection lost. Polling for restart... @ http://localhost:5173/@vite/client:1030
+[99304915ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=76631a5a:15804
+[101240550ms] [LOG] [vite] server connection lost. Polling for restart... @ http://localhost:5173/@vite/client:1030

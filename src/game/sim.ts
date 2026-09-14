@@ -108,3 +108,62 @@ export function programStep(variant: { cells: readonly number[] }, program: read
 export function commandMedal(cardsUsed: number, par: number): MedalTone {
   return cardsUsed <= par ? 'gold' : cardsUsed <= par + 2 ? 'silver' : 'bronze'
 }
+
+/* —— 探测关：二分查找 ——
+ * 玩家亲手选探测点：每次探测排除一半候选区间，探测次数就是 log₂n 的身体感受。 */
+
+export type ProbeAttempt = { index: number; value: number; result: 'found' | 'low' | 'high' }
+export type ProbeState = { low: number; high: number; attempts: ProbeAttempt[]; done: boolean; found: boolean }
+
+export function initProbe(cells: readonly number[]): ProbeState {
+  return { low: 0, high: cells.length - 1, attempts: [], done: cells.length === 0, found: false }
+}
+
+export function probeAt(cells: readonly number[], target: number, ps: ProbeState, index: number): ProbeState {
+  if (ps.done || index < ps.low || index > ps.high) return ps
+  const value = cells[index]
+  if (value === target) return { ...ps, attempts: [...ps.attempts, { index, value, result: 'found' }], done: true, found: true }
+  if (value < target) return { ...ps, attempts: [...ps.attempts, { index, value, result: 'low' }], low: index + 1 }
+  return { ...ps, attempts: [...ps.attempts, { index, value, result: 'high' }], high: index - 1 }
+}
+
+/** 探测关奖章按探测次数：金 ≤⌈log₂n⌉、银 +1、铜=完成。 */
+export function probeMedal(probes: number, par: number): MedalTone {
+  return probes <= par ? 'gold' : probes <= par + 1 ? 'silver' : 'bronze'
+}
+
+/* —— 归并关：双队首选择 ——
+ * 两列已排序的恒星流，每次只能取队首；取了较大的一侧立即被拒（这就是合并不变量的身体感受）。 */
+
+export type MergeCard = { id: string; value: number }
+export type MergeState = { left: MergeCard[]; right: MergeCard[]; out: MergeCard[]; attempts: number; done: boolean }
+
+export function initMerge(cells: readonly number[]): MergeState {
+  const half = Math.floor(cells.length / 2)
+  const card = (value: number, seed: number) => ({ id: `m${seed}`, value })
+  const left = cells.slice(0, half).map((v, i) => card(v, i)).sort((a, b) => a.value - b.value)
+  const right = cells.slice(half).map((v, i) => card(v, half + i)).sort((a, b) => a.value - b.value)
+  return { left, right, out: [], attempts: 0, done: cells.length === 0 }
+}
+
+export function mergePick(state: MergeState, side: 'left' | 'right'): { state: MergeState; ok: boolean } {
+  if (state.done) return { state, ok: false }
+  const queue = side === 'left' ? state.left : state.right
+  if (queue.length === 0) return { state, ok: false }
+  const other = side === 'left' ? state.right : state.left
+  const chosen = queue[0]
+  if (other.length > 0 && chosen.value > other[0].value) return { state: { ...state, attempts: state.attempts + 1 }, ok: false }
+  const next: MergeState = {
+    left: side === 'left' ? state.left.slice(1) : state.left,
+    right: side === 'right' ? state.right.slice(1) : state.right,
+    out: [...state.out, chosen],
+    attempts: state.attempts + 1,
+    done: state.left.length + state.right.length === 1,
+  }
+  return { state: next, ok: true }
+}
+
+/** 归并关奖章按取牌次数：金 = 零失误（n 次）、银 ≤n+2、铜=完成。 */
+export function mergeMedal(attempts: number, optimal: number): MedalTone {
+  return attempts <= optimal ? 'gold' : attempts <= optimal + 2 ? 'silver' : 'bronze'
+}

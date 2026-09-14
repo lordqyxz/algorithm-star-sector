@@ -1,4 +1,4 @@
-import type { CommandLevel, ExecuteLevel, GameLevel } from '@/game/types'
+import type { CommandLevel, ExecuteLevel, GameLevel, MergeLevel, ProbeLevel } from '@/game/types'
 
 /** 排序平原 M0：插入排序三关。关卡全部是数据；par 由标准插入排序逐变体手工验证。 */
 export const executeLevels: readonly ExecuteLevel[] = [
@@ -88,4 +88,36 @@ const commandLevels: readonly CommandLevel[] = [
   },
 ]
 
-export const gameLevels: readonly GameLevel[] = [...executeLevels, ...commandLevels]
+const probeLevels: readonly ProbeLevel[] = [
+  {
+    kind: 'probe',
+    id: 'barnard-probe-01',
+    destination: '巴纳德星（红矮星，5.96 光年）',
+    ly: 5.96,
+    title: '巴纳德 · 光谱探测',
+    brief: '巴纳德星是第二近的恒星系统。16 颗候选恒星的光谱已按编号排好——目标光谱 233 藏在其中。每次探测排除一半，4 次内锁定它。',
+    lesson: 'binary-search',
+    variants: [
+      { id: 'barnard-probe-01-base', label: '16 颗恒星', detail: '⌈log₂16⌉ = 4', cells: [2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584], target: 233 },
+    ],
+    par: { probes: 4 },
+  },
+]
+
+const mergeLevels: readonly MergeLevel[] = [
+  {
+    kind: 'merge',
+    id: 'pleiades-merge-01',
+    destination: '昴星团（444 光年 · 七姊妹疏散星团）',
+    ly: 444,
+    title: '昴星团 · 合并队列',
+    brief: '本星际泡的边界在昴星团。两列已排好的恒星流要合并成一列——每次只能取两列的队首，谁小谁先走。取错会被直接拒绝。',
+    lesson: 'merge-sort',
+    variants: [
+      { id: 'pleiades-merge-01-base', label: '8 颗恒星', detail: '零失误', cells: [21, 3, 44, 7, 15, 2, 38, 11] },
+    ],
+    par: { attempts: 8 },
+  },
+]
+
+export const gameLevels: readonly GameLevel[] = [executeLevels[0], ...probeLevels, executeLevels[1], executeLevels[2], ...commandLevels, ...mergeLevels]

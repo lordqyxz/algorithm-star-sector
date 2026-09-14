@@ -4,6 +4,7 @@ import { C, makePanel, makeText, SPACE } from '../core/ui'
 import { lyOf, nextMilestone, rankOf } from '../core/xp'
 import { gameLevels } from '../levels'
 import { loadSave } from '../save'
+import { openLevel } from '../core/open'
 import { CommandScene } from './CommandScene'
 import { LevelScene } from './LevelScene'
 
@@ -22,7 +23,7 @@ export class MapScene implements GameScene {
     const milestone = nextMilestone(ly)
     makeText(this.container, 642, 44, `航行里程 ${ly.toFixed(2)} 光年`, { size: 13, color: SPACE.text, family: 'ui-monospace, Menlo, monospace' })
     makeText(this.container, 642, 66, `称号：${rank.title}`, { size: 11, color: SPACE.muted, family: 'ui-monospace, Menlo, monospace' })
-    makeText(this.container, 24, 410, milestone ? `下一站：${milestone.note}（还需 ${(milestone.at - ly).toFixed(2)} 光年）` : '太阳邻域四大航段全部点亮。', { size: 12, color: SPACE.muted })
+    makeText(this.container, 24, 566, milestone ? `下一站：${milestone.note}（还需 ${(milestone.at - ly).toFixed(2)} 光年）` : '太阳邻域四大航段全部点亮。', { size: 12, color: SPACE.muted })
 
     makePanel(this.container, 44, 124, 872, 96, { stroke: C.purpleBorder, fill: C.purpleBg })
     makeText(this.container, 64, 142, '任务控制 · 国科大雁栖湖', { size: 15, weight: '800', color: C.purple })
@@ -32,9 +33,9 @@ export class MapScene implements GameScene {
       const next = gameLevels[index + 1] ?? null
       const unlocked = index === 0 || gameLevels[index - 1].variants.some(variant => save[variant.id])
       const node = new Container()
-      node.position.set(24 + index * 234, 252)
+      node.position.set(24 + (index % 3) * 320, index < 3 ? 244 : 408)
       this.container.addChild(node)
-      makePanel(node, 0, 0, 220, 152, { stroke: unlocked ? C.border : 0x3a4d6b, fill: unlocked ? 0xffffff : 0x101a29, radius: 12 })
+      makePanel(node, 0, 0, 290, 148, { stroke: unlocked ? C.border : 0x3a4d6b, fill: unlocked ? 0xffffff : 0x101a29, radius: 12 })
       makeText(node, 18, 16, String(index + 1), { size: 15, color: unlocked ? C.blue : C.muted, family: 'ui-monospace, Menlo, monospace', weight: '800' })
       makeText(node, 64, 17, unlocked ? level.destination : '', { size: 10, color: C.muted })
       makeText(node, 46, 16, unlocked ? '' : '未解锁', { size: 11, color: C.faint })
@@ -54,7 +55,7 @@ export class MapScene implements GameScene {
       if (unlocked) {
         node.eventMode = 'static'
         node.cursor = 'pointer'
-        node.on('pointerdown', () => this.game.switch(g => level.kind === 'execute' ? new LevelScene(g, level, next) : new CommandScene(g, level, next), `启航 → ${level.destination}`))
+        node.on('pointerdown', () => openLevel(this.game, level, gameLevels.slice(index + 1)))
       }
     })
 

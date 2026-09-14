@@ -59,6 +59,30 @@ export type ExecuteLevel = {
 export type CommandVariant = { id: string; label: string; detail: string; cells: number[]; prediction?: { prompt: string; options: string[]; answer: number; explanation: string } }
 
 /** 指挥关：把动作写成指令程序；指令槽稀缺是教学点。 */
+export type ProbeLevel = {
+  kind: 'probe'
+  id: string
+  destination: string
+  ly: number
+  title: string
+  brief: string
+  lesson: string
+  variants: readonly { id: string; label: string; detail: string; cells: number[]; target: number }[]
+  par: { probes: number }
+}
+
+export type MergeLevel = {
+  kind: 'merge'
+  id: string
+  destination: string
+  ly: number
+  title: string
+  brief: string
+  lesson: string
+  variants: readonly { id: string; label: string; detail: string; cells: number[] }[]
+  par: { attempts: number }
+}
+
 export type CommandLevel = {
   kind: 'command'
   id: string
@@ -73,7 +97,7 @@ export type CommandLevel = {
   variants: readonly CommandVariant[]
 }
 
-export type GameLevel = ExecuteLevel | CommandLevel
+export type GameLevel = ExecuteLevel | ProbeLevel | CommandLevel | MergeLevel
 
 export type SaveRecord = { medal: MedalTone; moves: number; compares: number }
 export type SaveData = { [levelVariantId: string]: SaveRecord }

@@ -6,6 +6,8 @@ import { commandMedal, foldExecute, initProgram, medalNames, programStep, progra
 import { loadSave, saveRecord } from '../save'
 import { LevelScene } from './LevelScene'
 import { MapScene } from './MapScene'
+import { openLevel } from '../core/open'
+import { ShelfView } from '../core/level-ui'
 import type { Card, CommandLevel, ExecuteCommand, ExecuteState, GameLevel, SaveData } from '../types'
 
 const CELL = 46
@@ -40,8 +42,6 @@ function drawCell(body: Graphics, label: Text, kind: keyof typeof palette, value
 /** 指挥关：把动作写成指令程序，运行让小精灵自己整理货架。 */
 export class CommandScene implements GameScene {
   readonly container = new Container()
-  private level: CommandLevel
-  private next: GameLevel | null
   private variantId: string
   private program: Card[] = []
   private runner = initProgram()
@@ -49,22 +49,21 @@ export class CommandScene implements GameScene {
   private runTimer: number | null = null
   private savedKeys = new Set<string>()
   private cellViews = new Map<string, CellView>()
-  private shelfLayer = new Container()
+  private shelf: ShelfView
   private dynamic = new Container()
   private programLayer = new Container()
   private paletteLayer = new Container()
   private runButton: ButtonHandle
   private keyHandler: (event: KeyboardEvent) => void
 
-  constructor(private game: Game, level: CommandLevel, next: GameLevel | null) {
-    this.level = level
-    this.next = next
+  constructor(private game: Game, private level: CommandLevel, private rest: readonly GameLevel[]) {
     this.variantId = level.variants[0].id
 
     makeText(this.container, 24, 20, `${this.level.title} · ${this.level.destination}`, { size: 20, weight: '800', color: SPACE.text })
     makeText(this.container, 24, 52, this.level.brief, { size: 12, color: SPACE.muted, wordWrap: 700 })
     makeButton(this.container, { x: 936 - 96, y: 20, w: 96, label: '返回地图', variant: 'outline', onTap: () => this.backToMap() })
-    this.container.addChild(this.shelfLayer)
+    this.shelf = new ShelfView({ x: 24, y: 214 })
+    this.container.addChild(this.shelf.container)
     this.container.addChild(this.dynamic)
     this.container.addChild(this.programLayer)
     this.container.addChild(this.paletteLayer)
@@ -140,36 +139,11 @@ export class CommandScene implements GameScene {
   }
 
   private syncShelf(state: ExecuteState) {
-    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
-    const seen = new Set<string>()
-    state.cells.forEach((cell, index) => {
-      seen.add(cell.id)
-      const kind = index < state.sortedCount ? 'sorted' : 'default'
-      let view = this.cellViews.get(cell.id)
-      if (!view) {
-        const container = new Container()
-        const body = new Graphics()
-        const label = new Text({ text: '', resolution: 3, style: { fontFamily: 'ui-monospace, Menlo, monospace', fontSize: 18, fontWeight: '800' } })
-        label.anchor.set(0.5)
-        label.position.set(CELL / 2, CELL / 2)
-        container.addChild(body, label)
-        container.position.set(24 + index * (CELL + GAP), 214)
-        this.shelfLayer.addChild(container)
-        drawCell(body, label, kind, cell.value)
-        this.cellViews.set(cell.id, { container, body, label, kind, col: index })
-        return
-      }
-      if (view.kind !== kind) { view.kind = kind; drawCell(view.body, view.label, kind, cell.value) }
-      const targetX = 24 + index * (CELL + GAP)
-      if (view.col !== index) {
-        view.col = index
-        if (reduceMotion) view.container.position.set(targetX, 214)
-        else animate(view.container, { x: targetX, duration: 220, ease: 'out(3)' })
-      }
-    })
-    this.cellViews.forEach((view, id) => {
-      if (!seen.has(id)) { view.container.destroy({ children: true }); this.cellViews.delete(id) }
-    })
+    this.shelf.setState(state.cells.map((cell, index) => ({
+      id: cell.id,
+      value: cell.value,
+      tone: index < state.sortedCount ? 'sorted' : 'default',
+    })))
   }
 
   private refresh() {
@@ -219,7 +193,7 @@ export class CommandScene implements GameScene {
     const save = loadSave()
     const previous = save[this.variant.id]
     const medalRank = { bronze: 1, silver: 2, gold: 3 } as const
-    if (!previous || medalRank[medal] > medalRank[previous.medal]) {
+    if (!previous || medalRank[medal] >= medalRank[previous.medal]) {
       const next: SaveData = { ...save, [this.variant.id]: { medal, moves: this.runner.steps, compares: this.program.length } }
       saveRecord(next)
     }
@@ -234,8 +208,8 @@ export class CommandScene implements GameScene {
     makeText(this.dynamic, 232, 222, `⚡ 运行 ${this.runner.steps} 步 · 💾 程序 ${this.program.length} / ${this.level.slots} 槽（最优 ${this.level.par.cards} 张）`, { size: 14, color: C.ink, family: 'ui-monospace, Menlo, monospace' })
     makeText(this.dynamic, 232, 252, this.program.length <= this.level.par.cards ? '最小指令程序达成——循环把重复动作压缩成了一张卡。' : '还有压缩空间：哪张卡出现的规律可以交给循环？', { size: 12, color: C.muted, wordWrap: 500 })
     makeButton(this.dynamic, { x: 232, y: 340, w: 120, label: '重新设计', variant: 'outline', onTap: () => { this.program = []; this.runner = initProgram(); this.refresh() } })
-    if (this.next) makeButton(this.dynamic, { x: 368, y: 340, w: 120, label: '下一关', variant: 'solid', onTap: () => { const target = this.next!; this.game.switch(g => target.kind === 'execute' ? new LevelScene(g, target, null) : new CommandScene(g, target, null), `启航 → ${target.destination}`) } })
-    makeButton(this.dynamic, { x: this.next ? 504 : 368, y: 340, w: 120, label: '返回地图', variant: 'ghost', onTap: () => this.backToMap() })
+    if (this.rest.length > 0) makeButton(this.dynamic, { x: 368, y: 340, w: 120, label: '下一关', variant: 'solid', onTap: () => openLevel(this.game, this.rest[0], this.rest.slice(1)) })
+    makeButton(this.dynamic, { x: this.rest.length > 0 ? 504 : 368, y: 340, w: 120, label: '返回地图', variant: 'ghost', onTap: () => this.backToMap() })
   }
 
   private backToMap() {
