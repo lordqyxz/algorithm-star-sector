@@ -1,9 +1,11 @@
 import { useState, type ComponentType } from 'react'
-import { BookOpen, Home, Route, Sparkles } from 'lucide-react'
+import { BookOpen, Home, Map as MapIcon, Route, Sparkles } from 'lucide-react'
 import { chapterCatalog, algorithmParts } from '@/content'
 import { HomePage } from '@/components/HomePage'
 import { PlaceholderLesson } from '@/components/PlaceholderLesson'
 import { GameHost } from '@/components/GameHost'
+import { StarField } from '@/components/StarField'
+import { StarMapNav } from '@/components/StarMapNav'
 import { AlgorithmRoleLesson } from '@/lessons/algorithm-role'
 import { AsymptoticNotationLesson } from '@/lessons/asymptotic-notation'
 import { BinarySearchLesson } from '@/lessons/binary-search'
@@ -53,6 +55,7 @@ const lessonRegistry: Record<string, ComponentType> = {
 
 export default function App() {
   const [active, setActive] = useState('kingdom')
+  const [navOpen, setNavOpen] = useState(false)
   const activeLesson = chapterCatalog.flatMap(chapter => chapter.lessons).find(item => item.id === active)
   const activeChapter = chapterCatalog.find(chapter => chapter.lessons.some(item => item.id === active))
   const activePart = algorithmParts.find(part => part.chapters.some(chapter => chapter.id === activeChapter?.id))
@@ -62,5 +65,31 @@ export default function App() {
     ? <PlaceholderLesson partLabel={activePart?.label ?? '算法'} chapterLabel={activeChapter?.label ?? ''} chapterTitle={activeChapter?.title ?? ''} lessonLabel={activeLesson?.label ?? ''} detail={activeLesson?.detail ?? ''} />
     : <ActiveLesson />
 
-  return <div className="site-shell"><aside className="site-sidebar"><div className="brand"><div className="brand-mark"><Sparkles size={17} /></div><div><strong>Algorithm</strong><span>Animation Studio</span></div></div><div className="sidebar-label">WORKSPACE</div><nav className="lesson-nav" aria-label="站点主题导航"><button type="button" className={`nav-item ${active === 'kingdom' ? 'active' : ''}`} aria-current={active === 'kingdom' ? 'page' : undefined} onClick={() => setActive('kingdom')}><span className="nav-icon green"><Route size={16} /></span><span><b>算法王国</b><small>像玩游戏一样学算法</small></span></button><button type="button" className={`nav-item ${active === 'home' ? 'active' : ''}`} aria-current={active === 'home' ? 'page' : undefined} onClick={() => setActive('home')}><span className="nav-icon slate"><Home size={16} /></span><span><b>学院</b><small>沙盘推演总览与路线</small></span></button></nav><div className="sidebar-footer"><span className="status-dot" />本地静态站点<br /><small>React 19.3 · Anime.js 4.5 · KaTeX 0.18.7</small></div></aside><main className="site-main"><header className="site-topbar"><div className="crumb"><BookOpen size={15} />算法动画站 <span>/</span> {active === 'home' ? '学院 · 沙盘推演' : active === 'kingdom' ? '算法王国' : `沙盘推演 / ${activeChapter?.label ?? ''} ${activeLesson?.label ?? ''}`}</div></header>{active === 'home' ? <HomePage onOpenLesson={openLesson} /> : active === 'kingdom' ? <div className="lesson-page"><GameHost /></div> : <div className="lesson-page">{lessonContent}</div>}</main></div>
+  return <div className="site-shell">
+    <StarField />
+    <header className="hud-bar">
+      <div className="hud-brand"><span className="hud-mark"><Sparkles size={15} /></span><div><strong>Algorithm</strong><span>STAR SECTOR · 算法星域</span></div></div>
+      <nav className="hud-nav" aria-label="站点主题导航">
+        <button type="button" className={`hud-chip \${active === 'kingdom' ? 'active' : ''}`} aria-current={active === 'kingdom' ? 'page' : undefined} onClick={() => setActive('kingdom')}><Route size={14} />星域</button>
+        <button type="button" className={`hud-chip \${active === 'home' ? 'active' : ''}`} aria-current={active === 'home' ? 'page' : undefined} onClick={() => setActive('home')}><Home size={14} />学院</button>
+        <button type="button" className="hud-chip" onClick={() => setNavOpen(true)}><MapIcon size={14} />星图导航</button>
+      </nav>
+    </header>
+    <main className="site-main">
+      {active === 'home'
+        ? <HomePage onOpenLesson={openLesson} />
+        : active === 'kingdom'
+          ? <div className="game-page"><GameHost /></div>
+          : <div className="lesson-page">
+              <p className="crumb"><BookOpen size={13} />算法星域 <span>/</span> 沙盘推演 <span>/</span> {activeChapter?.label ?? ''} {activeLesson?.label ?? ''}</p>
+              {lessonContent}
+            </div>}
+      <footer className="site-footer">
+        <span>© 2026 中国科学院大学 UCAS · 博学笃志 格物明德</span>
+        <span>Built by <a href="https://github.com/shiyz" target="_blank" rel="noreferrer">GitHub @shiyz</a></span>
+        <span>天文学数据参考：NASA / ESA / Gaia DR3 公开资料 · 仅用于教学</span>
+      </footer>
+    </main>
+    {navOpen ? <StarMapNav active={active} onClose={() => setNavOpen(false)} onOpenLesson={openLesson} onOpenGame={() => setActive('kingdom')} /> : null}
+  </div>
 }

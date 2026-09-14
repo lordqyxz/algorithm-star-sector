@@ -1,4 +1,4 @@
-import type { ExecuteCommand, ExecuteState, LevelVariant, MedalTone } from '@/game/types'
+import type { Card, ExecuteCommand, ExecuteState, LevelVariant, MedalTone } from '@/game/types'
 
 /**
  * 模拟层：纯函数，是游戏规则的唯一权威。
@@ -6,7 +6,7 @@ import type { ExecuteCommand, ExecuteState, LevelVariant, MedalTone } from '@/ga
  * `shift` 必须先 `compare` 且结论为 greater；`drop` 在洞到达最左时可免比较（短路边界）。
  * 渲染层与存档层对具体规则无感知。
  */
-export function initialExecuteState(variant: LevelVariant): ExecuteState {
+export function initialExecuteState(variant: { cells: readonly number[] }): ExecuteState {
   return {
     cells: variant.cells.map((value, index) => ({ id: `c${index}`, value })),
     sortedCount: 1,
@@ -48,7 +48,7 @@ export function executeCommand(state: ExecuteState, command: ExecuteCommand): Ex
 }
 
 /** 命令日志 → 状态。撤销 = 日志回滚，计数器随状态真实回退（零惩罚）。 */
-export function foldExecute(variant: LevelVariant, commands: readonly ExecuteCommand[]): ExecuteState {
+export function foldExecute(variant: { cells: readonly number[] }, commands: readonly ExecuteCommand[]): ExecuteState {
   return commands.reduce(executeCommand, initialExecuteState(variant))
 }
 
@@ -74,3 +74,37 @@ export function medalFor(undoCount: number): MedalTone {
 }
 
 export const medalNames: Record<MedalTone, string> = { gold: '金牌', silver: '银牌', bronze: '铜牌' }
+
+/* —— 指挥关：程序执行器 ——
+ * 程序 = 指令卡序列 + 指令指针。每步执行一张卡：动作卡走 executeCommand
+ * （守卫天然处理分支，被忽略的"空转"计入运行步但不进命令日志），
+ * 'loop' 在未完成时跳回程序开头。总步数上限防死循环。
+ * 只影响状态的命令进入 log，foldExecute(log) 与操演关完全同构。 */
+
+export type ProgramState = { pc: number; steps: number; finished: boolean; log: ExecuteCommand[] }
+
+export const programStepCap = 200
+
+export function initProgram(): ProgramState {
+  return { pc: 0, steps: 0, finished: false, log: [] }
+}
+
+export function programStep(variant: { cells: readonly number[] }, program: readonly Card[], ps: ProgramState): { ps: ProgramState; changed: boolean; card: Card | null } {
+  if (ps.finished || program.length === 0 || ps.steps >= programStepCap) return { ps, changed: false, card: null }
+  const card = program[ps.pc % program.length]
+  if (card === 'loop') {
+    const state = foldExecute(variant, ps.log)
+    if (state.done) return { ps: { ...ps, finished: true }, changed: false, card }
+    return { ps: { ...ps, pc: 0, steps: ps.steps + 1 }, changed: false, card }
+  }
+  const state = foldExecute(variant, ps.log)
+  const next = executeCommand(state, { type: card } as ExecuteCommand)
+  const changed = next !== state
+  const pc = (ps.pc + 1) % program.length
+  return { ps: { pc, steps: ps.steps + 1, finished: next.done, log: changed ? [...ps.log, { type: card } as ExecuteCommand] : ps.log }, changed, card }
+}
+
+/** 指挥关奖章按卡片数（指令槽稀缺）：金 ≤par、银 ≤par+2、铜=完成。 */
+export function commandMedal(cardsUsed: number, par: number): MedalTone {
+  return cardsUsed <= par ? 'gold' : cardsUsed <= par + 2 ? 'silver' : 'bronze'
+}

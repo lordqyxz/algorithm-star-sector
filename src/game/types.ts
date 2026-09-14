@@ -1,5 +1,5 @@
 /**
- * 《算法王国》M0 数据层：关卡即数据资产（version 字段为将来迁移留位）。
+ * 《算法星域》数据层：关卡即数据资产（version 字段为将来迁移留位）。
  * 模拟层 simulate(state, command) 是唯一权威；本文件只有数据，没有规则。
  */
 
@@ -13,6 +13,9 @@ export type ExecuteCommand =
   | { type: 'compare' }
   | { type: 'shift' }
   | { type: 'drop' }
+
+/** 指挥关的指令卡：四个动作 + 循环跳转（跳回程序开头）。 */
+export type Card = ExecuteCommand['type'] | 'loop'
 
 export type ExecuteState = {
   cells: { id: string; value: number }[]
@@ -42,12 +45,35 @@ export type LevelVariant = {
 }
 
 export type ExecuteLevel = {
+  kind: 'execute'
   id: string
+  /** 真实天体目的地（关卡的航段），ly 为其真实距离（光年）。 */
+  destination: string
+  ly: number
   title: string
   brief: string
   lesson: string
   variants: LevelVariant[]
 }
+
+export type CommandVariant = { id: string; label: string; detail: string; cells: number[]; prediction?: { prompt: string; options: string[]; answer: number; explanation: string } }
+
+/** 指挥关：把动作写成指令程序；指令槽稀缺是教学点。 */
+export type CommandLevel = {
+  kind: 'command'
+  id: string
+  destination: string
+  ly: number
+  title: string
+  brief: string
+  lesson: string
+  slots: number
+  cards: readonly Card[]
+  par: { cards: number }
+  variants: readonly CommandVariant[]
+}
+
+export type GameLevel = ExecuteLevel | CommandLevel
 
 export type SaveRecord = { medal: MedalTone; moves: number; compares: number }
 export type SaveData = { [levelVariantId: string]: SaveRecord }

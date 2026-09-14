@@ -1,10 +1,12 @@
 import { Container, Graphics, Text } from 'pixi.js'
 import { animate } from 'animejs'
 import type { Game, GameScene } from '../core/app'
-import { C, makeButton, makePanel, makeText, type ButtonHandle } from '../core/ui'
-import { gameLevels } from '../levels'
+import { C, makeButton, makePanel, makeText, SPACE, type ButtonHandle } from '../core/ui'
+import { executeLevels } from '../levels'
+import type { GameLevel } from '../types'
 import { canExecute, foldExecute, medalFor, medalNames } from '../sim'
 import { loadSave, saveRecord } from '../save'
+import { CommandScene } from './CommandScene'
 import { MapScene } from './MapScene'
 import type { ExecuteCommand, ExecuteLevel as LevelData, LevelVariant, SaveData } from '../types'
 
@@ -51,12 +53,12 @@ export class LevelScene implements GameScene {
   private buttons: Record<'pick' | 'compare' | 'shift' | 'drop' | 'undo', ButtonHandle>
   private keyHandler: (event: KeyboardEvent) => void
 
-  constructor(private game: Game, private levelIndex: number) {
-    this.level = gameLevels[levelIndex]
+  constructor(private game: Game, level: LevelData, private next: GameLevel | null) {
+    this.level = level
     this.variantId = this.level.variants[0].id
 
-    makeText(this.container, 24, 20, this.level.title, { size: 22, weight: '800' })
-    makeText(this.container, 24, 52, this.level.brief, { size: 12, color: C.muted, wordWrap: 700 })
+    makeText(this.container, 24, 20, `${this.level.title} · ${this.level.destination}`, { size: 20, weight: '800', color: SPACE.text })
+    makeText(this.container, 24, 52, this.level.brief, { size: 12, color: SPACE.muted, wordWrap: 700 })
     makeButton(this.container, { x: 936 - 96, y: 20, w: 96, label: '返回地图', variant: 'outline', onTap: () => this.backToMap() })
     this.container.addChild(this.chipLayer)
     this.container.addChild(this.shelfLayer)
@@ -74,7 +76,7 @@ export class LevelScene implements GameScene {
       undo: makeButton(this.controls, { x: 520, y: y.buttons, w: 112, label: '撤销 [U]', variant: 'outline', onTap: () => this.undo() }),
     }
     makeButton(this.controls, { x: 640, y: y.buttons, w: 90, label: '重开 [R]', variant: 'ghost', onTap: () => this.restart() })
-    makeText(this.controls, 24, y.keys, '零惩罚：撤销和重开都不影响奖章——奖章只看你是否靠撤销过关。', { size: 11, color: C.faint })
+    makeText(this.controls, 24, y.keys, '零惩罚：撤销和重开都不影响奖章——奖章只看你是否靠撤销过关。', { size: 11, color: SPACE.faint })
 
     this.keyHandler = (event: KeyboardEvent) => {
       if (event.metaKey || event.ctrlKey || event.altKey) return
@@ -129,15 +131,15 @@ export class LevelScene implements GameScene {
     this.syncShelf(state)
 
     this.dynamic.removeChildren().forEach(child => child.destroy({ children: true }))
-    makeText(this.dynamic, 24, 128, '手', { size: 12, color: C.faint, family: 'ui-monospace, Menlo, monospace' })
+    makeText(this.dynamic, 24, 128, '手', { size: 12, color: SPACE.faint, family: 'ui-monospace, Menlo, monospace' })
     if (state.held) {
       makePanel(this.dynamic, 46, 118, CELL, CELL, { fill: palette.key.fill, stroke: palette.key.stroke, radius: RADIUS })
       makeText(this.dynamic, 46 + CELL / 2, 118 + CELL / 2, String(state.held.value), { size: 17, color: palette.key.text, family: 'ui-monospace, Menlo, monospace', anchorX: 0.5, anchorY: 0.5, weight: '800' })
-      makeText(this.dynamic, 102, 130, '暂存的 key；货架上的虚线格是洞', { size: 11, color: C.faint })
+      makeText(this.dynamic, 102, 130, '暂存的 key；货架上的虚线格是洞', { size: 11, color: SPACE.faint })
     } else {
       makePanel(this.dynamic, 46, 118, CELL, CELL, { fill: 0xffffff, stroke: C.cellBorder, radius: RADIUS })
       makeText(this.dynamic, 46 + CELL / 2, 118 + CELL / 2, '空', { size: 12, color: C.faint, anchorX: 0.5, anchorY: 0.5 })
-      makeText(this.dynamic, 102, 130, '点「拿起下一张」取走绿色区右侧第一张牌', { size: 11, color: C.faint })
+      makeText(this.dynamic, 102, 130, '点「拿起下一张」取走绿色区右侧第一张牌', { size: 11, color: SPACE.faint })
     }
 
     const holeText = state.verdict === 'greater' && state.hole !== null
@@ -147,11 +149,11 @@ export class LevelScene implements GameScene {
         : state.hole === 0 && state.held
           ? '洞已到最左端：免比较，直接放下（这就是 while i>0 的短路边界）'
           : '还没有比较结论：先「与左邻比较」，再决定右移还是放下'
-    const verdictColor = state.verdict === 'greater' ? C.orange : state.verdict === 'less-equal' ? C.green : C.muted
+    const verdictColor = state.verdict === 'greater' ? C.orange : state.verdict === 'less-equal' ? C.green : SPACE.muted
     makeText(this.dynamic, 24, 248, holeText, { size: 13, color: verdictColor, weight: '700', wordWrap: 900, lineHeight: 18 })
 
-    makeText(this.dynamic, 24, 344, `⚡ 步数 ${state.moves} / 最优 ${variant.par.moves}`, { size: 13, color: C.ink, family: 'ui-monospace, Menlo, monospace' })
-    makeText(this.dynamic, 260, 344, `🔍 比较 ${state.compares} / 最优 ${variant.par.compares}`, { size: 13, color: C.ink, family: 'ui-monospace, Menlo, monospace' })
+    makeText(this.dynamic, 24, 344, `⚡ 步数 ${state.moves} / 最优 ${variant.par.moves}`, { size: 13, color: SPACE.text, family: 'ui-monospace, Menlo, monospace' })
+    makeText(this.dynamic, 260, 344, `🔍 比较 ${state.compares} / 最优 ${variant.par.compares}`, { size: 13, color: SPACE.text, family: 'ui-monospace, Menlo, monospace' })
     makeText(this.dynamic, 520, 344, `已整理 ${state.sortedCount} / ${state.cells.length}`, { size: 13, color: C.green, family: 'ui-monospace, Menlo, monospace' })
 
     const gate = variant.prediction && !this.answered.has(variant.id) && (variant.prediction.when === 'done' ? state.done : !state.done && state.compares >= 1) ? variant.prediction : null
@@ -232,18 +234,16 @@ export class LevelScene implements GameScene {
     }
     if (this.savedKeys.has(variant.id)) return
     this.savedKeys.add(variant.id)
-    this.game.app.stage.emit('algorithmia-win')
+    const lyGained = Math.round(this.level.ly * ({ gold: 1, silver: 0.6, bronze: 0.3 } as const)[medal] * 100) / 100
 
     const dim = makePanel(this.dynamic, 0, 0, 960, 600, { fill: C.dim, alpha: 0.35, radius: 0 }); dim.eventMode = 'static'
     makePanel(this.dynamic, 200, 150, 560, 260, { stroke: C.greenBorder, fill: 0xf0fbf6 })
-    makeText(this.dynamic, 232, 178, `${medalNames[medal]}（用了 ${this.undoCount} 次撤销）`, { size: 22, color: C.green, weight: '800' })
+    makeText(this.dynamic, 232, 178, `${medalNames[medal]}（用了 ${this.undoCount} 次撤销）· 航程 +${lyGained.toFixed(2)} 光年`, { size: 19, color: C.green, weight: '800' })
     makeText(this.dynamic, 232, 220, `⚡ ${state.moves} 步（最优 ${variant.par.moves}） · 🔍 ${state.compares} 次比较（最优 ${variant.par.compares}）`, { size: 14, color: C.ink, family: 'ui-monospace, Menlo, monospace' })
     makeText(this.dynamic, 232, 250, state.moves === variant.par.moves && state.compares === variant.par.compares ? '完美复现标准插入排序的动作数！' : '对照理论最优想一想：差距发生在哪几张牌上？', { size: 12, color: C.muted, wordWrap: 500 })
-    const nextIndex = this.levelIndex + 1
-    const hasNext = nextIndex < gameLevels.length
     makeButton(this.dynamic, { x: 232, y: 340, w: 120, label: '再玩一次', variant: 'outline', onTap: () => this.restart() })
-    if (hasNext) makeButton(this.dynamic, { x: 368, y: 340, w: 120, label: '下一关', variant: 'solid', onTap: () => { this.game.switch(g => new LevelScene(g, nextIndex)) } })
-    makeButton(this.dynamic, { x: hasNext ? 504 : 368, y: 340, w: 120, label: '返回地图', variant: 'ghost', onTap: () => this.backToMap() })
+    if (this.next) makeButton(this.dynamic, { x: 368, y: 340, w: 120, label: '下一关', variant: 'solid', onTap: () => { const target = this.next!; this.game.switch(g => target.kind === 'execute' ? new LevelScene(g, target, null) : new CommandScene(g, target, null)) } })
+    makeButton(this.dynamic, { x: this.next ? 504 : 368, y: 340, w: 120, label: '返回地图', variant: 'ghost', onTap: () => this.backToMap() })
   }
 
   destroy() {

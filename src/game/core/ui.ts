@@ -1,6 +1,49 @@
 import { Container, Graphics, Text } from 'pixi.js'
 
-/** 算法王国 UI 工具：与站点一致的语义色与面板语言。 */
+/** 深空航行主题（真实天文意象：银河带 + 背景恒星，位置用固定种子保证可复现）。 */
+export const SPACE = {
+  bg: 0x0b1220,
+  band: 0x1c2742,
+  text: 0xd9e3f3,
+  muted: 0x8fa3c0,
+  faint: 0x5a6c88,
+  star: 0xffffff,
+} as const
+
+export function mulberry32(seed: number) {
+  return () => {
+    seed |= 0
+    seed = (seed + 0x6d2b79f5) | 0
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed)
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+/** 银河带 + 背景恒星（作为场景最底层；银河带倾斜方向与银道面意象一致）。 */
+export function makeSpaceBackdrop(parent: Container, width: number, height: number, seed = 20260913): void {
+  const backdrop = new Container()
+  const sky = new Graphics()
+  sky.rect(0, 0, width, height)
+  sky.fill({ color: SPACE.bg })
+  const band = new Graphics()
+  band.rect(0, height * 0.42, width, height * 0.22)
+  band.fill({ color: SPACE.band, alpha: 0.5 })
+  backdrop.addChild(sky, band)
+  const rand = mulberry32(seed)
+  const stars = new Graphics()
+  for (let i = 0; i < 130; i += 1) {
+    const x = rand() * width
+    const y = rand() * height
+    const r = 0.5 + rand() * 1.4
+    stars.circle(x, y, r)
+    stars.fill({ color: SPACE.star, alpha: 0.25 + rand() * 0.65 })
+  }
+  backdrop.addChild(stars)
+  parent.addChildAt(backdrop, 0)
+}
+
+/** 算法星域 UI 工具：与站点一致的语义色与面板语言。 */
 
 export const C = {
   bg: 0xeef2f7,

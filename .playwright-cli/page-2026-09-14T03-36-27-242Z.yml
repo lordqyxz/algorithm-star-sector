@@ -1,0 +1,29 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e10]:
+      - strong [ref=e11]: Algorithm
+      - generic [ref=e12]: Animation Studio
+    - generic [ref=e13]: WORKSPACE
+    - navigation "站点主题导航" [ref=e14]:
+      - button "算法星域 像星灵执行官一样学算法" [ref=e15] [cursor=pointer]:
+        - generic [ref=e21]:
+          - generic [ref=e22]: 算法星域
+          - generic [ref=e23]: 像星灵执行官一样学算法
+      - button "学院 沙盘推演总览与路线" [ref=e24] [cursor=pointer]:
+        - generic [ref=e29]:
+          - generic [ref=e30]: 学院
+          - generic [ref=e31]: 沙盘推演总览与路线
+    - generic [ref=e32]: 本地静态站点React 19.3 · PixiJS 8.20 · Anime.js 4.5
+  - main [ref=e34]:
+    - generic [ref=e36]:
+      - text: 算法动画站
+      - generic [ref=e39]: /
+      - text: 算法星域
+    - generic "算法星域游戏画面" [ref=e41]
+    - generic [ref=e42]:
+      - generic [ref=e43]: © 2026 中国科学院大学 UCAS · 博学笃志 格物明德
+      - generic [ref=e44]:
+        - text: Built by
+        - link "GitHub @shiyz" [ref=e45] [cursor=pointer]:
+          - /url: https://github.com/shiyz
+      - generic [ref=e46]: 天文学数据参考：NASA / ESA / Gaia DR3 公开资料 · 仅用于教学

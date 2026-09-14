@@ -1,11 +1,14 @@
-import type { ExecuteLevel } from '@/game/types'
+import type { CommandLevel, ExecuteLevel, GameLevel } from '@/game/types'
 
 /** 排序平原 M0：插入排序三关。关卡全部是数据；par 由标准插入排序逐变体手工验证。 */
-export const gameLevels: readonly ExecuteLevel[] = [
+export const executeLevels: readonly ExecuteLevel[] = [
   {
+    kind: 'execute',
     id: 'insertion-01',
-    title: '第一箱',
-    brief: '绿色货架已经整理好。拿起下一张牌，和左邻比较，决定右移还是放下——这就是插入排序的全部。',
+    destination: '比邻星（半人马座 α 星 C）',
+    ly: 4.24,
+    title: '首航 · 比邻星',
+    brief: '首段航程目的地：比邻星，距地球 4.24 光年，最近的恒星，拥有一颗宜居带行星 Proxima b。拿起下一张牌，和左邻比较，决定右移还是放下。',
     lesson: 'insertion-sort',
     variants: [
       {
@@ -26,8 +29,11 @@ export const gameLevels: readonly ExecuteLevel[] = [
     ],
   },
   {
+    kind: 'execute',
     id: 'insertion-02',
-    title: '驿站分拣',
+    destination: '天狼星（夜空最亮恒星，双星系统）',
+    ly: 8.6,
+    title: '天狼双星 · 分拣',
     brief: '同样的动作，不同的货。切换下面的挑战，感受"输入的样子"如何改变你的步数。',
     lesson: 'insertion-sort',
     variants: [
@@ -43,9 +49,12 @@ export const gameLevels: readonly ExecuteLevel[] = [
     ],
   },
   {
+    kind: 'execute',
     id: 'insertion-03',
-    title: '逆风局',
-    brief: '全逆序的货架：每张牌都要越过前面所有牌。打完这一关，你会亲眼数出 n(n−1)/2。',
+    destination: '织女星（天琴座 α，带岩屑盘）',
+    ly: 25.0,
+    title: '织女 · 逆风航段',
+    brief: '全逆序的能量矩阵：每张牌都要越过前面所有牌。打完这一关，你会亲眼数出 n(n−1)/2。',
     lesson: 'insertion-sort',
     variants: [
       { id: 'insertion-03-base', label: '完全逆序', detail: '6 张牌', cells: [6, 5, 4, 3, 2, 1], par: { moves: 20, compares: 15 }, insight: {
@@ -59,3 +68,24 @@ export const gameLevels: readonly ExecuteLevel[] = [
     ],
   },
 ]
+
+/** 指挥关：HRM 式指令卡。最优程序 = 拿起/比较/右移/放下/循环，恰 5 张。 */
+const commandLevels: readonly CommandLevel[] = [
+  {
+    kind: 'command',
+    id: 'insertion-cmd-01',
+    destination: 'TRAPPIST-1（七行星轨道共振链）',
+    ly: 40.7,
+    title: 'TRAPPIST-1 · 共振指令',
+    brief: 'TRAPPIST-1 距地球 40.7 光年，七颗行星处于接近轨道共振的链条上。把四个动作写成指令程序——循环卡就是你的共振链。',
+    lesson: 'insertion-sort',
+    slots: 6,
+    cards: ['pick', 'compare', 'shift', 'drop', 'loop'],
+    par: { cards: 5 },
+    variants: [
+      { id: 'insertion-cmd-01-base', label: '4 张牌', detail: '训练营', cells: [3, 1, 2, 4], prediction: { prompt: '用 5 张卡为什么就能排好任意 4 张牌？', options: ['循环卡让 4 个动作自动重复，直到全部有序', '因为 4 张牌只需要 4 张卡', '小精灵自己会排序'], answer: 0, explanation: '循环 = while 全表有序之前反复执行：拿起/比较/右移/放下每个动作都可能发生多次——5 张卡 = 4 个动作 + 1 个循环，这就是"用循环消除重复"。' } },
+    ],
+  },
+]
+
+export const gameLevels: readonly GameLevel[] = [...executeLevels, ...commandLevels]
