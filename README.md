@@ -34,4 +34,4 @@ pnpm run preview    # 预览构建产物
 
 [CC BY-NC 4.0](./LICENSE) —— 署名-非商业性使用：转载与改编必须署名，严格禁止商用。
 
-© 2026 shiyz（中国科学院大学 UCAS）
+© 2026 shiyz（中国科学院大学 UCAS）· GitHub [@lordqyxz](https://github.com/lordqyxz)

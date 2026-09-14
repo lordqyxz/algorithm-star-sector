@@ -86,7 +86,7 @@ export default function App() {
             </div>}
       <footer className="site-footer">
         <span>© 2026 中国科学院大学 UCAS · 博学笃志 格物明德</span>
-        <span>Built by <a href="https://github.com/shiyz" target="_blank" rel="noreferrer">GitHub @shiyz</a></span>
+        <span>Built by <a href="https://github.com/lordqyxz" target="_blank" rel="noreferrer">GitHub @lordqyxz</a></span>
         <span>许可：CC BY-NC 4.0 · 禁止商用 · 转载需署名</span><span>天文学数据参考：NASA / ESA / Gaia DR3 公开资料</span>
       </footer>
     </main>
