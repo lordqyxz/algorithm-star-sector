@@ -25,7 +25,7 @@ export function StarMapNav({ active, onClose, onOpenLesson, onOpenGame }: { acti
   }, [onClose])
 
   const { nodes, lines } = useMemo(() => {
-    const nodes: StarNode[] = [{ id: 'kingdom', label: '算法星域 · 太阳邻域', x: CX, y: CY, kind: 'hub' }]
+    const nodes: StarNode[] = [{ id: 'kingdom', label: '太阳邻域', x: CX, y: CY, kind: 'hub' }]
     const lines: Line[] = []
     const chapters = algorithmParts.flatMap(part => part.chapters)
     chapters.forEach((chapter, ci) => {
@@ -70,6 +70,6 @@ export function StarMapNav({ active, onClose, onOpenLesson, onOpenGame }: { acti
         </button>)}
       </div>
     </div>
-    <p className="star-map-foot">ESC 关闭 · 鼠标移动改变视角 · 金色航路连接星域与星座</p>
+    <p className="star-map-foot">ESC 关闭 · 鼠标移动改变视角 · 金色航路连接枢纽与星座</p>
   </div>
 }

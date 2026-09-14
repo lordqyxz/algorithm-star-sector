@@ -14,7 +14,7 @@ export class MapScene implements GameScene {
 
   constructor(private game: Game) {
     const save = loadSave()
-    makeText(this.container, 44, 44, '算法星域 · 太阳邻域', { size: 30, weight: '800', color: SPACE.text })
+    makeText(this.container, 44, 44, '太阳邻域', { size: 30, weight: '800', color: SPACE.text })
     makeText(this.container, 44, 88, '把能量矩阵整理有序，逐段驶向真实的恒星。步数和比较次数，就是你的航行战绩。', { size: 13, color: SPACE.muted })
     const totalVariants = gameLevels.reduce((count, item) => count + item.variants.length, 0)
     const doneVariants = Object.keys(save).length
@@ -23,10 +23,10 @@ export class MapScene implements GameScene {
     const milestone = nextMilestone(ly)
     makeText(this.container, 642, 44, `航行里程 ${ly.toFixed(2)} 光年`, { size: 13, color: SPACE.text, family: 'ui-monospace, Menlo, monospace' })
     makeText(this.container, 642, 66, `称号：${rank.title}`, { size: 11, color: SPACE.muted, family: 'ui-monospace, Menlo, monospace' })
-    makeText(this.container, 24, 566, milestone ? `下一站：${milestone.note}（还需 ${(milestone.at - ly).toFixed(2)} 光年）` : '太阳邻域四大航段全部点亮。', { size: 12, color: SPACE.muted })
+    makeText(this.container, 24, 558, milestone ? `下一站：${milestone.note}（还需 ${(milestone.at - ly).toFixed(2)} 光年）` : '太阳邻域全部航段点亮。', { size: 12, color: SPACE.muted })
 
     makePanel(this.container, 44, 124, 872, 96, { stroke: C.purpleBorder, fill: C.purpleBg })
-    makeText(this.container, 64, 142, '任务控制 · 国科大雁栖湖', { size: 15, weight: '800', color: C.purple })
+    makeText(this.container, 64, 142, '任务控制', { size: 15, weight: '800', color: C.purple })
     makeText(this.container, 64, 166, '绿色货架代表"已整理区"——它就是插入排序的循环不变量：每次拿起新牌、放回正确的洞，不变量都向前长大一格。奖章只看一件事：你有没有靠撤销过关。博学笃志，格物明德。', { size: 12, color: C.muted, wordWrap: 830, lineHeight: 19 })
 
     gameLevels.forEach((level, index) => {
@@ -59,7 +59,7 @@ export class MapScene implements GameScene {
       }
     })
 
-    makeText(this.container, 44, 446, '三个 DLC 在校准中：深场（深度学习与 Transformer）· 巡天（机器学习原理与应用）· 盖亚（模式识别经典算法）。', { size: 12, color: SPACE.muted })
+    makeText(this.container, 24, 578, '三个 DLC 在校准中：深场（深度学习与 Transformer）· 巡天（机器学习原理与应用）· 盖亚（模式识别经典算法）。', { size: 12, color: SPACE.faint })
   }
 
   destroy() {

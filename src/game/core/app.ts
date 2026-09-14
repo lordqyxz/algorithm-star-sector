@@ -3,7 +3,7 @@ import { animate } from 'animejs'
 import { SPACE, makeSpaceBackdrop } from './ui'
 
 /**
- * 算法星域游戏内核（PixiJS 原生）。
+ * 游戏内核（PixiJS 原生）。
  * 游戏拥有自己的场景栈：场景是带生命周期的容器，Game 负责创建 Application、
  * 切换场景、统一销毁。玩法规则仍然只住在 src/game/sim.ts（纯函数 + 命令日志）。
  */
@@ -28,6 +28,7 @@ export class Game {
       height: STAGE_HEIGHT,
       backgroundAlpha: 0,
       resolution: Math.min(window.devicePixelRatio || 1, 2),
+      autoDensity: true,
       antialias: true,
       preference: 'webgl',
     })

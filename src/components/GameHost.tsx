@@ -17,5 +17,5 @@ export function GameHost() {
     })
     return () => { cancelled = true; game?.destroy() }
   }, [])
-  return <div ref={hostRef} className="game-host" aria-label="算法星域游戏画面" />
+  return <div ref={hostRef} className="game-host" aria-label="太阳邻域游戏画面" />
 }

@@ -43,7 +43,7 @@ export function makeSpaceBackdrop(parent: Container, width: number, height: numb
   parent.addChildAt(backdrop, 0)
 }
 
-/** 算法星域 UI 工具：与站点一致的语义色与面板语言。 */
+/** 游戏 UI 工具：与站点一致的语义色与面板语言。 */
 
 export const C = {
   bg: 0xeef2f7,

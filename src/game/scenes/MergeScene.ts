@@ -114,7 +114,7 @@ export class MergeScene implements GameScene {
   }
 
   private backToMap() {
-    this.game.switch(g => new MapScene(g), '返航 → 地球 · 雁栖湖')
+    this.game.switch(g => new MapScene(g), '返航 → 太阳邻域')
   }
 
   destroy() {

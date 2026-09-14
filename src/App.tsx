@@ -68,9 +68,9 @@ export default function App() {
   return <div className="site-shell">
     <StarField />
     <header className="hud-bar">
-      <div className="hud-brand"><span className="hud-mark"><Sparkles size={15} /></span><div><strong>Algorithm</strong><span>STAR SECTOR · 算法星域</span></div></div>
+      <div className="hud-brand"><span className="hud-mark"><Sparkles size={15} /></span><div><strong>Algorithm</strong><span>SOLAR NEIGHBORHOOD · 太阳邻域</span></div></div>
       <nav className="hud-nav" aria-label="站点主题导航">
-        <button type="button" className={`hud-chip \${active === 'kingdom' ? 'active' : ''}`} aria-current={active === 'kingdom' ? 'page' : undefined} onClick={() => setActive('kingdom')}><Route size={14} />星域</button>
+        <button type="button" className={`hud-chip \${active === 'kingdom' ? 'active' : ''}`} aria-current={active === 'kingdom' ? 'page' : undefined} onClick={() => setActive('kingdom')}><Route size={14} />太阳邻域</button>
         <button type="button" className={`hud-chip ${active === 'log' ? 'active' : ''}`} aria-current={active === 'log' ? 'page' : undefined} onClick={() => setActive('log')}><Compass size={14} />航行日志</button>
         <button type="button" className="hud-chip" onClick={() => setNavOpen(true)}><MapIcon size={14} />星图导航</button>
       </nav>
@@ -81,7 +81,7 @@ export default function App() {
         : active === 'kingdom'
           ? <div className="game-page"><GameHost /></div>
           : <div className="lesson-page">
-              <p className="crumb"><BookOpen size={13} />算法星域 <span>/</span> 沙盘推演 <span>/</span> {activeChapter?.label ?? ''} {activeLesson?.label ?? ''}</p>
+              <p className="crumb"><BookOpen size={13} />太阳邻域 <span>/</span> 沙盘推演 <span>/</span> {activeChapter?.label ?? ''} {activeLesson?.label ?? ''}</p>
               {lessonContent}
             </div>}
       <footer className="site-footer">

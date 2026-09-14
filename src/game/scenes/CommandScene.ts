@@ -214,7 +214,7 @@ export class CommandScene implements GameScene {
 
   private backToMap() {
     this.stopRun()
-    this.game.switch(g => new MapScene(g), '返航 → 地球 · 雁栖湖')
+    this.game.switch(g => new MapScene(g), '返航 → 太阳邻域')
   }
 
   destroy() {

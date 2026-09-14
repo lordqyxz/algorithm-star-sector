@@ -22,7 +22,7 @@ export function VoyageLog({ onOpenLesson, onOpenGame }: { onOpenLesson: (id: str
       <img src="/astro/banner.jpg" alt="" onError={event => { event.currentTarget.style.display = 'none' }} />
       <div className="voyage-banner-veil" aria-hidden="true" />
       <div className="voyage-banner-copy">
-        <p className="eyebrow">MISSION CONTROL · 国科大雁栖湖</p>
+        <p className="eyebrow">MISSION CONTROL</p>
         <h2>航行日志</h2>
         <p>博学笃志，格物明德——每一光年的航程，都记录在案。</p>
       </div>
