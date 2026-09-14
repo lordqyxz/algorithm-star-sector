@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { animate, stagger } from 'animejs'
+import { Formula } from '@/components/Formula'
 import { ArrayView } from '@/components/ArrayView'
 import { CalcDesk } from '@/components/CalcDesk'
 import { CompareJudge } from '@/components/CompareJudge'
@@ -97,6 +98,16 @@ export function TracePlayer({ trace, step }: { trace: Trace; step: number }) {
     if (scopeRef.current?.querySelector('.pseudo-line.active')) animate('.pseudo-line.active', { opacity: [0.4, 1], duration: 340, ease: 'out(3)' })
   }, [step])
   const [primary, ...rest] = state.scenes
+  if (step === trace.steps.length - 1 && trace.steps.length > 1) {
+    const summary = state.summary ?? {}
+    return <div ref={scopeRef} className="lesson-canvas">
+      <div className="summary-hero"><p className="eyebrow">SANDBOX SUMMARY</p><h3>{summary.headline ?? state.title}</h3></div>
+      <div className="summary-verdict"><b>结论</b><span>{summary.verdict ?? state.conclusion}</span></div>
+      <div className="summary-stats">{(summary.stats ?? state.metrics).map(metric => <div key={metric.label} className={['metric', metric.tone ? `metric-${metric.tone}` : ''].filter(Boolean).join(' ')}><span>{metric.label}</span><strong>{metric.value}</strong></div>)}</div>
+      {state.formula ? <div className="summary-formula"><Formula latex={state.formula} display /></div> : null}
+      {state.prediction ? <PredictionPrompt {...state.prediction} /> : null}
+    </div>
+  }
   return <div ref={scopeRef} className="lesson-canvas">
     <FormulaReadout question={state.question ?? '这一步，公式记录了什么？'} latex={state.formula} hint={state.formulaHint} />
     <div className="lesson-grid">

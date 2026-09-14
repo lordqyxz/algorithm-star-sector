@@ -1,0 +1,247 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e10]:
+      - strong [ref=e11]: Algorithm
+      - generic [ref=e12]: Animation Studio
+    - generic [ref=e13]: WORKSPACE
+    - navigation "站点主题导航" [ref=e14]:
+      - button "算法王国 像玩游戏一样学算法" [ref=e15] [cursor=pointer]:
+        - generic [ref=e21]:
+          - generic [ref=e22]: 算法王国
+          - generic [ref=e23]: 像玩游戏一样学算法
+      - button "学院 沙盘推演总览与路线" [ref=e24] [cursor=pointer]:
+        - generic [ref=e29]:
+          - generic [ref=e30]: 学院
+          - generic [ref=e31]: 沙盘推演总览与路线
+    - generic [ref=e32]: 本地静态站点React 19.3 · Anime.js 4.5 · KaTeX 0.18.7
+  - main [ref=e34]:
+    - generic [ref=e36]:
+      - text: 算法动画站
+      - generic [ref=e39]: /
+      - text: 沙盘推演 / 第 2 章 插入排序
+    - generic [ref=e368]:
+      - generic [ref=e369]:
+        - generic [ref=e370]:
+          - paragraph [ref=e371]: SANDBOX 06 · INSERTION SORT
+          - heading "先立规矩：前 1 张牌天然有序" [level=2] [ref=e372]
+          - paragraph [ref=e373]: 拿起、比较、右移、放下——四个动作就是插入排序的全部；绿色区是不变量。
+        - generic [ref=e374]:
+          - text: STEP
+          - strong [ref=e375]: "01"
+          - generic [ref=e376]: / 24
+      - group "先立规矩：前 1 张牌天然有序步骤控制" [ref=e377]:
+        - tablist "先立规矩：前 1 张牌天然有序步骤" [ref=e378]:
+          - tab "01 规矩" [selected] [ref=e379] [cursor=pointer]
+          - tab "02 取 key=2" [ref=e380] [cursor=pointer]
+          - tab "03 右移" [ref=e381] [cursor=pointer]
+          - tab "04 落位 2" [ref=e382] [cursor=pointer]
+          - tab "05 取 key=4" [ref=e383] [cursor=pointer]
+          - tab "06 右移" [ref=e384] [cursor=pointer]
+          - tab "07 停" [ref=e385] [cursor=pointer]
+          - tab "08 落位 4" [ref=e386] [cursor=pointer]
+          - tab "09 取 key=6" [ref=e387] [cursor=pointer]
+          - tab "10 停" [ref=e388] [cursor=pointer]
+          - tab "11 落位 6" [ref=e389] [cursor=pointer]
+          - tab "12 取 key=1" [ref=e390] [cursor=pointer]
+          - tab "13 右移" [ref=e391] [cursor=pointer]
+          - tab "14 右移" [ref=e392] [cursor=pointer]
+          - tab "15 右移" [ref=e393] [cursor=pointer]
+          - tab "16 右移" [ref=e394] [cursor=pointer]
+          - tab "17 落位 1" [ref=e395] [cursor=pointer]
+          - tab "18 取 key=3" [ref=e396] [cursor=pointer]
+          - tab "19 右移" [ref=e397] [cursor=pointer]
+          - tab "20 右移" [ref=e398] [cursor=pointer]
+          - tab "21 右移" [ref=e399] [cursor=pointer]
+          - tab "22 停" [ref=e400] [cursor=pointer]
+          - tab "23 落位 3" [ref=e401] [cursor=pointer]
+          - tab "24 完成" [ref=e402] [cursor=pointer]
+        - generic [ref=e403]:
+          - button "上一步" [disabled] [ref=e404]
+          - button "下一步" [ref=e407] [cursor=pointer]
+          - button "自动播放" [ref=e410] [cursor=pointer]
+          - button "切换播放速度" [ref=e413] [cursor=pointer]: 1×
+          - button "重播" [ref=e417] [cursor=pointer]
+      - progressbar "教学进度" [ref=e421]
+      - region "选择演示样例" [ref=e422]:
+        - generic [ref=e423]:
+          - generic [ref=e424]:
+            - paragraph [ref=e425]: INPUT LAB
+            - strong [ref=e426]: 换一组输入再看一次
+          - generic [ref=e427]: "[5,2,4,6,1,3]"
+        - group "演示样例" [ref=e428]:
+          - button "课堂混合 [5,2,4,6,1,3]" [pressed] [ref=e429] [cursor=pointer]:
+            - generic [ref=e430]: 课堂混合
+            - generic [ref=e431]: "[5,2,4,6,1,3]"
+          - button "已经有序 最好 Θ(n)" [ref=e432] [cursor=pointer]:
+            - generic [ref=e433]: 已经有序
+            - generic [ref=e434]: 最好 Θ(n)
+          - button "完全逆序 最坏 Θ(n²)" [ref=e435] [cursor=pointer]:
+            - generic [ref=e436]: 完全逆序
+            - generic [ref=e437]: 最坏 Θ(n²)
+          - button "重复键 4A/4B/4C 查稳定" [ref=e438] [cursor=pointer]:
+            - generic [ref=e439]: 重复键
+            - generic [ref=e440]: 4A/4B/4C 查稳定
+      - generic [ref=e441]:
+        - generic [ref=e442]:
+          - generic [ref=e443]: 这一步，公式记录了什么？
+          - generic [ref=e446]:
+            - math [ref=e448]:
+              - generic [ref=e450]:
+                - generic [ref=e451]: A
+                - generic [ref=e452]: "["
+                - generic [ref=e453]: 1..1
+                - generic [ref=e454]: "]"
+                - generic [ref=e455]: 已排序
+                - generic [ref=e456]: ;
+                - generic [ref=e457]: 目标：逐张插入使前缀始终有序
+            - generic [ref=e459]:
+              - text: A[1..1]
+              - generic [ref=e460]: 已排序
+              - text: ;
+              - generic [ref=e462]: 目标：逐张插入使前缀始终有序
+        - generic [ref=e463]:
+          - generic [ref=e464]:
+            - heading "货架：绿色区已有序" [level=3] [ref=e466]
+            - generic [ref=e467]:
+              - img "货架：绿色区已有序" [ref=e468]:
+                - generic [ref=e469]:
+                  - generic [ref=e470]: "5"
+                  - generic [ref=e471]: "2"
+                  - generic [ref=e472]: "4"
+                  - generic [ref=e473]: "6"
+                  - generic [ref=e474]: "1"
+                  - generic [ref=e475]: "3"
+                - generic [ref=e476]:
+                  - generic [ref=e477]: "1"
+                  - generic [ref=e478]: "2"
+                  - generic [ref=e479]: "3"
+                  - generic [ref=e480]: "4"
+                  - generic [ref=e481]: "5"
+                  - generic [ref=e482]: "6"
+              - list "颜色语义" [ref=e483]:
+                - listitem [ref=e484]: 已整理区（不变量）
+                - listitem [ref=e486]: 暂存的 key
+                - listitem [ref=e488]: 正在右移
+          - generic [ref=e490]:
+            - heading "计算台" [level=3] [ref=e492]
+            - generic [ref=e493]:
+              - generic [ref=e494]:
+                - generic [ref=e495]:
+                  - generic [ref=e496]: 已整理前缀
+                  - strong [ref=e497]: 1 / 6
+                - generic [ref=e498]:
+                  - generic [ref=e499]: 累计比较
+                  - strong [ref=e500]: "0"
+                - generic [ref=e501]:
+                  - generic [ref=e502]: 累计移动
+                  - strong [ref=e503]: "0"
+              - generic [ref=e506]:
+                - math [ref=e508]:
+                  - generic [ref=e510]:
+                    - generic [ref=e511]: 循环不变量：每次操作后
+                    - generic [ref=e512]: A
+                    - generic [ref=e513]: "["
+                    - generic [ref=e514]: 1..
+                    - generic [ref=e515]: j
+                    - generic [ref=e516]: −
+                    - generic [ref=e517]: "1"
+                    - generic [ref=e518]: "]"
+                    - generic [ref=e519]: 仍有序
+                - generic [aria-hidden] [ref=e520]:
+                  - generic [ref=e521]:
+                    - generic [ref=e522]: 循环不变量：每次操作后
+                    - text: A[1..j −
+                  - generic [ref=e523]:
+                    - text: 1]
+                    - generic [ref=e524]: 仍有序
+              - button "推演依据：不变量 · 伪代码 7 行 · 注解" [ref=e525] [cursor=pointer]
+        - generic [ref=e528]: 拿起第 2 张牌，开始第一次插入。
+      - region "设计思路" [ref=e529]:
+        - generic [ref=e530]: 设计思路：为什么这样设计
+        - generic [ref=e539]:
+          - generic [ref=e540]:
+            - generic [ref=e541]: "01"
+            - text: 关键观察
+          - paragraph [ref=e542]: 绿色前缀是循环不变量：每个动作都只在"不破坏前缀有序"的前提下进行——正确性不靠检查全局，只靠维护这一条局部性质。
+        - generic [ref=e543]:
+          - generic [ref=e544]:
+            - generic [ref=e545]: "02"
+            - text: 换个设计会怎样
+          - generic [ref=e546]:
+            - generic [ref=e547]:
+              - generic [ref=e548]: 若改用 选择排序（每轮找最小值）
+              - paragraph [ref=e553]: 比较次数固定 n²/2、不看输入脸色；相等键会跨越（不稳定），也无法在有序输入上提前收工——插入排序能拿到 Θ(n)。
+            - generic [ref=e554]:
+              - generic [ref=e555]: 若改用 二分插入
+              - paragraph [ref=e560]: 比较降到 Θ(n log n)，但移动步数一步省不掉——移动才是插入排序的硬成本。
+        - generic [ref=e561]:
+          - generic [ref=e562]:
+            - generic [ref=e563]: "03"
+            - text: 带走这一招
+          - region [ref=e567]:
+            - generic [ref=e572]:
+              - text: 先猜一步
+              - heading "如果货架是链表，\"右移一格\"会变成什么？" [level=3] [ref=e573]
+            - group "预测答案" [ref=e574]:
+              - button "A 不用右移：找到位置后改两个指针即可插入" [ref=e575] [cursor=pointer]:
+                - generic [ref=e576]: A
+                - text: 不用右移：找到位置后改两个指针即可插入
+              - button "B 还是要逐格右移" [ref=e577] [cursor=pointer]:
+                - generic [ref=e578]: B
+                - text: 还是要逐格右移
+              - button "C 链表不能插入排序" [ref=e579] [cursor=pointer]:
+                - generic [ref=e580]: C
+                - text: 链表不能插入排序
+      - region [ref=e581]:
+        - generic [ref=e582]:
+          - generic [ref=e583]:
+            - paragraph [ref=e584]: COMPLEXITY MAP
+            - heading "插入排序：复杂度由输入条件决定" [level=3] [ref=e585]
+            - paragraph [ref=e586]: 标准原地插入排序：逐张把未整理区的第一张牌插进有序前缀。
+          - generic [ref=e587]: 条件 → 复杂度
+        - generic [ref=e588]:
+          - generic [ref=e590]:
+            - generic [ref=e591]:
+              - generic [ref=e592]: 最好
+              - strong [ref=e593]: Θ(n)
+            - paragraph [ref=e594]:
+              - generic [ref=e595]: 条件
+              - text: 输入已经有序：每张只比较一次，零移动。
+            - paragraph [ref=e596]:
+              - generic [ref=e597]: 例子
+              - code [ref=e598]: "[1,2,3,4,5,6]"
+            - generic [ref=e599]: while 条件第一次就为假，前缀检查即收工。
+          - generic [ref=e601]:
+            - generic [ref=e602]:
+              - generic [ref=e603]: 平均
+              - strong [ref=e604]: Θ(n²)
+            - paragraph [ref=e605]:
+              - generic [ref=e606]: 条件
+              - text: 随机排列：平均每张越过一半前缀。
+            - paragraph [ref=e607]:
+              - generic [ref=e608]: 例子
+              - code [ref=e609]: "[5,2,4,6,1,3]"
+            - generic [ref=e610]: 期望移动约 n²/4，比较约 n²/4。
+          - generic [ref=e612]:
+            - generic [ref=e613]:
+              - generic [ref=e614]: 最差
+              - strong [ref=e615]: Θ(n²)
+            - paragraph [ref=e616]:
+              - generic [ref=e617]: 条件
+              - text: 完全逆序：每张要越过全部前缀。
+            - paragraph [ref=e618]:
+              - generic [ref=e619]: 例子
+              - code [ref=e620]: "[6,5,4,3,2,1]"
+            - generic [ref=e621]: 比较与移动都是 n(n−1)/2。
+        - generic [ref=e622]:
+          - generic [ref=e623]:
+            - generic [ref=e624]:
+              - generic [ref=e625]: STABILITY CHECK
+              - strong [ref=e626]: 稳定排序
+            - generic [ref=e627]: 相等键保序
+          - paragraph [ref=e628]: 相等键不右移、不越过：后拿的 key 落在相等键的右边，身份顺序保持。
+          - generic [ref=e629]:
+            - code [ref=e630]: 4A → 4B
+            - generic [ref=e631]: →
+            - code [ref=e632]: 4A → 4B
+        - generic [ref=e633]: 别只背结论二分插入可以把比较压到 Θ(n log n)，但移动不变——这是插入排序的硬成本。

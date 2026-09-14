@@ -126,6 +126,8 @@ export type TraceStep = {
   note?: string
   conclusion: string
   prediction?: PredictionData
+  /** 末拍整页总结的增强字段；缺省时 TracePlayer 用 title/metrics/conclusion 自动推导。 */
+  summary?: { headline?: string; stats?: MetricItem[]; verdict?: string }
 }
 
 export type Trace = {

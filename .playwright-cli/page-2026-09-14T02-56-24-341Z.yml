@@ -1,0 +1,229 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e10]:
+      - strong [ref=e11]: Algorithm
+      - generic [ref=e12]: Animation Studio
+    - generic [ref=e13]: WORKSPACE
+    - navigation "站点主题导航" [ref=e14]:
+      - button "算法王国 像玩游戏一样学算法" [ref=e15] [cursor=pointer]:
+        - generic [ref=e21]:
+          - generic [ref=e22]: 算法王国
+          - generic [ref=e23]: 像玩游戏一样学算法
+      - button "学院 沙盘推演总览与路线" [ref=e24] [cursor=pointer]:
+        - generic [ref=e29]:
+          - generic [ref=e30]: 学院
+          - generic [ref=e31]: 沙盘推演总览与路线
+    - generic [ref=e32]: 本地静态站点React 19.3 · Anime.js 4.5 · KaTeX 0.18.7
+  - main [ref=e34]:
+    - generic [ref=e36]:
+      - text: 算法动画站
+      - generic [ref=e39]: /
+      - text: 沙盘推演 / 第 6 章 堆排序
+    - generic [ref=e1543]:
+      - generic [ref=e1544]:
+        - generic [ref=e1545]:
+          - paragraph [ref=e1546]: SANDBOX 02 · HEAP SORT
+          - heading "先看数组：最大值还没有浮到顶端" [level=2] [ref=e1547]
+          - paragraph [ref=e1548]: 把数组看成完全二叉树：根节点负责交付当前最大值，堆化负责修复被交换破坏的局部关系；同值元素的身份也会被单独检查。
+        - generic [ref=e1549]:
+          - text: STEP
+          - strong [ref=e1550]: "01"
+          - generic [ref=e1551]: / 17
+      - group "先看数组：最大值还没有浮到顶端步骤控制" [ref=e1552]:
+        - tablist "先看数组：最大值还没有浮到顶端步骤" [ref=e1553]:
+          - tab "01 看数组" [selected] [ref=e1554] [cursor=pointer]
+          - tab "02 建堆" [ref=e1555] [cursor=pointer]
+          - tab "03 建堆" [ref=e1556] [cursor=pointer]
+          - tab "04 建堆" [ref=e1557] [cursor=pointer]
+          - tab "05 建堆" [ref=e1558] [cursor=pointer]
+          - tab "06 取最大值" [ref=e1559] [cursor=pointer]
+          - tab "07 再堆化" [ref=e1560] [cursor=pointer]
+          - tab "08 再堆化" [ref=e1561] [cursor=pointer]
+          - tab "09 再堆化" [ref=e1562] [cursor=pointer]
+          - tab "10 取最大值·2" [ref=e1563] [cursor=pointer]
+          - tab "11 再堆化" [ref=e1564] [cursor=pointer]
+          - tab "12 再堆化" [ref=e1565] [cursor=pointer]
+          - tab "13 取最大值·3" [ref=e1566] [cursor=pointer]
+          - tab "14 再堆化" [ref=e1567] [cursor=pointer]
+          - tab "15 取最大值·4" [ref=e1568] [cursor=pointer]
+          - tab "16 再堆化" [ref=e1569] [cursor=pointer]
+          - tab "17 完成" [ref=e1570] [cursor=pointer]
+        - generic [ref=e1571]:
+          - button "上一步" [disabled] [ref=e1572]
+          - button "下一步" [ref=e1575] [cursor=pointer]
+          - button "自动播放" [ref=e1578] [cursor=pointer]
+          - button "切换播放速度" [ref=e1581] [cursor=pointer]: 1×
+          - button "重播" [ref=e1585] [cursor=pointer]
+      - progressbar "教学进度" [ref=e1589]
+      - region "选择演示样例" [ref=e1590]:
+        - generic [ref=e1591]:
+          - generic [ref=e1592]:
+            - paragraph [ref=e1593]: INPUT LAB
+            - strong [ref=e1594]: 换一组输入再看一次
+          - generic [ref=e1595]: "[4,10,3,5,1]"
+        - group "演示样例" [ref=e1596]:
+          - button "课堂混合序列 [4,10,3,5,1]" [pressed] [ref=e1597] [cursor=pointer]:
+            - generic [ref=e1598]: 课堂混合序列
+            - generic [ref=e1599]: "[4,10,3,5,1]"
+          - button "已经是大根堆 [10,5,3,4,1]" [ref=e1600] [cursor=pointer]:
+            - generic [ref=e1601]: 已经是大根堆
+            - generic [ref=e1602]: "[10,5,3,4,1]"
+          - button "接近最忙的升序 [1,2,3,4,5]" [ref=e1603] [cursor=pointer]:
+            - generic [ref=e1604]: 接近最忙的升序
+            - generic [ref=e1605]: "[1,2,3,4,5]"
+          - button "重复键·查身份 [4,1,4,3,2]" [ref=e1606] [cursor=pointer]:
+            - generic [ref=e1607]: 重复键·查身份
+            - generic [ref=e1608]: "[4,1,4,3,2]"
+      - generic [ref=e1609]:
+        - generic [ref=e1610]:
+          - generic [ref=e1611]: 这一步，公式记录了什么？
+          - generic [ref=e1614]:
+            - math [ref=e1616]:
+              - generic [ref=e1617]: 目标：构造大根堆
+            - generic [ref=e1621]: 目标：构造大根堆
+        - generic [ref=e1623]:
+          - generic [ref=e1624]:
+            - heading "堆排序完全二叉树" [level=3] [ref=e1626]
+            - generic [ref=e1627]:
+              - generic "堆排序完全二叉树" [ref=e1628]:
+                - generic [ref=e1629]: "4"
+                - generic [ref=e1631]:
+                  - generic [ref=e1632]: "10"
+                  - generic [ref=e1633]: "3"
+                - generic [ref=e1634]:
+                  - generic [ref=e1635]: "5"
+                  - generic [ref=e1636]: "1"
+              - list "颜色语义" [ref=e1639]:
+                - listitem [ref=e1640]: 堆化路径
+                - listitem [ref=e1642]: 正在交换 / 下沉的元素
+                - listitem [ref=e1644]: 有序后缀
+          - generic [ref=e1646]:
+            - heading "计算台" [level=3] [ref=e1648]
+            - generic [ref=e1649]:
+              - generic [ref=e1650]:
+                - generic [ref=e1651]:
+                  - generic [ref=e1652]: 未排序区间
+                  - strong [ref=e1653]: "5"
+                - generic [ref=e1654]:
+                  - generic [ref=e1655]: 已固定最大值
+                  - strong [ref=e1656]: "0"
+                - generic [ref=e1657]:
+                  - generic [ref=e1658]: 累计比较
+                  - strong [ref=e1659]: "0"
+              - generic [ref=e1662]:
+                - math [ref=e1664]:
+                  - generic [ref=e1666]:
+                    - generic [ref=e1667]: 父节点
+                    - generic [ref=e1668]: ≥
+                    - generic [ref=e1669]: 子节点
+                - generic [aria-hidden] [ref=e1670]:
+                  - generic [ref=e1671]:
+                    - generic [ref=e1672]: 父节点
+                    - text: ≥
+                  - generic [ref=e1673]: 子节点
+              - button "推演依据：不变量 · 伪代码 7 行 · 注解" [ref=e1675] [cursor=pointer]
+        - generic [ref=e1679]:
+          - heading "堆排序数组状态" [level=3] [ref=e1681]
+          - img "堆排序数组状态" [ref=e1683]:
+            - generic [ref=e1684]:
+              - generic [ref=e1685]: "4"
+              - generic [ref=e1686]: "10"
+              - generic [ref=e1687]: "3"
+              - generic [ref=e1688]: "5"
+              - generic [ref=e1689]: "1"
+            - generic [ref=e1690]:
+              - generic [ref=e1691]: "1"
+              - generic [ref=e1692]: "2"
+              - generic [ref=e1693]: "3"
+              - generic [ref=e1694]: "4"
+              - generic [ref=e1695]: "5"
+        - generic [ref=e1696]: 下一步从最后一个非叶节点开始向上修复。
+      - region "设计思路" [ref=e1697]:
+        - generic [ref=e1698]: 设计思路：为什么这样设计
+        - generic [ref=e1707]:
+          - generic [ref=e1708]:
+            - generic [ref=e1709]: "01"
+            - text: 关键观察
+          - paragraph [ref=e1710]: "\"反复取最大值\"这个朴素需求被改写成\"维护堆序\"：建一次堆 Θ(n)，之后每次取最大只修复一条对数长度的路径。"
+        - generic [ref=e1711]:
+          - generic [ref=e1712]:
+            - generic [ref=e1713]: "02"
+            - text: 换个设计会怎样
+          - generic [ref=e1714]:
+            - generic [ref=e1715]:
+              - generic [ref=e1716]: 若改用 无序数组每次线性找最大
+              - paragraph [ref=e1721]: 每次 Θ(n)、共 n 次合计 Θ(n²)；堆把"找"的成本摊到"维护"上，一次堆化只走一条路径。
+            - generic [ref=e1722]:
+              - generic [ref=e1723]: 若改用 维护一个有序数组
+              - paragraph [ref=e1728]: 取最大 O(1) 很快，但插入新元素要整体挪动 Θ(n)；堆让插入和取出都是 O(log n)。
+        - generic [ref=e1729]:
+          - generic [ref=e1730]:
+            - generic [ref=e1731]: "03"
+            - text: 带走这一招
+          - region [ref=e1735]:
+            - generic [ref=e1740]:
+              - text: 先猜一步
+              - heading "自底向上建堆是 Θ(n) 而不是 n·log n，为什么？" [level=3] [ref=e1741]
+            - group "预测答案" [ref=e1742]:
+              - button "A 一半以上是叶子、根本不下沉，按高度加权求和收敛到 O(n)" [ref=e1743] [cursor=pointer]:
+                - generic [ref=e1744]: A
+                - text: 一半以上是叶子、根本不下沉，按高度加权求和收敛到 O(n)
+              - button "B 建堆不需要比较" [ref=e1745] [cursor=pointer]:
+                - generic [ref=e1746]: B
+                - text: 建堆不需要比较
+              - button "C 因为数组已经有序" [ref=e1747] [cursor=pointer]:
+                - generic [ref=e1748]: C
+                - text: 因为数组已经有序
+      - region [ref=e1749]:
+        - generic [ref=e1750]:
+          - generic [ref=e1751]:
+            - paragraph [ref=e1752]: COMPLEXITY MAP
+            - heading "堆排序：建堆快，但反复取最大值决定阶数" [level=3] [ref=e1753]
+            - paragraph [ref=e1754]: 标准原地堆排序的建堆是 Θ(n)，后续 n 次取最大值和堆化把总时间推到 Θ(n log n)。
+          - generic [ref=e1755]: 条件 → 复杂度
+        - generic [ref=e1756]:
+          - generic [ref=e1758]:
+            - generic [ref=e1759]:
+              - generic [ref=e1760]: 最好
+              - strong [ref=e1761]: Θ(n log n)
+            - paragraph [ref=e1762]:
+              - generic [ref=e1763]: 条件
+              - text: 输入本来就是大根堆。
+            - paragraph [ref=e1764]:
+              - generic [ref=e1765]: 例子
+              - code [ref=e1766]: "[10,5,3,4,1]"
+            - generic [ref=e1767]: 建堆几乎不动，但每次取根仍要维护剩余堆。
+          - generic [ref=e1769]:
+            - generic [ref=e1770]:
+              - generic [ref=e1771]: 平均
+              - strong [ref=e1772]: Θ(n log n)
+            - paragraph [ref=e1773]:
+              - generic [ref=e1774]: 条件
+              - text: 输入是随机排列。
+            - paragraph [ref=e1775]:
+              - generic [ref=e1776]: 例子
+              - code [ref=e1777]: "[4,10,3,5,1]"
+            - generic [ref=e1778]: 每轮处理的堆高平均仍带来对数级堆化成本。
+          - generic [ref=e1780]:
+            - generic [ref=e1781]:
+              - generic [ref=e1782]: 最差
+              - strong [ref=e1783]: Θ(n log n)
+            - paragraph [ref=e1784]:
+              - generic [ref=e1785]: 条件
+              - text: 输入接近升序，建大根堆和后续交换都更忙。
+            - paragraph [ref=e1786]:
+              - generic [ref=e1787]: 例子
+              - code [ref=e1788]: "[1,2,3,4,5,6,7,8]"
+            - generic [ref=e1789]: 常数可能变大，但提取 n 个元素的对数级路径仍存在。
+        - generic [ref=e1790]:
+          - generic [ref=e1791]:
+            - generic [ref=e1792]:
+              - generic [ref=e1793]: STABILITY CHECK
+              - strong [ref=e1794]: 不稳定排序
+            - generic [ref=e1795]: 相等键可能换位
+          - paragraph [ref=e1796]: 根和末尾的原地交换可能跨过同值元素，让它们的身份顺序改变。
+          - generic [ref=e1797]:
+            - code [ref=e1798]: 4A → 4B
+            - generic [ref=e1799]: →
+            - code [ref=e1800]: 4B → 4A
+        - generic [ref=e1801]: 别只背结论空间复杂度是 O(1)（不计输入数组）；堆排序的标准实现不是稳定排序。

@@ -48,3 +48,14 @@
 [85386473ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=76631a5a:15804
 [85905373ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:5173/src/App.tsx?t=1789348713531:0
 [85905374ms] [ERROR] [vite] Failed to reload /src/App.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:5173/@vite/client:962
+[88771877ms] [ERROR] [vite] ReferenceError: n16Levels is not defined
+    at http://localhost:5173/src/lessons/master-method.tsx?t=1789351580031:311:1 @ http://localhost:5173/@vite/client:962
+[88771877ms] [ERROR] [vite] Failed to reload /src/lessons/master-method.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:5173/@vite/client:962
+[90316531ms] [ERROR] [vite] SyntaxError: Identifier 'levelCount' has already been declared @ http://localhost:5173/@vite/client:962
+[90316532ms] [ERROR] [vite] Failed to reload /src/lessons/merge-sort.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:5173/@vite/client:962
+[90355638ms] [ERROR] [vite] SyntaxError: Identifier 'levelCount' has already been declared @ http://localhost:5173/@vite/client:962
+[90355638ms] [ERROR] [vite] Failed to reload /src/lessons/merge-sort.tsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://localhost:5173/@vite/client:962
+[90944073ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=76631a5a:15804
+[91241224ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=76631a5a:15804
+[91288556ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=76631a5a:15804
+[91563271ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=76631a5a:15804

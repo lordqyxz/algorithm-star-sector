@@ -1,0 +1,216 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e10]:
+      - strong [ref=e11]: Algorithm
+      - generic [ref=e12]: Animation Studio
+    - generic [ref=e13]: WORKSPACE
+    - navigation "站点主题导航" [ref=e14]:
+      - button "算法王国 像玩游戏一样学算法" [ref=e15] [cursor=pointer]:
+        - generic [ref=e21]:
+          - generic [ref=e22]: 算法王国
+          - generic [ref=e23]: 像玩游戏一样学算法
+      - button "学院 沙盘推演总览与路线" [ref=e24] [cursor=pointer]:
+        - generic [ref=e29]:
+          - generic [ref=e30]: 学院
+          - generic [ref=e31]: 沙盘推演总览与路线
+    - generic [ref=e32]: 本地静态站点React 19.3 · Anime.js 4.5 · KaTeX 0.18.7
+  - main [ref=e34]:
+    - generic [ref=e36]:
+      - text: 算法动画站
+      - generic [ref=e39]: /
+      - text: 沙盘推演 / 第 4 章 最近点对
+    - generic [ref=e951]:
+      - generic [ref=e952]:
+        - generic [ref=e953]:
+          - paragraph [ref=e954]: SANDBOX 04 · CLOSEST PAIR
+          - heading "看问题：从所有点对中找最小距离" [level=2] [ref=e955]
+          - paragraph [ref=e956]: 局部答案还不够：只有检查中线附近的候选，才能得到全局最近点对。
+        - generic [ref=e957]:
+          - text: STEP
+          - strong [ref=e958]: "01"
+          - generic [ref=e959]: / 06
+      - group "看问题：从所有点对中找最小距离步骤控制" [ref=e960]:
+        - tablist "看问题：从所有点对中找最小距离步骤" [ref=e961]:
+          - tab "01 看问题" [selected] [ref=e962] [cursor=pointer]
+          - tab "02 分开" [ref=e963] [cursor=pointer]
+          - tab "03 局部解" [ref=e964] [cursor=pointer]
+          - tab "04 条带" [ref=e965] [cursor=pointer]
+          - tab "05 答案" [ref=e966] [cursor=pointer]
+          - tab "06 完成" [ref=e967] [cursor=pointer]
+        - generic [ref=e968]:
+          - button "上一步" [disabled] [ref=e969]
+          - button "下一步" [ref=e972] [cursor=pointer]
+          - button "自动播放" [ref=e975] [cursor=pointer]
+          - button "切换播放速度" [ref=e978] [cursor=pointer]: 1×
+          - button "重播" [ref=e982] [cursor=pointer]
+      - progressbar "教学进度" [ref=e986]
+      - region "选择演示样例" [ref=e987]:
+        - generic [ref=e988]:
+          - generic [ref=e989]:
+            - paragraph [ref=e990]: INPUT LAB
+            - strong [ref=e991]: 换一组输入再看一次
+          - generic [ref=e992]: 跨界最近：C–E
+        - group "演示样例" [ref=e993]:
+          - button "课堂混合点集 跨界最近：C–E" [pressed] [ref=e994] [cursor=pointer]:
+            - generic [ref=e995]: 课堂混合点集
+            - generic [ref=e996]: 跨界最近：C–E
+          - button "跨界候选更近 中线两侧各有近邻" [ref=e997] [cursor=pointer]:
+            - generic [ref=e998]: 跨界候选更近
+            - generic [ref=e999]: 中线两侧各有近邻
+          - button "分散点集 局部答案已经很小" [ref=e1000] [cursor=pointer]:
+            - generic [ref=e1001]: 分散点集
+            - generic [ref=e1002]: 局部答案已经很小
+          - button "中线附近密集 条带候选更多" [ref=e1003] [cursor=pointer]:
+            - generic [ref=e1004]: 中线附近密集
+            - generic [ref=e1005]: 条带候选更多
+      - generic [ref=e1006]:
+        - generic [ref=e1007]:
+          - generic [ref=e1008]: 这一步，公式记录了图上的什么？
+          - generic [ref=e1011]:
+            - math [ref=e1013]:
+              - generic [ref=e1015]:
+                - generic [ref=e1016]: 目标：
+                - generic [ref=e1017]: min
+                - generic: ⁡
+                - generic [ref=e1018]: d
+                - generic [ref=e1019]: (
+                - generic [ref=e1020]:
+                  - generic [ref=e1021]: P
+                  - generic [ref=e1022]: i
+                - generic [ref=e1023]: ","
+                - generic [ref=e1024]:
+                  - generic [ref=e1025]: P
+                  - generic [ref=e1026]: j
+                - generic [ref=e1027]: )
+            - generic [ref=e1029]:
+              - generic [ref=e1030]: 目标：
+              - text: min d(
+              - generic [ref=e1031]:
+                - text: P
+                - generic [ref=e1032]: i
+              - text: ","
+              - generic [ref=e1040]:
+                - text: P
+                - generic [ref=e1041]: j
+              - text: )
+        - generic [ref=e1049]:
+          - generic [ref=e1050]:
+            - heading "点集：距离是图上的线段" [level=3] [ref=e1052]
+            - generic [ref=e1053]:
+              - img "点集：距离是图上的线段" [ref=e1054]:
+                - generic [ref=e1055]: A
+                - generic [ref=e1058]: B
+                - generic [ref=e1061]: C
+                - generic [ref=e1064]: D
+                - generic [ref=e1067]: E
+                - generic [ref=e1070]: F
+                - generic [ref=e1073]: G
+                - generic [ref=e1076]: H
+              - list "颜色语义" [ref=e1079]:
+                - listitem [ref=e1080]: 左半边的点
+                - listitem [ref=e1082]: 右半边的点
+                - listitem [ref=e1084]: 中线条带候选
+                - listitem [ref=e1086]: 全局最近点对
+          - generic [ref=e1088]:
+            - heading "计算台" [level=3] [ref=e1090]
+            - generic [ref=e1091]:
+              - generic [ref=e1092]:
+                - generic [ref=e1093]:
+                  - generic [ref=e1094]: 左半边最小距离 δL
+                  - strong [ref=e1095]: —
+                - generic [ref=e1096]:
+                  - generic [ref=e1097]: 右半边最小距离 δR
+                  - strong [ref=e1098]: —
+                - generic [ref=e1099]:
+                  - generic [ref=e1100]: 当前最好 δ
+                  - strong [ref=e1101]: —
+                - generic [ref=e1102]:
+                  - generic [ref=e1103]: 候选点对数
+                  - strong [ref=e1104]: "0"
+                - generic [ref=e1105]:
+                  - generic [ref=e1106]: δ 更新次数
+                  - strong [ref=e1107]: "0"
+              - generic [ref=e1110]:
+                - math [ref=e1112]:
+                  - generic [ref=e1113]: 枚举所有点对作为候选
+                - generic [ref=e1117]: 枚举所有点对作为候选
+              - button "推演依据：不变量 · 伪代码 3 行 · 注解" [ref=e1119] [cursor=pointer]
+        - generic [ref=e1122]: 下一步：画中线，把大问题分成左右两个小问题。
+      - region "设计思路" [ref=e1123]:
+        - generic [ref=e1124]: 设计思路：为什么这样设计
+        - generic [ref=e1133]:
+          - generic [ref=e1134]:
+            - generic [ref=e1135]: "01"
+            - text: 关键观察
+          - paragraph [ref=e1136]: 几何性质替算法干活：距离超过 δ 的点对不可能更近，于是中线条带把跨界候选压缩到寥寥几个——合并阶段从"全比"变成"只查必要的"。
+        - generic [ref=e1137]:
+          - generic [ref=e1138]:
+            - generic [ref=e1139]: "02"
+            - text: 换个设计会怎样
+          - generic [ref=e1140]:
+            - generic [ref=e1141]:
+              - generic [ref=e1142]: 若改用 暴力枚举所有点对
+              - paragraph [ref=e1147]: Θ(n²) 在 n 大时不可行；分治压到 Θ(n log n)，代价是预处理要按 x 排序、条带内还要按 y 扫描。
+            - generic [ref=e1148]:
+              - generic [ref=e1149]: 若改用 只算左右两半的答案
+              - paragraph [ref=e1154]: 会漏掉跨界最近对（本课数据集就是反例）——分治的正确性永远在"合并"这一步补全。
+        - generic [ref=e1155]:
+          - generic [ref=e1156]:
+            - generic [ref=e1157]: "03"
+            - text: 带走这一招
+          - region [ref=e1161]:
+            - generic [ref=e1166]:
+              - text: 先猜一步
+              - heading "条带宽度为什么取 2δ 而不是 δ？" [level=3] [ref=e1167]
+            - group "预测答案" [ref=e1168]:
+              - button "A 最近点对可能分居中线两侧，两端点各自到中线的距离都可能达到 δ" [ref=e1169] [cursor=pointer]:
+                - generic [ref=e1170]: A
+                - text: 最近点对可能分居中线两侧，两端点各自到中线的距离都可能达到 δ
+              - button "B 条带越宽越保险" [ref=e1171] [cursor=pointer]:
+                - generic [ref=e1172]: B
+                - text: 条带越宽越保险
+              - button "C δ 是点的直径" [ref=e1173] [cursor=pointer]:
+                - generic [ref=e1174]: C
+                - text: δ 是点的直径
+      - region [ref=e1175]:
+        - generic [ref=e1176]:
+          - generic [ref=e1177]:
+            - paragraph [ref=e1178]: COMPLEXITY MAP
+            - heading "最近点对：数据形状不改变分治的阶数" [level=3] [ref=e1179]
+            - paragraph [ref=e1180]: 以下是标准分治版本：先排序，再递归求左右答案，最后检查中线条带。
+          - generic [ref=e1181]: 条件 → 复杂度
+        - generic [ref=e1182]:
+          - generic [ref=e1184]:
+            - generic [ref=e1185]:
+              - generic [ref=e1186]: 最好
+              - strong [ref=e1187]: Θ(n log n)
+            - paragraph [ref=e1188]:
+              - generic [ref=e1189]: 条件
+              - text: 点很分散，也不能跳过分治和条带检查。
+            - paragraph [ref=e1190]:
+              - generic [ref=e1191]: 例子
+              - code [ref=e1192]: 均匀分布：(0,0)、(10,0)、(0,10)…
+            - generic [ref=e1193]: 距离大小会改变常数，但算法仍要完成排序、分半和合并。
+          - generic [ref=e1195]:
+            - generic [ref=e1196]:
+              - generic [ref=e1197]: 平均
+              - strong [ref=e1198]: Θ(n log n)
+            - paragraph [ref=e1199]:
+              - generic [ref=e1200]: 条件
+              - text: 点是随机分布的平面点。
+            - paragraph [ref=e1201]:
+              - generic [ref=e1202]: 例子
+              - code [ref=e1203]: 随机点集：P₁…Pₙ
+            - generic [ref=e1204]: 平均情况下条带候选较少，但递归树和排序成本仍在。
+          - generic [ref=e1206]:
+            - generic [ref=e1207]:
+              - generic [ref=e1208]: 最差
+              - strong [ref=e1209]: Θ(n log n)
+            - paragraph [ref=e1210]:
+              - generic [ref=e1211]: 条件
+              - text: 很多点靠近中线，条带候选变多。
+            - paragraph [ref=e1212]:
+              - generic [ref=e1213]: 例子
+              - code [ref=e1214]: Pᵢ=(5±εᵢ, yᵢ)
+            - generic [ref=e1215]: 条带检查可能更忙，但几何性质仍把合并限制在线性规模。
+        - generic [ref=e1216]: 别只背结论若改成暴力枚举所有点对，才会变成 Θ(n²)；本动画展示的是分治版。

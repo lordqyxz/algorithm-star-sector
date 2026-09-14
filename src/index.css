@@ -157,6 +157,16 @@
 .bucket-empty { color:#b8c4d4; font:700 .68rem/1 monospace; }
 .bar-unit { color:#9aa8ba; font:750 .66rem/1 monospace; }
 .shape-label { font-family:monospace; font-size:13px; font-weight:750; }
+/* —— 渐进式披露：推演依据折叠 —— */
+.evidence-toggle { display:inline-flex; gap:6px; align-items:center; margin-top:10px; padding:6px 9px; border:1px solid #d7e0eb; border-radius:6px; background:#f8fafc; color:#607087; cursor:pointer; font:750 .68rem/1.4 sans-serif; text-align:left; }
+.evidence-toggle:hover { border-color:#9bb1da; color:#172235; }
+.evidence-chevron { transition:transform .16s ease; } .evidence-chevron.open { transform:rotate(180deg); }
+.evidence-body { display:grid; gap:4px; }
+/* —— 末拍整页总结 —— */
+.summary-hero { display:grid; gap:6px; margin-bottom:14px; } .summary-hero h3 { margin:0; color:#172235; font-size:clamp(1.4rem,3vw,2.1rem); letter-spacing:-.04em; }
+.summary-verdict { display:flex; gap:9px; align-items:baseline; margin-bottom:14px; padding:13px 15px; border:1px solid #74c9ae; border-radius:9px; background:#f0fbf6; } .summary-verdict b { flex:0 0 auto; color:#12866d; font-size:.72rem; letter-spacing:.06em; } .summary-verdict span { color:#172235; font-size:.86rem; font-weight:750; line-height:1.55; }
+.summary-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:10px; margin-bottom:14px; } .summary-stats .metric { flex-direction:column; align-items:start; gap:6px; padding:14px; } .summary-stats .metric strong { font-size:1.7rem; }
+.summary-formula { padding:13px 15px; border-left:4px solid #2f60d6; border-radius:8px; background:#e7edff; }
 /* —— 算法王国（游戏模式，PixiJS 原生） —— */
 .game-host { width:100%; max-width:960px; aspect-ratio: 960 / 600; margin:0 auto; border:1px solid #d7e0eb; border-radius:12px; background:#eef2f7; overflow:hidden; box-shadow:0 16px 36px rgba(25,45,75,.08); }
 .game-host canvas { width:100% !important; height:100% !important; display:block; }

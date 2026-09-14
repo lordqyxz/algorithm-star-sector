@@ -1,0 +1,235 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e10]:
+      - strong [ref=e11]: Algorithm
+      - generic [ref=e12]: Animation Studio
+    - generic [ref=e13]: WORKSPACE
+    - navigation "站点主题导航" [ref=e14]:
+      - button "算法王国 像玩游戏一样学算法" [ref=e15] [cursor=pointer]:
+        - generic [ref=e21]:
+          - generic [ref=e22]: 算法王国
+          - generic [ref=e23]: 像玩游戏一样学算法
+      - button "学院 沙盘推演总览与路线" [ref=e24] [cursor=pointer]:
+        - generic [ref=e29]:
+          - generic [ref=e30]: 学院
+          - generic [ref=e31]: 沙盘推演总览与路线
+    - generic [ref=e32]: 本地静态站点React 19.3 · Anime.js 4.5 · KaTeX 0.18.7
+  - main [ref=e34]:
+    - generic [ref=e36]:
+      - text: 算法动画站
+      - generic [ref=e39]: /
+      - text: 沙盘推演 / 第 2 章 归并排序
+    - generic [ref=e368]:
+      - generic [ref=e369]:
+        - generic [ref=e370]:
+          - paragraph [ref=e371]: SANDBOX 01 · MERGE SORT
+          - heading "初始问题：给 8 个数字排序" [level=2] [ref=e372]
+          - paragraph [ref=e373]: 数字真的被分开、比较、合并；每一层的工作量都能从数组读出来，相等键还会保留身份顺序。
+        - generic [ref=e374]:
+          - text: STEP
+          - strong [ref=e375]: "01"
+          - generic [ref=e376]: / 13
+      - group "初始问题：给 8 个数字排序步骤控制" [ref=e377]:
+        - tablist "初始问题：给 8 个数字排序步骤" [ref=e378]:
+          - tab "01 初始" [selected] [ref=e379] [cursor=pointer]
+          - tab "02 拆分" [ref=e380] [cursor=pointer]
+          - tab "03 基例" [ref=e381] [cursor=pointer]
+          - tab "04 合并" [ref=e382] [cursor=pointer]
+          - tab "05 写回 1/8" [ref=e383] [cursor=pointer]
+          - tab "06 写回 2/8" [ref=e384] [cursor=pointer]
+          - tab "07 写回 3/8" [ref=e385] [cursor=pointer]
+          - tab "08 写回 4/8" [ref=e386] [cursor=pointer]
+          - tab "09 写回 5/8" [ref=e387] [cursor=pointer]
+          - tab "10 写回 6/8" [ref=e388] [cursor=pointer]
+          - tab "11 写回 7/8" [ref=e389] [cursor=pointer]
+          - tab "12 写回 8/8" [ref=e390] [cursor=pointer]
+          - tab "13 复杂度" [ref=e391] [cursor=pointer]
+        - generic [ref=e392]:
+          - button "上一步" [disabled] [ref=e393]
+          - button "下一步" [ref=e396] [cursor=pointer]
+          - button "自动播放" [ref=e399] [cursor=pointer]
+          - button "切换播放速度" [ref=e402] [cursor=pointer]: 1×
+          - button "重播" [ref=e406] [cursor=pointer]
+      - progressbar "教学进度" [ref=e410]
+      - region "选择演示样例" [ref=e411]:
+        - generic [ref=e412]:
+          - generic [ref=e413]:
+            - paragraph [ref=e414]: INPUT LAB
+            - strong [ref=e415]: 换一组输入再看一次
+          - generic [ref=e416]: "[8,3,7,4,1,6,2,5]"
+        - group "演示样例" [ref=e417]:
+          - button "课堂混合序列 [8,3,7,4,1,6,2,5]" [pressed] [ref=e418] [cursor=pointer]:
+            - generic [ref=e419]: 课堂混合序列
+            - generic [ref=e420]: "[8,3,7,4,1,6,2,5]"
+          - button "已经有序 [1,2,3,4,5,6,7,8]" [ref=e421] [cursor=pointer]:
+            - generic [ref=e422]: 已经有序
+            - generic [ref=e423]: "[1,2,3,4,5,6,7,8]"
+          - button "完全逆序 [8,7,6,5,4,3,2,1]" [ref=e424] [cursor=pointer]:
+            - generic [ref=e425]: 完全逆序
+            - generic [ref=e426]: "[8,7,6,5,4,3,2,1]"
+          - button "重复键 [4,1,4,2,4,3,4,2]" [ref=e427] [cursor=pointer]:
+            - generic [ref=e428]: 重复键
+            - generic [ref=e429]: "[4,1,4,2,4,3,4,2]"
+      - generic [ref=e430]:
+        - generic [ref=e431]:
+          - generic [ref=e432]: 这一步，公式记录了什么？
+          - generic [ref=e435]:
+            - math [ref=e437]:
+              - generic [ref=e439]:
+                - generic [ref=e440]: T
+                - generic [ref=e441]: (
+                - generic [ref=e442]: "8"
+                - generic [ref=e443]: )
+                - generic [ref=e444]: =
+                - generic [ref=e445]: "2"
+                - generic [ref=e446]: T
+                - generic [ref=e447]: (
+                - generic [ref=e448]: "4"
+                - generic [ref=e449]: )
+                - generic [ref=e450]: +
+                - generic [ref=e451]: "8"
+            - generic [aria-hidden] [ref=e452]:
+              - generic [ref=e453]: T(8) =
+              - generic [ref=e454]: 2T(4) +
+              - generic [ref=e455]: "8"
+        - generic [ref=e456]:
+          - generic [ref=e457]:
+            - heading "递归树：每一层的实际数字" [level=3] [ref=e459]
+            - generic [ref=e460]:
+              - generic "递归树：每一层的实际数字" [ref=e461]:
+                - generic [ref=e462]:
+                  - generic [ref=e463]: "8"
+                  - generic [ref=e464]: "3"
+                  - generic [ref=e465]: "7"
+                  - generic [ref=e466]: "4"
+                  - generic [ref=e467]: "1"
+                  - generic [ref=e468]: "6"
+                  - generic [ref=e469]: "2"
+                  - generic [ref=e470]: "5"
+              - list "颜色语义" [ref=e471]:
+                - listitem [ref=e472]: 当前正在看的层
+                - listitem [ref=e474]: 合并完成的输出
+                - listitem [ref=e476]: 正在比较的队首候选
+                - listitem [ref=e478]: 已取走的队首
+          - generic [ref=e480]:
+            - heading "计算台" [level=3] [ref=e482]
+            - generic [ref=e483]:
+              - generic [ref=e484]:
+                - generic [ref=e485]:
+                  - generic [ref=e486]: 这一层有多少个问题
+                  - strong [ref=e487]: "1"
+                - generic [ref=e488]:
+                  - generic [ref=e489]: 每个问题有多大
+                  - strong [ref=e490]: "8"
+                - generic [ref=e491]:
+                  - generic [ref=e492]: 整层工作量
+                  - strong [ref=e493]: "8"
+                - generic [ref=e494]:
+                  - generic [ref=e495]: 累计比较
+                  - strong [ref=e496]: "0"
+                - generic [ref=e497]:
+                  - generic [ref=e498]: 已写回元素
+                  - strong [ref=e499]: 0 / 8
+              - generic [ref=e502]:
+                - math [ref=e504]:
+                  - generic [ref=e506]:
+                    - generic [ref=e507]: "1"
+                    - generic [ref=e508]: ×
+                    - generic [ref=e509]: "8"
+                    - generic [ref=e510]: =
+                    - generic [ref=e511]: "8"
+                - generic [aria-hidden] [ref=e512]:
+                  - generic [ref=e513]: 1 ×
+                  - generic [ref=e514]: 8 =
+                  - generic [ref=e515]: "8"
+              - button "推演依据：不变量 · 伪代码 7 行 · 注解" [ref=e516] [cursor=pointer]
+        - generic [ref=e519]: 下一步：让第一刀真的发生。
+      - region "设计思路" [ref=e520]:
+        - generic [ref=e521]: 设计思路：为什么这样设计
+        - generic [ref=e530]:
+          - generic [ref=e531]:
+            - generic [ref=e532]: "01"
+            - text: 关键观察
+          - paragraph [ref=e533]: 整个算法的地基是一句话：合并两个有序数组只需线性扫描。把"排序"化归为"合并"，分治才有意义。
+        - generic [ref=e534]:
+          - generic [ref=e535]:
+            - generic [ref=e536]: "02"
+            - text: 换个设计会怎样
+          - generic [ref=e537]:
+            - generic [ref=e538]:
+              - generic [ref=e539]: 若改用 快速排序
+              - paragraph [ref=e544]: 省掉 O(n) 辅助空间且更缓存友好，代价是不稳定、最坏 Θ(n²)；归并对任何输入都封顶 Θ(n log n) 且稳定。
+            - generic [ref=e545]:
+              - generic [ref=e546]: 若改用 插入排序直接排大数组
+              - paragraph [ref=e551]: 逆序输入 Θ(n²)；归并用 log₂n 层线性合并把最坏情况压到 Θ(n log n)。
+        - generic [ref=e552]:
+          - generic [ref=e553]:
+            - generic [ref=e554]: "03"
+            - text: 带走这一招
+          - region [ref=e558]:
+            - generic [ref=e563]:
+              - text: 先猜一步
+              - heading "归并排序在链表上比在数组上更有优势，为什么？" [level=3] [ref=e564]
+            - group "预测答案" [ref=e565]:
+              - button "A 链表合并只需改指针，不需要 O(n) 辅助数组" [ref=e566] [cursor=pointer]:
+                - generic [ref=e567]: A
+                - text: 链表合并只需改指针，不需要 O(n) 辅助数组
+              - button "B 链表天然有序" [ref=e568] [cursor=pointer]:
+                - generic [ref=e569]: B
+                - text: 链表天然有序
+              - button "C 数组不能归并" [ref=e570] [cursor=pointer]:
+                - generic [ref=e571]: C
+                - text: 数组不能归并
+      - region [ref=e572]:
+        - generic [ref=e573]:
+          - generic [ref=e574]:
+            - paragraph [ref=e575]: COMPLEXITY MAP
+            - heading "归并排序：三种输入都保持同一个阶数" [level=3] [ref=e576]
+            - paragraph [ref=e577]: 这里指标准自顶向下归并排序；每次都拆分，并把每层子数组线性合并。
+          - generic [ref=e578]: 条件 → 复杂度
+        - generic [ref=e579]:
+          - generic [ref=e581]:
+            - generic [ref=e582]:
+              - generic [ref=e583]: 最好
+              - strong [ref=e584]: Θ(n log n)
+            - paragraph [ref=e585]:
+              - generic [ref=e586]: 条件
+              - text: 输入已经有序，但标准实现仍会递归和合并。
+            - paragraph [ref=e587]:
+              - generic [ref=e588]: 例子
+              - code [ref=e589]: "[1,2,3,4,5,6,7,8]"
+            - generic [ref=e590]: 有序可能减少比较次数，但不会减少递归层数和每层处理。
+          - generic [ref=e592]:
+            - generic [ref=e593]:
+              - generic [ref=e594]: 平均
+              - strong [ref=e595]: Θ(n log n)
+            - paragraph [ref=e596]:
+              - generic [ref=e597]: 条件
+              - text: 元素是随机排列的。
+            - paragraph [ref=e598]:
+              - generic [ref=e599]: 例子
+              - code [ref=e600]: "[8,3,7,4,1,6,2,5]"
+            - generic [ref=e601]: 每层处理 n 个元素，递归树高度约 log₂n。
+          - generic [ref=e603]:
+            - generic [ref=e604]:
+              - generic [ref=e605]: 最差
+              - strong [ref=e606]: Θ(n log n)
+            - paragraph [ref=e607]:
+              - generic [ref=e608]: 条件
+              - text: 输入逆序或两个子数组交错，合并比较更充分。
+            - paragraph [ref=e609]:
+              - generic [ref=e610]: 例子
+              - code [ref=e611]: "[8,7,6,5,4,3,2,1]"
+            - generic [ref=e612]: 比较次数的常数变大，但每层仍只做线性合并。
+        - generic [ref=e613]:
+          - generic [ref=e614]:
+            - generic [ref=e615]:
+              - generic [ref=e616]: STABILITY CHECK
+              - strong [ref=e617]: 稳定排序
+            - generic [ref=e618]: 相等键保序
+          - paragraph [ref=e619]: 相等键的相对顺序不改变；合并时两边键相等，先取左边元素。
+          - generic [ref=e620]:
+            - code [ref=e621]: 4A → 4B
+            - generic [ref=e622]: →
+            - code [ref=e623]: 4A → 4B
+        - generic [ref=e624]: 别只背结论如果额外加入“左右已经有序就直接跳过合并”的优化，最好情况可以降到 Θ(n)；当前动画展示的是标准版本。
