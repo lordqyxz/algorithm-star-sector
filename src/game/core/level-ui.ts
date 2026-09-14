@@ -2,18 +2,20 @@ import { Container, Graphics, Text } from 'pixi.js'
 import { animate } from 'animejs'
 import { C, makeButton, makePanel, makeText, SPACE, type ButtonHandle, type FontWeight } from './ui'
 import type { Game, GameScene } from './app'
+import { eventsBetween, type Milestone } from './xp'
+import { t, zh } from '../locale'
 
 /**
  * 游戏关卡可复用资产层：
- * - ShelfView：身份保持的精灵货架（所有"排列/分拣/探测"类关卡的共同资产）
+ * - CellRowView：身份保持的格行视图（所有"排列/整备/定位/汇合"类关卡的共同资产）
  * - makeLevelChrome：关卡框架（标题/简报/返回/控制层/动态层），统一层级关系
- * - overlayDim / countersRow：覆盖层与计数控件
+ * - overlayDim / countersRow / drawMilestones：覆盖层、计数控件与里程碑庆祝行
  * 规则层（各关 sim）与本层完全解耦。
  */
 
-export type ShelfTone = 'default' | 'sorted' | 'focus' | 'key' | 'pivot' | 'target' | 'muted' | 'hole'
+export type CellRowTone = 'default' | 'sorted' | 'focus' | 'key' | 'pivot' | 'target' | 'muted' | 'slot'
 
-export const shelfPalette: Record<ShelfTone, { fill: number; stroke: number; text: number }> = {
+export const cellRowPalette: Record<CellRowTone, { fill: number; stroke: number; text: number }> = {
   default: { fill: 0xf3f6f9, stroke: 0xcbd5e2, text: 0x607087 },
   sorted: { fill: 0xdcf4ec, stroke: 0x74c9ae, text: 0x12866d },
   focus: { fill: 0xe7edff, stroke: 0x2f60d6, text: 0x2f60d6 },
@@ -21,20 +23,20 @@ export const shelfPalette: Record<ShelfTone, { fill: number; stroke: number; tex
   pivot: { fill: 0xfff0e9, stroke: 0xd96643, text: 0xd96643 },
   target: { fill: 0xf7f4ff, stroke: 0x7659d5, text: 0x7659d5 },
   muted: { fill: 0x1c2742, stroke: 0x3a4d6b, text: 0x8fa3c0 },
-  hole: { fill: 0xffffff, stroke: 0xd3dce6, text: 0xffffff },
+  slot: { fill: 0xffffff, stroke: 0xd3dce6, text: 0xffffff },
 }
 
-export type ShelfCell = { id: string; value: number | string; tone: ShelfTone }
-export type ShelfPointer = { index: number; label: string; tone?: 'dark' | 'blue' | 'orange' | 'green' | 'purple' | 'yellow' }
-export type ShelfBracket = { from: number; to: number; label?: string; color?: number }
+export type CellRowCell = { id: string; value: number | string; tone: CellRowTone }
+export type CellRowPointer = { index: number; label: string; tone?: 'dark' | 'blue' | 'orange' | 'green' | 'purple' | 'yellow' }
+export type CellRowBracket = { from: number; to: number; label?: string; color?: number }
 
-const pointerColors: Record<NonNullable<ShelfPointer['tone']>, number> = {
+const pointerColors: Record<NonNullable<CellRowPointer['tone']>, number> = {
   dark: 0x172235, blue: 0x2f60d6, orange: 0xd96643, green: 0x12866d, purple: 0x7659d5, yellow: 0xb27800,
 }
 
-export class ShelfView {
+export class CellRowView {
   readonly container = new Container()
-  private views = new Map<string, { container: Container; body: Graphics; label: Text; kind: ShelfTone; col: number }>()
+  private views = new Map<string, { container: Container; body: Graphics; label: Text; kind: CellRowTone; col: number }>()
   private bracket = new Graphics()
   private cellsLayer = new Container()
   private pointers = new Container()
@@ -47,8 +49,8 @@ export class ShelfView {
     this.container.addChild(this.bracket, this.cellsLayer, this.pointers)
   }
 
-  /** cells 必须带稳定 id；tone 决定外观；holeAt 让该格显示为空（暂存/洞语义）。 */
-  setState(cells: readonly ShelfCell[], options: { pointers?: readonly ShelfPointer[]; bracket?: ShelfBracket; holeAt?: number | null } = {}) {
+  /** cells 必须带稳定 id；tone 决定外观；slotAt 让该格显示为空（机械臂抓持后的空槽语义）。 */
+  setState(cells: readonly CellRowCell[], options: { pointers?: readonly CellRowPointer[]; bracket?: CellRowBracket; slotAt?: number | null } = {}) {
     const cell = this.cell
     const gap = this.gap
     this.bracket.clear()
@@ -84,12 +86,12 @@ export class ShelfView {
         container.addChild(body, label)
         container.position.set(this.opts.x + index * (cell + gap), this.opts.y)
         this.cellsLayer.addChild(container)
-        this.paint(body, label, item, options.holeAt === index)
+        this.paint(body, label, item, options.slotAt === index)
         this.views.set(item.id, { container, body, label, kind: item.tone, col: index })
         return
       }
-      if (view.kind !== item.tone) { view.kind = item.tone; this.paint(view.body, view.label, item, options.holeAt === index) }
-      else if (options.holeAt !== index) view.label.text = String(item.value)
+      if (view.kind !== item.tone) { view.kind = item.tone; this.paint(view.body, view.label, item, options.slotAt === index) }
+      else if (options.slotAt !== index) view.label.text = String(item.value)
       const targetX = this.opts.x + index * (cell + gap)
       if (view.col !== index) {
         view.col = index
@@ -102,13 +104,13 @@ export class ShelfView {
     })
   }
 
-  private paint(body: Graphics, label: Text, item: ShelfCell, asHole: boolean) {
-    const theme = shelfPalette[item.tone]
+  private paint(body: Graphics, label: Text, item: CellRowCell, asSlot: boolean) {
+    const theme = cellRowPalette[item.tone]
     body.clear()
     body.roundRect(0, 0, this.cell, this.cell, 8)
     body.fill({ color: theme.fill })
     body.stroke({ width: 1, color: theme.stroke })
-    label.text = asHole || item.tone === 'hole' ? '' : String(item.value)
+    label.text = asSlot || item.tone === 'slot' ? '' : String(item.value)
     label.style.fill = theme.text
   }
 
@@ -123,7 +125,7 @@ export type LevelChrome = { container: Container; controls: Container; dynamic: 
 export function makeLevelChrome(parent: Container, opts: { title: string; brief: string; onBack: () => void }): LevelChrome {
   makeText(parent, 24, 20, opts.title, { size: 20, weight: '800', color: SPACE.text })
   makeText(parent, 24, 52, opts.brief, { size: 12, color: SPACE.muted, wordWrap: 760 })
-  makeButton(parent, { x: 936 - 96, y: 20, w: 96, label: '返回地图', variant: 'outline', onTap: opts.onBack })
+  makeButton(parent, { x: 936 - 96, y: 20, w: 96, label: t('ui.backToMap'), variant: 'outline', onTap: opts.onBack })
   const controls = new Container()
   const dynamic = new Container()
   parent.addChild(controls, dynamic)
@@ -137,6 +139,19 @@ export function overlayDim(dynamic: Container, width = 960, height = 600) {
 
 export function countersRow(parent: Container, y: number, items: readonly { text: string; color?: number }[]) {
   items.forEach((item, index) => makeText(parent, 24 + index * 236, y, item.text, { size: 13, color: item.color ?? SPACE.text, family: 'ui-monospace, Menlo, monospace' }))
+}
+
+/** 结算页里程碑庆祝行：按序渲染本次跨越的晋升/换装事件，返回下一行 y。 */
+export function drawMilestones(parent: Container, x: number, y: number, oldLy: number, newLy: number): number {
+  const crossed = eventsBetween(oldLy, newLy)
+  for (const milestone of crossed as readonly Milestone[]) {
+    const text = milestone.kind === 'rank'
+      ? t('ui.promote', { title: zh.rank[milestone.id].title, note: zh.rank[milestone.id].note })
+      : t('ui.engineSwap', { name: zh.engine[milestone.id].name, speed: zh.engine[milestone.id].speed })
+    makeText(parent, x, y, text, { size: 13, color: 0xf2c85d, weight: '800' })
+    y += 21
+  }
+  return y
 }
 
 export { makeButton, type ButtonHandle, type FontWeight }

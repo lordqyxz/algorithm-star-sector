@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { t } from '@/game/locale'
 
 /**
  * React 与游戏边界的唯一接触面：一个挂载点。
@@ -17,5 +18,5 @@ export function GameHost() {
     })
     return () => { cancelled = true; game?.destroy() }
   }, [])
-  return <div ref={hostRef} className="game-host" aria-label="太阳邻域游戏画面" />
+  return <div ref={hostRef} className="game-host" aria-label={t('hud.gameHostAria')} />
 }

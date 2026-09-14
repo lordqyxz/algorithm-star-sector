@@ -4,9 +4,11 @@ import { LevelScene } from '../scenes/LevelScene'
 import { CommandScene } from '../scenes/CommandScene'
 import { ProbeScene } from '../scenes/ProbeScene'
 import { MergeScene } from '../scenes/MergeScene'
+import { t, zh, type LevelId } from '../locale'
 
 /** 按关卡类型分发到对应场景；rest 是后续航段（供"下一关"链）。 */
 export function openLevel(game: Game, level: GameLevel, rest: readonly GameLevel[]): void {
+  const dest = zh.level[level.id as LevelId].destination
   game.switch(g => {
     switch (level.kind) {
       case 'execute': return new LevelScene(g, level, rest)
@@ -14,5 +16,5 @@ export function openLevel(game: Game, level: GameLevel, rest: readonly GameLevel
       case 'probe': return new ProbeScene(g, level, rest)
       case 'merge': return new MergeScene(g, level, rest)
     }
-  }, `启航 → ${level.destination}`)
+  }, t('ui.embarkTransit', { dest }))
 }
