@@ -1,7 +1,7 @@
 import { useState, type ComponentType } from 'react'
-import { BookOpen, Home, Map as MapIcon, Route, Sparkles } from 'lucide-react'
+import { BookOpen, Compass, Map as MapIcon, Route, Sparkles } from 'lucide-react'
 import { chapterCatalog, algorithmParts } from '@/content'
-import { HomePage } from '@/components/HomePage'
+import { VoyageLog } from '@/components/VoyageLog'
 import { PlaceholderLesson } from '@/components/PlaceholderLesson'
 import { GameHost } from '@/components/GameHost'
 import { StarField } from '@/components/StarField'
@@ -71,13 +71,13 @@ export default function App() {
       <div className="hud-brand"><span className="hud-mark"><Sparkles size={15} /></span><div><strong>Algorithm</strong><span>STAR SECTOR · 算法星域</span></div></div>
       <nav className="hud-nav" aria-label="站点主题导航">
         <button type="button" className={`hud-chip \${active === 'kingdom' ? 'active' : ''}`} aria-current={active === 'kingdom' ? 'page' : undefined} onClick={() => setActive('kingdom')}><Route size={14} />星域</button>
-        <button type="button" className={`hud-chip \${active === 'home' ? 'active' : ''}`} aria-current={active === 'home' ? 'page' : undefined} onClick={() => setActive('home')}><Home size={14} />学院</button>
+        <button type="button" className={`hud-chip ${active === 'log' ? 'active' : ''}`} aria-current={active === 'log' ? 'page' : undefined} onClick={() => setActive('log')}><Compass size={14} />航行日志</button>
         <button type="button" className="hud-chip" onClick={() => setNavOpen(true)}><MapIcon size={14} />星图导航</button>
       </nav>
     </header>
     <main className="site-main">
-      {active === 'home'
-        ? <HomePage onOpenLesson={openLesson} />
+      {active === 'log'
+        ? <VoyageLog onOpenLesson={openLesson} onOpenGame={() => setActive('kingdom')} />
         : active === 'kingdom'
           ? <div className="game-page"><GameHost /></div>
           : <div className="lesson-page">

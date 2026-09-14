@@ -1,0 +1,112 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e10]:
+      - strong [ref=e11]: Algorithm
+      - generic [ref=e12]: STAR SECTOR · 算法星域
+    - navigation "站点主题导航" [ref=e13]:
+      - button "星域" [ref=e14] [cursor=pointer]
+      - button "航行日志" [active] [ref=e19] [cursor=pointer]
+      - button "星图导航" [ref=e23] [cursor=pointer]
+  - main [ref=e26]:
+    - generic [ref=e34]:
+      - generic [ref=e37]:
+        - paragraph [ref=e38]: MISSION CONTROL · 国科大雁栖湖
+        - heading "航行日志" [level=2] [ref=e39]
+        - paragraph [ref=e40]: 博学笃志，格物明德——每一光年的航程，都记录在案。
+      - generic [ref=e41]:
+        - heading "指挥官档案" [level=3] [ref=e42]
+        - generic [ref=e46]:
+          - generic [ref=e47]:
+            - generic [ref=e48]: 航行里程
+            - strong [ref=e49]: "0.00"
+            - generic [ref=e50]: 光年（按最佳奖章折算）
+          - generic [ref=e51]:
+            - generic [ref=e52]: 当前称号
+            - strong [ref=e53]: 地面待命
+            - generic [ref=e54]: 国科大雁栖湖 · 任务控制中心
+          - generic [ref=e55]:
+            - generic [ref=e56]: 下一站
+            - strong [ref=e57]: 穿越奥尔特云
+            - generic [ref=e58]: 奥尔特云外缘约 1 光年量级 · 还需 1.00 光年
+          - button "继续航行" [ref=e59] [cursor=pointer]
+      - generic [ref=e64]:
+        - heading "航段记录 · 太阳邻域" [level=3] [ref=e65]
+        - generic [ref=e70]:
+          - button "首航 · 比邻星 比邻星（半人马座 α 星 C） · 4.24 光年 未点亮" [ref=e71] [cursor=pointer]:
+            - generic [ref=e73]:
+              - generic [ref=e74]: 首航 · 比邻星
+              - generic [ref=e75]: 比邻星（半人马座 α 星 C） · 4.24 光年
+            - generic [ref=e76]: 未点亮
+          - button "天狼双星 · 分拣 天狼星（夜空最亮恒星，双星系统） · 8.6 光年 未点亮" [ref=e79] [cursor=pointer]:
+            - generic [ref=e81]:
+              - generic [ref=e82]: 天狼双星 · 分拣
+              - generic [ref=e83]: 天狼星（夜空最亮恒星，双星系统） · 8.6 光年
+            - generic [ref=e84]: 未点亮
+          - button "织女 · 逆风航段 织女星（天琴座 α，带岩屑盘） · 25 光年 未点亮" [ref=e87] [cursor=pointer]:
+            - generic [ref=e89]:
+              - generic [ref=e90]: 织女 · 逆风航段
+              - generic [ref=e91]: 织女星（天琴座 α，带岩屑盘） · 25 光年
+            - generic [ref=e92]: 未点亮
+          - button "TRAPPIST-1 · 共振指令 TRAPPIST-1（七行星轨道共振链） · 40.7 光年 未点亮" [ref=e95] [cursor=pointer]:
+            - generic [ref=e97]:
+              - generic [ref=e98]: TRAPPIST-1 · 共振指令
+              - generic [ref=e99]: TRAPPIST-1（七行星轨道共振链） · 40.7 光年
+            - generic [ref=e100]: 未点亮
+        - generic [ref=e103]: 奖章系数：金 ×1 · 银 ×0.6 · 铜 ×0.3——重玩高奖章即可提升里程。
+      - generic [ref=e104]:
+        - heading "研究档案 · 沙盘推演（21）" [level=3] [ref=e105]
+        - generic [ref=e109]:
+          - generic [ref=e110]:
+            - heading "第 1 章 · 算法与计算" [level=4] [ref=e111]
+            - button "算法的角色" [ref=e113] [cursor=pointer]
+          - generic [ref=e120]:
+            - heading "第 2 章 · 起步" [level=4] [ref=e121]
+            - generic [ref=e122]:
+              - button "插入排序" [ref=e123] [cursor=pointer]
+              - button "归并排序" [ref=e133] [cursor=pointer]
+              - button "二分查找" [ref=e144] [cursor=pointer]
+          - generic [ref=e155]:
+            - heading "第 3 章 · 刻画运行时间" [level=4] [ref=e156]
+            - generic [ref=e157]:
+              - button "渐近记号" [ref=e158] [cursor=pointer]
+              - button "递归式" [ref=e165] [cursor=pointer]
+          - generic [ref=e172]:
+            - heading "第 4 章 · 分治法" [level=4] [ref=e173]
+            - generic [ref=e174]:
+              - button "最大子数组" [ref=e175] [cursor=pointer]
+              - button "最近点对" [ref=e181] [cursor=pointer]
+              - button "主方法" [ref=e187] [cursor=pointer]
+              - button "Strassen 矩阵乘法" [ref=e195] [cursor=pointer]
+          - generic [ref=e201]:
+            - heading "第 5 章 · 概率分析与随机算法" [level=4] [ref=e202]
+            - generic [ref=e203]:
+              - button "随机化算法" [ref=e204] [cursor=pointer]
+              - button "招聘问题" [ref=e211] [cursor=pointer]
+          - generic [ref=e219]:
+            - heading "第 6 章 · 堆排序" [level=4] [ref=e220]
+            - generic [ref=e221]:
+              - button "堆排序" [ref=e222] [cursor=pointer]
+              - button "优先队列" [ref=e233] [cursor=pointer]
+          - generic [ref=e240]:
+            - heading "第 7 章 · 快速排序" [level=4] [ref=e241]
+            - generic [ref=e242]:
+              - button "快速排序" [ref=e243] [cursor=pointer]
+              - button "随机化快速排序" [ref=e252] [cursor=pointer]
+          - generic [ref=e262]:
+            - heading "第 8 章 · 线性时间排序" [level=4] [ref=e263]
+            - generic [ref=e264]:
+              - button "计数排序" [ref=e265] [cursor=pointer]
+              - button "基数排序" [ref=e272] [cursor=pointer]
+              - button "桶排序" [ref=e279] [cursor=pointer]
+          - generic [ref=e293]:
+            - heading "第 9 章 · 中位数与顺序统计量" [level=4] [ref=e294]
+            - generic [ref=e295]:
+              - button "顺序统计量" [ref=e296] [cursor=pointer]
+              - button "中位数的中位数" [ref=e304] [cursor=pointer]
+    - generic [ref=e29]:
+      - generic [ref=e30]: © 2026 中国科学院大学 UCAS · 博学笃志 格物明德
+      - generic [ref=e31]:
+        - text: Built by
+        - link "GitHub @shiyz" [ref=e32] [cursor=pointer]:
+          - /url: https://github.com/shiyz
+      - generic [ref=e33]: 天文学数据参考：NASA / ESA / Gaia DR3 公开资料 · 仅用于教学

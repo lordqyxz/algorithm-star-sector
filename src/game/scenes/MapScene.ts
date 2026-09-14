@@ -34,12 +34,12 @@ export class MapScene implements GameScene {
       const node = new Container()
       node.position.set(24 + index * 234, 252)
       this.container.addChild(node)
-      makePanel(node, 0, 0, 220, 152, { stroke: unlocked ? C.border : 0xe1e7ef, fill: 0xffffff, radius: 12, alpha: unlocked ? 1 : 0.55 })
-      makeText(node, 18, 16, String(index + 1), { size: 15, color: unlocked ? C.blue : C.faint, family: 'ui-monospace, Menlo, monospace', weight: '800' })
-      makeText(node, 64, 17, level.destination, { size: 10, color: unlocked ? C.muted : C.faint })
+      makePanel(node, 0, 0, 220, 152, { stroke: unlocked ? C.border : 0x3a4d6b, fill: unlocked ? 0xffffff : 0x101a29, radius: 12 })
+      makeText(node, 18, 16, String(index + 1), { size: 15, color: unlocked ? C.blue : C.muted, family: 'ui-monospace, Menlo, monospace', weight: '800' })
+      makeText(node, 64, 17, unlocked ? level.destination : '', { size: 10, color: C.muted })
       makeText(node, 46, 16, unlocked ? '' : '未解锁', { size: 11, color: C.faint })
-      makeText(node, 18, 46, level.title, { size: 17, weight: '800', color: unlocked ? C.ink : C.faint })
-      makeText(node, 18, 74, level.kind === 'command' ? `[指令卡] ${level.variants.length} 项挑战` : `${level.variants.length} 个挑战`, { size: 11, color: unlocked ? C.muted : C.faint })
+      makeText(node, 18, 46, level.title, { size: 17, weight: '800', color: unlocked ? C.ink : SPACE.text })
+      makeText(node, 18, 74, level.kind === 'command' ? `[指令卡] ${level.variants.length} 项挑战` : `${level.variants.length} 个挑战`, { size: 11, color: unlocked ? C.muted : C.muted })
       level.variants.forEach((variant, variantIndex) => {
         const record = save[variant.id]
         const medalColor = record ? (record.medal === 'gold' ? 0xf2c85d : record.medal === 'silver' ? 0xd9e0ea : 0xe0a979) : 0xe1e7ef
@@ -50,7 +50,7 @@ export class MapScene implements GameScene {
         dot.position.set(18 + variantIndex * 20, 108)
         node.addChild(dot)
       })
-      makeText(node, 18, 126, '进入关卡 →', { size: 11, color: unlocked ? C.blue : C.faint, weight: '700' })
+      makeText(node, 18, 126, unlocked ? '进入关卡 →' : '完成前一航段后解锁', { size: 11, color: unlocked ? C.blue : C.muted, weight: '700' })
       if (unlocked) {
         node.eventMode = 'static'
         node.cursor = 'pointer'
