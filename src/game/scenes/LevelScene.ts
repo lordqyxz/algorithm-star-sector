@@ -179,7 +179,7 @@ export class LevelScene implements GameScene {
       if (!view) {
         const container = new Container()
         const body = new Graphics()
-        const label = new Text({ text: '', style: { fontFamily: 'ui-monospace, Menlo, monospace', fontSize: 18, fontWeight: '800' } })
+        const label = new Text({ text: '', resolution: 3, style: { fontFamily: 'ui-monospace, Menlo, monospace', fontSize: 18, fontWeight: '800' } })
         label.anchor.set(0.5)
         label.position.set(CELL / 2, CELL / 2)
         container.addChild(body, label)

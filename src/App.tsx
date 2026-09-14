@@ -87,7 +87,7 @@ export default function App() {
       <footer className="site-footer">
         <span>© 2026 中国科学院大学 UCAS · 博学笃志 格物明德</span>
         <span>Built by <a href="https://github.com/shiyz" target="_blank" rel="noreferrer">GitHub @shiyz</a></span>
-        <span>天文学数据参考：NASA / ESA / Gaia DR3 公开资料 · 仅用于教学</span>
+        <span>许可：CC BY-NC 4.0 · 禁止商用 · 转载需署名</span><span>天文学数据参考：NASA / ESA / Gaia DR3 公开资料</span>
       </footer>
     </main>
     {navOpen ? <StarMapNav active={active} onClose={() => setNavOpen(false)} onOpenLesson={openLesson} onOpenGame={() => setActive('kingdom')} /> : null}

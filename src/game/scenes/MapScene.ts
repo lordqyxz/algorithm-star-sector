@@ -14,7 +14,7 @@ export class MapScene implements GameScene {
   constructor(private game: Game) {
     const save = loadSave()
     makeText(this.container, 44, 44, '算法星域 · 太阳邻域', { size: 30, weight: '800', color: SPACE.text })
-    makeText(this.container, 44, 88, '你是从国科大雁栖湖出发的见习领航员：亲手把能量矩阵整理有序，逐段驶向真实的恒星。步数和比较次数就是你的战绩。', { size: 13, color: SPACE.muted })
+    makeText(this.container, 44, 88, '把能量矩阵整理有序，逐段驶向真实的恒星。步数和比较次数，就是你的航行战绩。', { size: 13, color: SPACE.muted })
     const totalVariants = gameLevels.reduce((count, item) => count + item.variants.length, 0)
     const doneVariants = Object.keys(save).length
     const ly = lyOf(save, gameLevels)

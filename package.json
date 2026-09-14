@@ -35,5 +35,6 @@
   },
   "engines": {
     "node": ">=20.19.0"
-  }
+  },
+  "license": "CC-BY-NC-4.0"
 }

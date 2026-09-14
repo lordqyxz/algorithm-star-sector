@@ -75,7 +75,7 @@ export const MONO = 'ui-monospace, Menlo, monospace'
 export type FontWeight = 'normal' | 'bold' | '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900'
 
 export function makeText(parent: Container, x: number, y: number, content: string, opts: { size?: number; color?: number; family?: string; weight?: FontWeight; anchorX?: number; anchorY?: number; wordWrap?: number; lineHeight?: number } = {}): Text {
-  const t = new Text({ text: content, style: {
+  const t = new Text({ text: content, resolution: 3, style: {
     fontFamily: opts.family ?? SANS,
     fontSize: opts.size ?? 14,
     fontWeight: opts.weight ?? '400',

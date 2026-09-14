@@ -1,6 +1,6 @@
 import { Application, Container, Graphics, Text } from 'pixi.js'
 import { animate } from 'animejs'
-import { makeSpaceBackdrop, SPACE } from './ui'
+import { SPACE, makeSpaceBackdrop } from './ui'
 
 /**
  * 算法星域游戏内核（PixiJS 原生）。
@@ -17,8 +17,12 @@ export const STAGE_HEIGHT = 600
 export class Game {
   readonly app: Application = new Application()
   private current: GameScene | null = null
+  private host: HTMLElement | null = null
+  private observer: ResizeObserver | null = null
+  private background = new Container()
 
   async init(parent: HTMLElement) {
+    this.host = parent
     await this.app.init({
       width: STAGE_WIDTH,
       height: STAGE_HEIGHT,
@@ -28,6 +32,27 @@ export class Game {
       preference: 'webgl',
     })
     parent.appendChild(this.app.canvas)
+    this.app.stage.addChild(this.background)
+    this.fit()
+    if (typeof ResizeObserver !== 'undefined') {
+      this.observer = new ResizeObserver(() => this.fit())
+      this.observer.observe(parent)
+    }
+  }
+
+  /** 画布 1:1 适配容器（文字不发虚），世界坐标按 960×600 等比缩放并居中。 */
+  private fit() {
+    const host = this.host
+    if (!host) return
+    const w = Math.max(1, host.clientWidth)
+    const h = Math.max(1, host.clientHeight)
+    if (this.app.renderer.width !== w || this.app.renderer.height !== h) this.app.renderer.resize(w, h)
+    const scale = Math.min(w / STAGE_WIDTH, h / STAGE_HEIGHT)
+    this.app.stage.scale.set(scale)
+    this.app.stage.position.set((w - STAGE_WIDTH * scale) / 2, (h - STAGE_HEIGHT * scale) / 2)
+    this.background.removeChildren().forEach(child => child.destroy({ children: true }))
+    makeSpaceBackdrop(this.background, w / scale + 40, h / scale + 40)
+    this.background.position.set(-20, -20)
   }
 
   switch(factory: SceneFactory, transit?: string) {
@@ -36,8 +61,8 @@ export class Game {
       this.current.destroy()
     }
     this.current = factory(this)
-    makeSpaceBackdrop(this.current.container, STAGE_WIDTH, STAGE_HEIGHT)
     this.app.stage.addChild(this.current.container)
+    this.fit()
     if (transit) this.playTransit(transit)
   }
 
@@ -54,7 +79,7 @@ export class Game {
       lines.lineTo(x + len, y)
       lines.stroke({ width: 1.2, color: SPACE.star, alpha: 0.5 })
     }
-    const tag = new Text({ text: label, style: { fontFamily: 'Inter, "PingFang SC", sans-serif', fontSize: 20, fontWeight: '700', fill: SPACE.text, letterSpacing: 2 } })
+    const tag = new Text({ text: label, resolution: 3, style: { fontFamily: 'Inter, "PingFang SC", sans-serif', fontSize: 20, fontWeight: '700', fill: SPACE.text, letterSpacing: 2 } })
     tag.anchor.set(0.5)
     tag.position.set(STAGE_WIDTH / 2, STAGE_HEIGHT / 2)
     overlay.addChild(lines, tag)
@@ -66,6 +91,8 @@ export class Game {
   }
 
   destroy() {
+    this.observer?.disconnect()
+    this.observer = null
     this.current?.destroy()
     this.current = null
     this.app.destroy(true, { children: true })
