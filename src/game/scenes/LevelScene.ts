@@ -45,6 +45,7 @@ export class LevelScene implements GameScene {
   private savedKeys = new Set<string>()
   private cellViews = new Map<string, CellView>()
   private shelfLayer = new Container()
+  private controls = new Container()
   private dynamic = new Container()
   private chipLayer = new Container()
   private buttons: Record<'pick' | 'compare' | 'shift' | 'drop' | 'undo', ButtonHandle>
@@ -59,18 +60,21 @@ export class LevelScene implements GameScene {
     makeButton(this.container, { x: 936 - 96, y: 20, w: 96, label: '返回地图', variant: 'outline', onTap: () => this.backToMap() })
     this.container.addChild(this.chipLayer)
     this.container.addChild(this.shelfLayer)
+    this.controls = new Container()
+    this.container.addChild(this.controls)
+    // dynamic 最后加入：预测门/结算覆盖层永远压在货架与按钮之上
     this.container.addChild(this.dynamic)
 
     const y = { chips: 86, hand: 128, shelf: 178, verdict: 244, buttons: 292, counters: 344, keys: 380 }
     this.buttons = {
-      pick: makeButton(this.container, { x: 24, y: y.buttons, w: 122, label: '拿起下一张 [P]', onTap: () => this.run('pick') }),
-      compare: makeButton(this.container, { x: 154, y: y.buttons, w: 122, label: '与左邻比较 [C]', onTap: () => this.run('compare') }),
-      shift: makeButton(this.container, { x: 284, y: y.buttons, w: 110, label: '右移一格 [S]', onTap: () => this.run('shift') }),
-      drop: makeButton(this.container, { x: 402, y: y.buttons, w: 110, label: '放回洞里 [D]', onTap: () => this.run('drop') }),
-      undo: makeButton(this.container, { x: 520, y: y.buttons, w: 112, label: '撤销 [U]', variant: 'outline', onTap: () => this.undo() }),
+      pick: makeButton(this.controls, { x: 24, y: y.buttons, w: 122, label: '拿起下一张 [P]', onTap: () => this.run('pick') }),
+      compare: makeButton(this.controls, { x: 154, y: y.buttons, w: 122, label: '与左邻比较 [C]', onTap: () => this.run('compare') }),
+      shift: makeButton(this.controls, { x: 284, y: y.buttons, w: 110, label: '右移一格 [S]', onTap: () => this.run('shift') }),
+      drop: makeButton(this.controls, { x: 402, y: y.buttons, w: 110, label: '放回洞里 [D]', onTap: () => this.run('drop') }),
+      undo: makeButton(this.controls, { x: 520, y: y.buttons, w: 112, label: '撤销 [U]', variant: 'outline', onTap: () => this.undo() }),
     }
-    makeButton(this.container, { x: 640, y: y.buttons, w: 90, label: '重开 [R]', variant: 'ghost', onTap: () => this.restart() })
-    makeText(this.container, 24, y.keys, '零惩罚：撤销和重开都不影响奖章——奖章只看你是否靠撤销过关。', { size: 11, color: C.faint })
+    makeButton(this.controls, { x: 640, y: y.buttons, w: 90, label: '重开 [R]', variant: 'ghost', onTap: () => this.restart() })
+    makeText(this.controls, 24, y.keys, '零惩罚：撤销和重开都不影响奖章——奖章只看你是否靠撤销过关。', { size: 11, color: C.faint })
 
     this.keyHandler = (event: KeyboardEvent) => {
       if (event.metaKey || event.ctrlKey || event.altKey) return
@@ -116,13 +120,6 @@ export class LevelScene implements GameScene {
   private refresh() {
     const state = this.state
     const variant = this.variant
-    this.buttons.pick.setEnabled(canExecute(state, 'pick'))
-    this.buttons.compare.setEnabled(canExecute(state, 'compare'))
-    this.buttons.shift.setEnabled(canExecute(state, 'shift'))
-    this.buttons.drop.setEnabled(canExecute(state, 'drop'))
-    this.buttons.undo.setEnabled(this.commands.length > 0)
-    this.buttons.undo.setLabel(`撤销 ${this.undoCount} [U]`)
-
     this.chipLayer.removeChildren().forEach(child => child.destroy({ children: true }))
     this.level.variants.forEach(item => {
       const active = item.id === this.variantId
@@ -158,6 +155,13 @@ export class LevelScene implements GameScene {
     makeText(this.dynamic, 520, 344, `已整理 ${state.sortedCount} / ${state.cells.length}`, { size: 13, color: C.green, family: 'ui-monospace, Menlo, monospace' })
 
     const gate = variant.prediction && !this.answered.has(variant.id) && (variant.prediction.when === 'done' ? state.done : !state.done && state.compares >= 1) ? variant.prediction : null
+    const blocked = Boolean(gate) || state.done
+    this.buttons.pick.setEnabled(!blocked && canExecute(state, 'pick'))
+    this.buttons.compare.setEnabled(!blocked && canExecute(state, 'compare'))
+    this.buttons.shift.setEnabled(!blocked && canExecute(state, 'shift'))
+    this.buttons.drop.setEnabled(!blocked && canExecute(state, 'drop'))
+    this.buttons.undo.setEnabled(!blocked && this.commands.length > 0)
+    this.buttons.undo.setLabel(`撤销 ${this.undoCount} [U]`)
     if (state.done) this.drawWin(state, variant)
     if (gate) this.drawPrediction(variant, state.done)
   }
@@ -198,7 +202,7 @@ export class LevelScene implements GameScene {
 
   private drawPrediction(variant: LevelVariant, done: boolean) {
     const prediction = variant.prediction!
-    makePanel(this.dynamic, 0, 0, 960, 600, { fill: C.dim, alpha: 0.35, radius: 0 })
+    const dim = makePanel(this.dynamic, 0, 0, 960, 600, { fill: C.dim, alpha: 0.35, radius: 0 }); dim.eventMode = 'static'
     makePanel(this.dynamic, 120, 130, 720, 300, { stroke: C.yellow, fill: 0xfffaf0 })
     makeText(this.dynamic, 148, 152, '先猜一步', { size: 12, color: C.yellow, weight: '800' })
     makeText(this.dynamic, 148, 176, prediction.prompt, { size: 14, weight: '700', wordWrap: 660, lineHeight: 20 })
@@ -230,7 +234,7 @@ export class LevelScene implements GameScene {
     this.savedKeys.add(variant.id)
     this.game.app.stage.emit('algorithmia-win')
 
-    makePanel(this.dynamic, 0, 0, 960, 600, { fill: C.dim, alpha: 0.35, radius: 0 })
+    const dim = makePanel(this.dynamic, 0, 0, 960, 600, { fill: C.dim, alpha: 0.35, radius: 0 }); dim.eventMode = 'static'
     makePanel(this.dynamic, 200, 150, 560, 260, { stroke: C.greenBorder, fill: 0xf0fbf6 })
     makeText(this.dynamic, 232, 178, `${medalNames[medal]}（用了 ${this.undoCount} 次撤销）`, { size: 22, color: C.green, weight: '800' })
     makeText(this.dynamic, 232, 220, `⚡ ${state.moves} 步（最优 ${variant.par.moves}） · 🔍 ${state.compares} 次比较（最优 ${variant.par.compares}）`, { size: 14, color: C.ink, family: 'ui-monospace, Menlo, monospace' })
