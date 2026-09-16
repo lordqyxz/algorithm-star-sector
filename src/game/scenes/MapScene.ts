@@ -21,16 +21,16 @@ export class MapScene implements GameScene {
     const rank = rankOf(ly)
     const engine = engineOf(ly)
     const milestone = nextMilestone(ly)
-    makeText(this.container, 642, 44, t('map.lyReadout', { ly: ly.toFixed(2) }), { size: 13, color: SPACE.text, family: 'ui-monospace, Menlo, monospace' })
-    makeText(this.container, 642, 66, t('map.rankEngine', { rank: zh.rank[rank].title, engine: zh.engine[engine].name, speed: zh.engine[engine].speed }), { size: 11, color: SPACE.muted, family: 'ui-monospace, Menlo, monospace' })
+    makeText(this.container, 936, 44, t('map.lyReadout', { ly: ly.toFixed(2) }), { size: 13, color: SPACE.text, family: 'ui-monospace, Menlo, monospace', anchorX: 1 })
+    makeText(this.container, 936, 66, t('map.rankEngine', { rank: zh.rank[rank].title, engine: zh.engine[engine].name, speed: zh.engine[engine].speed }), { size: 11, color: SPACE.muted, family: 'ui-monospace, Menlo, monospace', anchorX: 1 })
     const milestoneLabel = milestone
       ? milestone.kind === 'rank' ? zh.rank[milestone.id].title : `${zh.engine[milestone.id].name}（${zh.engine[milestone.id].speed}）`
       : ''
     makeText(this.container, 24, 558, milestone ? t('map.milestone', { label: milestoneLabel, ly: (milestone.at - ly).toFixed(2) }) : t('map.allLit'), { size: 12, color: SPACE.muted })
 
-    makePanel(this.container, 44, 124, 872, 96, { stroke: C.purpleBorder, fill: C.purpleBg })
-    makeText(this.container, 64, 142, t('map.taskControl'), { size: 15, weight: '800', color: C.purple })
-    makeText(this.container, 64, 166, t('map.taskControlBody'), { size: 12, color: C.muted, wordWrap: 830, lineHeight: 19 })
+    makePanel(this.container, 24, 124, 912, 96, { stroke: C.purpleBorder, fill: C.purpleBg })
+    makeText(this.container, 44, 142, t('map.taskControl'), { size: 15, weight: '800', color: C.purple })
+    makeText(this.container, 44, 166, t('map.taskControlBody'), { size: 12, color: C.muted, wordWrap: 880, lineHeight: 19 })
 
     gameLevels.forEach((level, index) => {
       const unlocked = index === 0 || gameLevels[index - 1].variants.some(variant => save[variant.id])

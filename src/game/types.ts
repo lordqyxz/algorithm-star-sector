@@ -4,6 +4,8 @@
  * 面向用户的文案一律存于 locale.ts，本文件只持有键（level/variant/prediction 词条按 id 对应）。
  */
 
+import type { AlgoId } from './locale'
+
 export type MedalTone = 'gold' | 'silver' | 'bronze'
 
 /** 操演关的玩家命令（Command 模式：命令日志即可完整重放/撤销）。 */
@@ -47,6 +49,8 @@ export type ExecuteLevel = {
   id: string
   /** 真实天体目的地（关卡的航段），ly 为其真实距离（光年）。 */
   ly: number
+  /** 本关操演的算法身份（名称牌/结算标尺按 locale.algo 取词）。 */
+  algo: AlgoId
   variants: readonly ExecuteVariant[]
 }
 
@@ -54,6 +58,7 @@ export type CommandLevel = {
   kind: 'command'
   id: string
   ly: number
+  algo: AlgoId
   slots: number
   cards: readonly Card[]
   par: { cards: number }
@@ -64,6 +69,7 @@ export type ProbeLevel = {
   kind: 'probe'
   id: string
   ly: number
+  algo: AlgoId
   variants: readonly { id: string; cells: number[]; target: number }[]
   par: { probes: number }
 }
@@ -72,6 +78,7 @@ export type MergeLevel = {
   kind: 'merge'
   id: string
   ly: number
+  algo: AlgoId
   variants: readonly { id: string; cells: number[] }[]
   par: { attempts: number }
 }

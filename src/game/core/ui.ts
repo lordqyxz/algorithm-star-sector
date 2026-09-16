@@ -27,8 +27,16 @@ export function makeSpaceBackdrop(parent: Container, width: number, height: numb
   sky.rect(0, 0, width, height)
   sky.fill({ color: SPACE.bg })
   const band = new Graphics()
-  band.rect(0, height * 0.42, width, height * 0.22)
-  band.fill({ color: SPACE.band, alpha: 0.5 })
+  // 银河带：高斯衰减的软带，不形成可见的硬边（硬边矩形会被误读为 UI 面板）。
+  const bandY = height * 0.40
+  const bandH = height * 0.26
+  const strips = 28
+  for (let i = 0; i < strips; i += 1) {
+    const t = i / (strips - 1)
+    const alpha = Math.exp(-Math.pow((t - 0.5) * 3.2, 2))
+    band.rect(0, bandY + bandH * t, width, bandH / strips + 1)
+    band.fill({ color: SPACE.band, alpha: 0.55 * alpha })
+  }
   backdrop.addChild(sky, band)
   const rand = mulberry32(seed)
   const stars = new Graphics()
@@ -206,15 +214,24 @@ export function drawGlyph(g: Graphics, kind: GlyphKind, x: number, y: number, co
   }
 }
 
-export function makeButton(parent: Container, opts: { x: number; y: number; w: number; h?: number; label: string; variant?: 'solid' | 'outline' | 'ghost'; size?: number; icon?: GlyphKind; onTap: () => void }): ButtonHandle {
+export function makeButton(parent: Container, opts: { x: number; y: number; w?: number; h?: number; label: string; variant?: 'solid' | 'outline' | 'ghost'; size?: number; icon?: GlyphKind; onTap: () => void }): ButtonHandle {
+  /** 按钮自适应：w 省略时按文本自动取宽；w 固定但文本放不下时按 0.5px 步长缩字号（下限 9px）。 */
   const h = opts.h ?? 34
   const variant = opts.variant ?? 'solid'
   const container = new Container()
   container.position.set(opts.x, opts.y)
   const bg = new Graphics()
+  const padX = 14
+  const iconPad = opts.icon ? 26 : 0
+  let fontSize = opts.size ?? 13
+  const label = new Text({ text: opts.label, resolution: 3, style: { fontFamily: SANS, fontSize, fontWeight: '700', fill: variant === 'solid' ? 0xffffff : variant === 'ghost' ? C.muted : C.ink } })
+  label.anchor.set(0.5, 0.5)
+  const measure = () => Math.ceil(label.width) + padX * 2 + iconPad
+  const auto = opts.w === undefined
+  let w = opts.w ?? 0
   const draw = (enabled: boolean) => {
     bg.clear()
-    bg.roundRect(0, 0, opts.w, h, 7)
+    bg.roundRect(0, 0, w, h, 7)
     if (variant === 'solid') {
       bg.fill({ color: enabled ? C.blue : C.disabled })
     } else if (variant === 'outline') {
@@ -224,33 +241,36 @@ export function makeButton(parent: Container, opts: { x: number; y: number; w: n
       bg.fill({ color: 0xffffff, alpha: enabled ? 0.7 : 0.25 })
     }
   }
-  const label = new Text({ text: opts.label, resolution: 3, style: { fontFamily: SANS, fontSize: opts.size ?? 13, fontWeight: '700', fill: variant === 'solid' ? 0xffffff : variant === 'ghost' ? C.muted : C.ink } })
-  label.anchor.set(0.5, 0.5)
+  const layout = () => {
+    if (auto) { w = Math.max(measure(), 40) }
+    else { while (measure() > w && fontSize > 9) { fontSize -= 0.5; label.style.fontSize = fontSize } }
+    draw(enabled)
+    label.position.set(opts.icon ? (iconPad + w - padX) / 2 : w / 2, h / 2)
+  }
   const iconColor = variant === 'solid' ? 0xffffff : variant === 'ghost' ? C.muted : C.blue
   if (opts.icon) {
     const glyph = new Graphics()
     drawGlyph(glyph, opts.icon, 11, h / 2 - 7.5, iconColor)
     container.addChild(bg, glyph, label)
-    label.position.set(opts.w / 2 + 9, h / 2)
   } else {
     container.addChild(bg, label)
-    label.position.set(opts.w / 2, h / 2)
   }
   let enabled = true
   container.eventMode = 'static'
   container.cursor = 'pointer'
   container.on('pointerdown', () => { if (enabled) opts.onTap() })
   const applyEnabled = (value: boolean) => {
+    enabled = value
     draw(value)
     label.alpha = value ? 1 : 0.55
-    if (opts.icon) label.position.set(opts.w / 2 + 9, h / 2)
     container.cursor = value ? 'pointer' : 'default'
   }
+  layout()
   applyEnabled(true)
   parent.addChild(container)
   return {
     container,
-    setEnabled: (value: boolean) => { enabled = value; applyEnabled(value) },
-    setLabel: (value: string) => { label.text = value },
+    setEnabled: (value: boolean) => applyEnabled(value),
+    setLabel: (value: string) => { label.text = value; layout() },
   }
 }

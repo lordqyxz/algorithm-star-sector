@@ -31,13 +31,19 @@ export const zh = {
     E10: { name: '暗物质虚空引擎', speed: '5万c' },
   },
   medal: { gold: '金章', silver: '银章', bronze: '铜章' },
+  /** 算法身份：关卡数据只持 AlgoId（名称牌 / 结算标尺 / 将来的档案卡按此取词）。 */
+  algo: {
+    'insertion-sort': { name: '插入排序', en: 'Insertion Sort' },
+    'binary-search': { name: '二分查找', en: 'Binary Search' },
+    'merge-sort': { name: '归并排序', en: 'Merge Sort' },
+  },
   ui: {
     backToMap: '返回地图',
     undo: '撤销 {n} [U]',
     restart: '重开 [R]',
     zeroPenalty: '零惩罚：撤销和重开都不影响奖章——奖章只看你是否靠撤销过关。',
     armHeldHint: '{holder}夹持的{unit}；{place}上的虚线格是{slot}',
-    armEmptyHint: '点「{pick}」取走绿色区右侧第一{unit}',
+    armEmptyHint: '{holder}空闲：点「{pick}」取走绿色区右侧第一{unit}',
     pick: '抓取下一{unit} [P]',
     pickPlain: '抓取下一{unit}',
     compare: '与左邻比对 [C]',
@@ -63,6 +69,12 @@ export const zh = {
     winCompareHint: '对照理论最优想一想：差距发生在哪{unit}上？',
     winAgain: '再玩一次',
     nextLevel: '下一关',
+    // 算法名称牌与三态标尺
+    algoPlate: '本关算法 · {name} {en}',
+    caseRulerTitle: '三态标尺 · 同样 {n} 项，比对次数由「输入的样子」决定',
+    caseYou: '本次 {n}',
+    caseBest: '最好 n−1 = {n}',
+    caseWorst: '最坏 n(n−1)/2 = {n}',
     // 指挥关
     cmdPick: '抓取',
     cmdCompare: '比对',
@@ -114,7 +126,7 @@ export const zh = {
     engineSwap: '🔧 引擎换装：{name}（最大 {speed}）',
     nextStop: '下一站 {label}（还需 {ly} 光年）',
     embarkTransit: '启航 → {dest}',
-    backTransit: '返航 → 太阳邻域',
+    backTransit: '返航 → 太阳系',
   },
   map: {
     title: '太阳邻域',
@@ -205,6 +217,11 @@ export const zh = {
       options: ['3 右移一格，空槽向左挪', '1 直接放回原地', '3 和 1 同时消失'],
       explanation: '3 > 1，所以 3 要给 1 让位：3 右移一格，空槽向左挪一格，再继续比对。',
     },
+    'insertion-02-reversed': {
+      prompt: '这次 6 艘完全逆序的舰用了 15 次比对。下一次完全逆序、12 艘，比对次数会接近多少？',
+      options: ['约 66 次：涨到 4 倍以上', '约 30 次：正好翻倍', '仍是 15 次：次数与舰数无关'],
+      explanation: '完全逆序时比对次数 = (n−1)+(n−2)+…+1 = n(n−1)/2。12 艘时是 11+10+…+1 = 66：规模只翻一倍，次数涨到 4 倍以上——这就是插入排序最坏情形 Θ(n²) 的平方增长。',
+    },
     'insertion-03-base': {
       prompt: '6 艘完全逆序的增援舰，完成调度总共要比对多少次？',
       options: ['15 次 = 5+4+3+2+1', '6 次', '30 次'],
@@ -243,7 +260,7 @@ export const zh = {
     starMapEyebrow: 'STAR MAP',
     starMapHead: '星图导航 · 点击星辰前往',
     starMapFoot: 'ESC 关闭 · 鼠标移动改变视角 · 金色航路连接枢纽与星座',
-    hubLabel: '太阳邻域',
+    hubLabel: '太阳系',
     footerCopy: '© 2026 中国科学院大学 UCAS · 博学笃志 格物明德',
     footerBuiltBy: 'Built by',
     footerLicense: '许可：CC BY-NC 4.0 · 禁止商用 · 转载需署名',
@@ -256,6 +273,7 @@ export const zh = {
 export type LevelId = keyof typeof zh.level
 export type VariantId = keyof typeof zh.variant
 export type PredictionId = keyof typeof zh.prediction
+export type AlgoId = keyof typeof zh.algo
 
 /** 递归推导所有「文本叶子」的点路径（'ui.pick' / 'rank.R04.title' / 'level.insertion-01.brief' …）。 */
 type TextPaths<T> = T extends readonly unknown[]

@@ -9,20 +9,20 @@
 .starfield { position:fixed; inset:0; width:100%; height:100%; z-index:0; pointer-events:none; }
 /* 深空外壳：内容浮于星野之上 */
 .site-main { flex:1; min-width:0; position:relative; z-index:1; padding:0 0 20px; display:flex; flex-direction:column; } .site-main > * { flex:0 0 auto; }
-.site-footer { margin-top:auto; padding:18px 0 8px; border-top:1px solid rgba(139,163,192,.18); display:flex; flex-wrap:wrap; gap:8px 22px; color:#71829e; font-size:.72rem; } .site-footer a { color:#9bb1da; text-decoration:none; } .site-footer a:hover { text-decoration:underline; }
+.site-footer { margin-top:auto; justify-content:center; text-align:center; padding:12px 16px 6px; border-top:1px solid rgba(139,163,192,.18); display:flex; flex-wrap:wrap; gap:8px 22px; color:#71829e; font-size:.72rem; } .site-footer a { color:#9bb1da; text-decoration:none; } .site-footer a:hover { text-decoration:underline; }
 .eyebrow { margin:0 0 9px; color:#d96643; font-size:.7rem; font-weight:850; letter-spacing:.14em; }
-.game-page { width:100%; display:flex; justify-content:center; }
-.game-host { width:min(100%, calc((100vh - 210px) * 1.6)); min-width:min(100%, 640px); aspect-ratio: 960 / 600; max-width:none; border:0; border-radius:0; background:transparent; box-shadow:none; }
+.game-page { width:100%; flex:1; min-height:0; display:grid; place-items:center; }
+.game-host { width:min(100%, calc((100dvh - 150px) * 1.6)); min-width:min(100%, 640px); aspect-ratio: 960 / 600; max-width:none; border:0; border-radius:0; background:transparent; box-shadow:none; }
 .game-host canvas { display:block; }
 
 /* —— 关卡星图 —— */
-.star-map { position:fixed; inset:0; z-index:40; background:rgba(6,10,20,.86); backdrop-filter:blur(6px); overflow-y:auto; padding:5vh clamp(16px,4vw,60px) 6vh; display:flex; flex-direction:column; gap:14px; }
+.star-map { position:fixed; inset:0; z-index:40; backdrop-filter:blur(6px); overflow-y:auto; padding:5vh clamp(16px,4vw,60px) 6vh; display:flex; flex-direction:column; gap:14px; background:radial-gradient(ellipse 62% 46% at 72% 18%, rgba(72,96,190,.30), transparent 66%), radial-gradient(ellipse 52% 42% at 16% 82%, rgba(140,64,150,.20), transparent 62%), radial-gradient(ellipse 46% 38% at 42% 52%, rgba(38,120,140,.16), transparent 64%), radial-gradient(ellipse 110% 90% at 50% 50%, rgba(9,14,28,.92), rgba(3,5,11,.97)); }
 .star-map-head { display:flex; justify-content:space-between; align-items:end; } .star-map-head h3 { margin:4px 0 0; color:#eef4ff; font-size:1.25rem; letter-spacing:-.03em; } .star-map-head .eyebrow { margin:0; }
 .star-map-close { display:grid; place-items:center; width:36px; height:36px; border:1px solid rgba(139,163,192,.3); border-radius:9px; background:rgba(16,26,41,.6); color:#aab8cc; cursor:pointer; } .star-map-close:hover { color:#fff; border-color:#9bb1da; }
 .star-map-plane-wrap { flex:1; min-height:56vh; perspective:1100px; }
 .star-map-plane { position:relative; width:100%; height:100%; min-height:56vh; transform-style:preserve-3d; transform:perspective(1100px) rotateX(14deg); transition:transform .2s ease-out; }
 .star-lines { position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
-.star-line { stroke:rgba(139,163,192,.3); stroke-width:1; stroke-dasharray:3 5; } .star-line.gold { stroke:rgba(228,170,33,.5); stroke-width:1.4; stroke-dasharray:none; }
+.star-arc { fill:none; stroke:rgba(139,163,192,.28); stroke-width:1; } .star-flow { fill:none; stroke:rgba(255,214,120,.85); stroke-width:1.6; stroke-linecap:round; stroke-dasharray:2 16; animation:arcFlow 2.6s linear infinite; }
 .star { position:absolute; transform:translate(-50%, -50%); display:grid; justify-items:center; gap:6px; background:transparent; border:0; cursor:pointer; z-index:2; }
 .star-glow { display:block; border-radius:50%; background:radial-gradient(circle, #d9e3f3 0%, #8fa3c0 45%, transparent 72%); }
 .star.hub .star-glow { width:30px; height:30px; background:radial-gradient(circle, #ffe9a8 0%, #e4aa21 45%, transparent 72%); box-shadow:0 0 26px rgba(228,170,33,.75); }
@@ -36,6 +36,21 @@
 .star-label { display:inline-flex; gap:6px; align-items:baseline; color:#c7d3e6; font:700 .7rem/1.3 'Inter', sans-serif; white-space:nowrap; text-shadow:0 1px 6px rgba(6,10,20,.9); }
 .star-label small { color:#8fa3c0; font-size:.62rem; }
 .star-map-foot { margin:0; color:#5a6c88; font-size:.68rem; text-align:center; }
+/* 星图深空质感：轨道环 / 星尘 / 瞄准环（动效均在 no-preference 下启用） */
+.star-orbit { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); border-radius:50%; pointer-events:none; }
+.star-orbit.spin-slow { width:74%; aspect-ratio:1; border:1px dashed rgba(120,152,205,.14); animation:orbitSpin 90s linear infinite; }
+.star-orbit.spin-fast { width:46%; aspect-ratio:1; border:1px solid rgba(120,152,205,.10); box-shadow:inset 0 0 40px rgba(80,120,200,.05); animation:orbitSpin 48s linear infinite reverse; }
+@keyframes orbitSpin { to { transform:translate(-50%,-50%) rotate(360deg); } }
+.star-dust { position:absolute; inset:-6%; overflow:hidden; pointer-events:none; }
+.star-dust i { position:absolute; border-radius:50%; background:#cfe0ff; box-shadow:0 0 4px rgba(180,205,255,.8); animation:dustTwinkle var(--d,3s) ease-in-out infinite; }
+@keyframes dustTwinkle { 0%,100% { opacity:.12; } 50% { opacity:.85; } }
+.star-reticle { position:absolute; left:50%; top:6px; width:26px; height:26px; transform:translate(-50%,-50%) translate(-0px,-4px); border:1px solid rgba(159,192,255,0); border-radius:50%; pointer-events:none; transition:border-color .25s ease, transform .25s ease; }
+.star:hover .star-reticle { border-color:rgba(159,192,255,.55); transform:translate(-50%,-50%) translate(0,-4px) scale(1.25); box-shadow:0 0 12px rgba(120,160,255,.35), inset 0 0 8px rgba(120,160,255,.2); }
+.star.hub .star-reticle { left:50%; top:50%; transform:translate(-50%,-50%); width:44px; height:44px; border-color:rgba(255,222,120,.35); border-style:dashed; animation:orbitSpin 26s linear infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .star-flow, .star-orbit, .star-dust i, .star.hub .star-reticle, .star.leg .star-glow { animation:none !important; }
+}
+
 
 /* —— 航行日志 —— */
 .voyage-log { padding:0 clamp(18px,4vw,52px); }

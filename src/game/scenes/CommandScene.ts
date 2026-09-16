@@ -1,7 +1,7 @@
 import { Container, Graphics, Text } from 'pixi.js'
 import type { Game, GameScene } from '../core/app'
 import { C, makeButton, makePanel, makeText, SPACE, type ButtonHandle } from '../core/ui'
-import { CellRowView, drawMilestones } from '../core/level-ui'
+import { CellRowView, drawAlgoPlate, drawMilestones, levelHeading } from '../core/level-ui'
 import { commandMedal, foldExecute, initProgram, programStep, programStepCap } from '../sim'
 import { loadSave, saveRecord } from '../save'
 import { lyOf } from '../core/xp'
@@ -61,8 +61,10 @@ export class CommandScene implements GameScene {
     this.variantId = level.variants[0].id
     const text = zh.level[this.level.id as LevelId]
 
-    makeText(this.container, 24, 20, `${text.title} · ${text.destination}`, { size: 20, weight: '800', color: SPACE.text })
+    makeText(this.container, 24, 20, levelHeading(text), { size: 20, weight: '800', color: SPACE.text })
     makeText(this.container, 24, 52, text.brief, { size: 12, color: SPACE.muted, wordWrap: 700 })
+    // 标题区右侧放算法名称牌（左列被简报/指令面板占满）。
+    drawAlgoPlate(this.container, { x: 936, y: 58, algo: level.algo, anchorX: 1 })
     makeButton(this.container, { x: 936 - 96, y: 20, w: 96, label: t('ui.backToMap'), variant: 'outline', onTap: () => this.backToMap() })
     this.rail = new CellRowView({ x: 24, y: 214 })
     this.container.addChild(this.rail.container)

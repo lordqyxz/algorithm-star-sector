@@ -1,6 +1,6 @@
 import { Container, Rectangle } from 'pixi.js'
 import type { Game, GameScene } from '../core/app'
-import { makeLevelChrome, overlayDim, countersRow, CellRowView, drawMilestones, type CellRowCell } from '../core/level-ui'
+import { makeLevelChrome, overlayDim, countersRow, CellRowView, drawMilestones, levelHeading, type CellRowCell } from '../core/level-ui'
 import { C, makeButton, makePanel, makeText } from '../core/ui'
 import { initMerge, mergePick, mergeMedal } from '../sim'
 import { loadSave, saveRecord } from '../save'
@@ -32,7 +32,7 @@ export class MergeScene implements GameScene {
 
   constructor(private game: Game, private level: MergeLevel, private rest: readonly GameLevel[]) {
     const text = zh.level[this.level.id as LevelId]
-    const chrome = makeLevelChrome(this.container, { title: text.title + ' · ' + text.destination, brief: text.brief, onBack: () => this.backToMap() })
+    const chrome = makeLevelChrome(this.container, { title: levelHeading(text), brief: text.brief, algo: level.algo, onBack: () => this.backToMap() })
     this.leftRail = new CellRowView({ x: QUEUE_X, y: QUEUE_Y })
     this.rightRail = new CellRowView({ x: QUEUE_X, y: QUEUE_Y + 64 })
     this.outRail = new CellRowView({ x: OUT_X, y: OUT_Y })
@@ -40,7 +40,7 @@ export class MergeScene implements GameScene {
     chrome.container.addChild(this.leftRail.container, this.rightRail.container, this.outRail.container)
 
     makeText(chrome.container, 24, 160, t('ui.leftStream'), { size: 12, color: C.muted, family: 'ui-monospace, Menlo, monospace' })
-    makeText(chrome.container, 24, 224, t('ui.rightStream'), { size: 12, color: C.muted, family: 'ui-monospace, Menlo, monospace' })
+    makeText(chrome.container, 24, 238, t('ui.rightStream'), { size: 12, color: C.muted, family: 'ui-monospace, Menlo, monospace' })
     makeText(chrome.container, 24, 300, t('ui.mergeOutput'), { size: 11, color: C.faint })
 
     this.leftRail.container.eventMode = 'static'

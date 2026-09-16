@@ -1,6 +1,6 @@
 import { Container, Graphics } from 'pixi.js'
 import type { Game, GameScene } from '../core/app'
-import { makeLevelChrome, overlayDim, countersRow, CellRowView, drawMilestones } from '../core/level-ui'
+import { makeLevelChrome, overlayDim, countersRow, CellRowView, drawMilestones, levelHeading } from '../core/level-ui'
 import { C, makeButton, makePanel, makeText } from '../core/ui'
 import { initProbe, probeAt, probeMedal } from '../sim'
 import { loadSave, saveRecord } from '../save'
@@ -26,7 +26,7 @@ export class ProbeScene implements GameScene {
 
   constructor(private game: Game, private level: ProbeLevel, private rest: readonly GameLevel[]) {
     const text = zh.level[this.level.id as LevelId]
-    const chrome = makeLevelChrome(this.container, { title: `${text.title} · ${text.destination}`, brief: text.brief, onBack: () => this.backToMap() })
+    const chrome = makeLevelChrome(this.container, { title: levelHeading(text), brief: text.brief, algo: level.algo, onBack: () => this.backToMap() })
     this.dynamic = chrome.dynamic
     this.rail = new CellRowView({ x: RAIL_X, y: RAIL_Y })
     chrome.container.addChild(this.rail.container)
