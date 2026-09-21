@@ -1,7 +1,7 @@
 import { Container, Graphics, Text } from 'pixi.js'
 import type { Game, GameScene } from '../core/app'
 import { C, makeButton, makePanel, makeText, SPACE, type ButtonHandle } from '../core/ui'
-import { CellRowView, drawAlgoPlate, drawMilestones, levelHeading } from '../core/level-ui'
+import { CellRowView, drawAlgoPlate, drawMilestones, levelHeading, openDossierOverlay } from '../core/level-ui'
 import { commandMedal, foldExecute, initProgram, programStep, programStepCap } from '../sim'
 import { loadSave, saveRecord } from '../save'
 import { lyOf } from '../core/xp'
@@ -49,6 +49,7 @@ export class CommandScene implements GameScene {
   private running = false
   private runTimer: number | null = null
   private savedKeys = new Set<string>()
+  private dossierClose: (() => void) | null = null
   private cellViews = new Map<string, CellView>()
   private rail: CellRowView
   private dynamic = new Container()
@@ -191,6 +192,11 @@ export class CommandScene implements GameScene {
     if (state.done) this.drawWin()
   }
 
+  private openDossier() {
+    if (this.dossierClose) return
+    this.dossierClose = openDossierOverlay(this.container, { algo: this.level.algo, onClose: () => { this.dossierClose = null } })
+  }
+
   private drawWin() {
     this.stopRun()
     const medal = commandMedal(this.program.length, this.level.par.cards)
@@ -215,9 +221,11 @@ export class CommandScene implements GameScene {
     makeText(this.dynamic, 232, 210, t('ui.cmdWinStats', { n: this.runner.steps, a: this.program.length, b: this.level.slots, par: this.level.par.cards }), { size: 14, color: C.ink, family: 'ui-monospace, Menlo, monospace' })
     const hintY = drawMilestones(this.dynamic, 232, 244, oldLy, newLy)
     makeText(this.dynamic, 232, hintY + 4, this.program.length <= this.level.par.cards ? t('ui.cmdWinOptimal') : t('ui.cmdWinCompress'), { size: 12, color: C.muted, wordWrap: 500 })
-    makeButton(this.dynamic, { x: 232, y: hintY + 96 > 380 ? 380 : hintY + 96, w: 120, label: t('ui.redesign'), variant: 'outline', onTap: () => { this.program = []; this.runner = initProgram(); this.refresh() } })
-    if (this.rest.length > 0) makeButton(this.dynamic, { x: 368, y: hintY + 96 > 380 ? 380 : hintY + 96, w: 120, label: t('ui.nextLevel'), variant: 'solid', onTap: () => openLevel(this.game, this.rest[0], this.rest.slice(1)) })
-    makeButton(this.dynamic, { x: this.rest.length > 0 ? 504 : 368, y: hintY + 96 > 380 ? 380 : hintY + 96, w: 120, label: t('ui.backToMap'), variant: 'ghost', onTap: () => this.backToMap() })
+    const btnY = hintY + 96 > 380 ? 380 : hintY + 96
+    makeButton(this.dynamic, { x: 232, y: btnY, w: 112, label: t('ui.dossierOpen'), variant: 'outline', onTap: () => this.openDossier() })
+    makeButton(this.dynamic, { x: 360, y: btnY, w: 112, label: t('ui.redesign'), variant: 'outline', onTap: () => { this.program = []; this.runner = initProgram(); this.refresh() } })
+    if (this.rest.length > 0) makeButton(this.dynamic, { x: 488, y: btnY, w: 112, label: t('ui.nextLevel'), variant: 'solid', onTap: () => openLevel(this.game, this.rest[0], this.rest.slice(1)) })
+    makeButton(this.dynamic, { x: this.rest.length > 0 ? 616 : 488, y: btnY, w: 112, label: t('ui.backToMap'), variant: 'ghost', onTap: () => this.backToMap() })
   }
 
   private backToMap() {
@@ -227,6 +235,7 @@ export class CommandScene implements GameScene {
 
   destroy() {
     this.stopRun()
+    this.dossierClose?.()
     window.removeEventListener('keydown', this.keyHandler)
     this.container.destroy({ children: true })
   }

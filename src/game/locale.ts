@@ -31,11 +31,57 @@ export const zh = {
     E10: { name: '暗物质虚空引擎', speed: '5万c' },
   },
   medal: { gold: '金章', silver: '银章', bronze: '铜章' },
-  /** 算法身份：关卡数据只持 AlgoId（名称牌 / 结算标尺 / 将来的档案卡按此取词）。 */
+  /** 算法身份：关卡数据只持 AlgoId（名称牌 / 结算标尺 / 档案卡按此取词）。 */
   algo: {
     'insertion-sort': { name: '插入排序', en: 'Insertion Sort' },
     'binary-search': { name: '二分查找', en: 'Binary Search' },
     'merge-sort': { name: '归并排序', en: 'Merge Sort' },
+  },
+  /**
+   * 算法档案：发明思路与历史沿革（陈述性知识——只呈现，不入预测门）。
+   * 结构与 docs/动画绘制方法论.md 的设计思路三段式对齐：
+   * 关键观察 / 换个设计 / 带走这一招，外加 出生 / 发明动机 / 今日遗产。
+   */
+  dossier: {
+    'insertion-sort': {
+      born: '1946 年，ENIAC 团队的约翰·莫奇利在《Sorting and Computing》讲义中首次把它写成算法——更早以前，它是牌手理牌的本能：每摸一张，插进手里已排好的牌。',
+      motive: '数据逐件到达，随到随排：不必等全部到齐，也不必第二条空轨——永远维护一段有序区，这就是「在线」的力量。',
+      insight: '绿色整备区是循环不变量：永远有序，且每放回一件就向前长大一格——这就是算法为什么正确。',
+      alternative: '若改用归并：最坏情形也快，但要一条等长空轨放临时件；插入排序原地整备，代价是最坏 Θ(n²)——数据小或近乎有序时，这笔交易很划算。',
+      legacy: '2002 年 Timsort 把它与归并焊在一起，成为 Python / Java / Android 的默认排序——你手机今天整理列表时，跑的就是这段 1946 年的手牌技艺。',
+      transfer: {
+        prompt: '增援舰每分钟报到一艘，指挥室只挂一条已排好的队列——你会选哪种整备方式？',
+        options: ['随到随插：新舰与队中舰逐位比对，插入合适航位', '等 60 艘全部到齐，分成两半各自排好再汇合', '清空队列，按报到顺序重排一遍'],
+        answer: 0,
+        explanation: '流式数据 + 单条队列 + 就地维护——正是插入排序的主场：在线、原地、对近乎有序的数据最快。',
+      },
+    },
+    'binary-search': {
+      born: '1946 年，莫奇利在首批计算机讲学中公开描述了它；但第一个对所有数组都正确的实现迟至 1962 年才出现——1986 年 Bentley 统计，专业程序员当场写对的仅约一成。',
+      motive: '电话簿和字典没人从第一页翻起：表一旦有序，对半猜就是最优策略——16 颗恒星 4 次探测，100 万颗也只要 20 次。',
+      insight: '紫色候选区间是循环不变量：目标永远在区间内，每次探测严格排除一半。',
+      alternative: '若改用逐个排查：代码最简单，但 100 万颗要 100 万次探测；二分的代价是表必须先有序——排序一次，换取此后每次查找都对数级。',
+      legacy: '数据库索引与 B 树是它的多路后代，git bisect 用它定位坏提交；2006 年 Java 标准库还在二分里被发现整数溢出 bug——写对它，60 年来都算本事。',
+      transfer: {
+        prompt: '候选恒星从 16 颗翻倍到 32 颗，最坏要多花几次探测？',
+        options: ['多 1 次：log₂32 = 5', '多 16 次：候选翻倍就多查一倍', '次数不变：反正每颗都要看一眼'],
+        answer: 0,
+        explanation: '对数级的含义：候选翻倍，代价只加一。这就是「先排序、后二分」成为数据库索引祖师爷的原因。',
+      },
+    },
+    'merge-sort': {
+      born: '1945 年，冯·诺依曼为存储程序计算机 EDVAC 写下它——最早的计算机程序之一，还顺手用它估算这台尚不存在的机器需要多少硬件。',
+      motive: '磁带时代数据大到内存装不下，只能顺序读带：两盘已排好的磁带怎么合成一盘？看两队队首哪张小——归并是磁带时代的生存技能。',
+      insight: '每次只看两队队首，光度小者先入列：n 颗恒星恰好 n 次取星，线性工作量。',
+      alternative: '若改用插入：省掉整条输出列，但磁带只能顺序读、来回插行不通；归并用 O(n) 辅助空间换稳定的 Θ(n log n)——外部排序至今是它的天下。',
+      legacy: '磁带机退场了，外部排序和数据库归并连接仍在用它；2002 年 Timsort 把它与插入排序合体——你学过的两个算法，今天在手机里并肩运行。',
+      transfer: {
+        prompt: '两股星流各 4 颗、都已按光度排好，汇合最坏要几次取星？',
+        options: ['恰好 8 次：每颗恰好入列一次', '最多 16 次：可能反复比较队首', '取决于两股流的光度差'],
+        answer: 0,
+        explanation: '汇合是线性的：n 颗恒星 n 次取星。归并排序每层的工作量由此而来——log n 层 × 每层 n = n log n。',
+      },
+    },
   },
   ui: {
     backToMap: '返回地图',
@@ -75,6 +121,16 @@ export const zh = {
     caseYou: '本次 {n}',
     caseBest: '最好 n−1 = {n}',
     caseWorst: '最坏 n(n−1)/2 = {n}',
+    // 算法档案卡（通关解锁；图鉴常驻）
+    dossierOpen: '算法档案',
+    dossierTitle: '算法档案 · {name} {en}',
+    dossierClose: '关闭 [Esc]',
+    dossierBorn: '出生',
+    dossierMotive: '发明动机',
+    dossierInsight: '关键观察',
+    dossierAlternative: '换个设计',
+    dossierLegacy: '今日遗产',
+    dossierTransfer: '带走这一招',
     // 指挥关
     cmdPick: '抓取',
     cmdCompare: '比对',
@@ -257,6 +313,11 @@ export const zh = {
     legMeta: '{medal} · 航程 {ly} 光年',
     legLocked: '未点亮',
     medalFactorNote: '奖章系数：金 ×1 · 银 ×0.6 · 铜 ×0.3——重玩高奖章即可提升里程。',
+    dossierTitle: '算法图鉴',
+    dossierNote: '通关结算页点「算法档案」即归档一张卡——发明现场、设计取舍与今日遗产，全部有据可查。',
+    dossierLockedName: '？？？',
+    dossierLockedHint: '完成任一对应航段后解密',
+    dossierArchived: '已归档',
     starMapEyebrow: 'STAR MAP',
     starMapHead: '星图导航 · 点击星辰前往',
     starMapFoot: 'ESC 关闭 · 鼠标移动改变视角 · 金色航路连接枢纽与星座',
@@ -274,6 +335,7 @@ export type LevelId = keyof typeof zh.level
 export type VariantId = keyof typeof zh.variant
 export type PredictionId = keyof typeof zh.prediction
 export type AlgoId = keyof typeof zh.algo
+export type DossierId = keyof typeof zh.dossier
 
 /** 递归推导所有「文本叶子」的点路径（'ui.pick' / 'rank.R04.title' / 'level.insertion-01.brief' …）。 */
 type TextPaths<T> = T extends readonly unknown[]

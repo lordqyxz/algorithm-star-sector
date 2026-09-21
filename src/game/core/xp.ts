@@ -1,3 +1,4 @@
+import type { AlgoId } from '../locale'
 import type { GameLevel, SaveData } from '../types'
 
 /**
@@ -15,6 +16,15 @@ export function lyOf(save: SaveData, levels: readonly GameLevel[]): number {
     if (record) total += level.ly * medalLyFactor[record.medal]
   }
   return Math.round(total * 100) / 100
+}
+
+/** 图鉴解锁态：任一对应航段有记录即解锁（派生自存档，不单独持久化）。 */
+export function unlockedAlgos(save: SaveData, levels: readonly GameLevel[]): Set<AlgoId> {
+  const set = new Set<AlgoId>()
+  for (const level of levels) {
+    if (level.variants.some(variant => Boolean(save[variant.id]))) set.add(level.algo)
+  }
+  return set
 }
 
 export type RankId = 'R01' | 'R02' | 'R03' | 'R04' | 'R05' | 'R06' | 'R07' | 'R08' | 'R09' | 'R10'

@@ -11,6 +11,7 @@ import { makeSprite, spriteTexture, type SpriteKey } from './sprites'
  * - CellRowView：身份保持的格行视图（所有"排列/整备/定位/汇合"类关卡的共同资产）
  * - makeLevelChrome：关卡框架（标题/算法名称牌/简报/返回/控制层/动态层），统一层级关系
  * - drawAlgoPlate / drawCaseRuler：算法名称牌与最好-本次-最坏三态标尺
+ * - openDossierOverlay：算法档案卡（发明思路 + 历史沿革 + 迁移题自检，通关解锁）
  * - overlayDim / countersRow / drawMilestones：覆盖层、计数控件与里程碑庆祝行
  * 规则层（各关 sim）与本层完全解耦。
  */
@@ -211,6 +212,61 @@ export function drawCaseRuler(parent: Container, x: number, y: number, n: number
   makeText(parent, Math.max(x + 40, pos(best)), barY + 16, t('ui.caseBest', { n: best }), { size: 10, color: C.green, anchorX: 0.5, family: 'ui-monospace, Menlo, monospace' })
   makeText(parent, x + width, barY + 16, t('ui.caseWorst', { n: worst }), { size: 10, color: C.orange, anchorX: 1, family: 'ui-monospace, Menlo, monospace' })
   return barY + 34
+}
+
+/**
+ * 算法档案卡：通关结算页解锁的陈述性知识层（发明思路 + 历史沿革 + 设计取舍）。
+ * 结构与 docs/动画绘制方法论.md 的设计思路三段式对齐；末尾一道迁移题自检
+ * （只揭示、不评分——预测门 grade 的是下一步状态变化，这里 grade 的是迁移理解）。
+ * 自包含：自带遮罩与 Esc 关闭，返回 close()（场景销毁时必须调用以移除键盘监听）。
+ */
+export function openDossierOverlay(parent: Container, opts: { algo: AlgoId; onClose: () => void }): () => void {
+  const layer = new Container()
+  parent.addChild(layer)
+  const onKey = (event: KeyboardEvent) => {
+    if (event.key === 'Escape') { event.preventDefault(); close() }
+  }
+  const close = () => {
+    window.removeEventListener('keydown', onKey)
+    layer.destroy({ children: true })
+    opts.onClose()
+  }
+  window.addEventListener('keydown', onKey)
+
+  const d = zh.dossier[opts.algo]
+  const algo = zh.algo[opts.algo]
+  let choice: number | null = null
+  const render = () => {
+    layer.removeChildren().forEach(child => child.destroy({ children: true }))
+    const dim = makePanel(layer, 0, 0, 960, 600, { fill: C.dim, alpha: 0.5, radius: 0 })
+    dim.eventMode = 'static'
+    makePanel(layer, 120, 50, 720, 516, { stroke: C.purple, fill: 0xf9f8ff })
+    makeText(layer, 148, 72, t('ui.dossierTitle', { name: algo.name, en: algo.en }), { size: 15, weight: '800', color: C.ink })
+    makeButton(layer, { x: 724, y: 66, w: 96, label: t('ui.dossierClose'), variant: 'outline', size: 11, onTap: close })
+    const section = (y: number, header: string, color: number, content: string) => {
+      makeText(layer, 148, y, header, { size: 11, weight: '800', color })
+      makeText(layer, 148, y + 14, content, { size: 12, color: C.ink, wordWrap: 664, lineHeight: 16 })
+    }
+    section(114, t('ui.dossierBorn'), C.purple, d.born)
+    section(168, t('ui.dossierMotive'), C.blue, d.motive)
+    section(208, t('ui.dossierInsight'), C.green, d.insight)
+    section(248, t('ui.dossierAlternative'), C.orange, d.alternative)
+    section(304, t('ui.dossierLegacy'), C.yellow, d.legacy)
+    makeText(layer, 148, 360, t('ui.dossierTransfer'), { size: 11, weight: '800', color: C.ink })
+    makeText(layer, 148, 376, d.transfer.prompt, { size: 12, weight: '700', color: C.ink, wordWrap: 664 })
+    d.transfer.options.forEach((option, index) => {
+      const revealed = choice !== null
+      const correct = index === d.transfer.answer
+      makeButton(layer, { x: 148, y: 398 + index * 32, w: 664, h: 28, label: `${String.fromCharCode(65 + index)}  ${option}`, variant: revealed ? (correct ? 'outline' : 'ghost') : 'outline', size: 11, onTap: () => { if (choice === null) { choice = index; render() } } })
+    })
+    if (choice !== null) {
+      const correct = choice === d.transfer.answer
+      makeText(layer, 148, 502, correct ? t('ui.predictionOk') : t('ui.predictionRetry'), { size: 12, weight: '800', color: correct ? C.green : C.orange })
+      makeText(layer, 148, 520, d.transfer.explanation, { size: 11, color: C.muted, wordWrap: 664, lineHeight: 15 })
+    }
+  }
+  render()
+  return close
 }
 
 /** 关卡框架：标题/算法名称牌/简报/返回 + 控制层（按钮）+ 动态层（覆盖层最后渲染，永远在按钮之上）。 */

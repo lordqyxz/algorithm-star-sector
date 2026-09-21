@@ -1,7 +1,7 @@
 import { Container, Graphics, Text } from 'pixi.js'
 import type { Game, GameScene } from '../core/app'
 import { C, makeButton, makePanel, makeText, SPACE, type ButtonHandle, type GlyphKind } from '../core/ui'
-import { CellRowView, cellRowPalette, drawAlgoPlate, drawCaseRuler, drawMilestones, levelHeading, paintFuelRodCell, paintSocket } from '../core/level-ui'
+import { CellRowView, cellRowPalette, drawAlgoPlate, drawCaseRuler, drawMilestones, levelHeading, openDossierOverlay, paintFuelRodCell, paintSocket } from '../core/level-ui'
 import { gameLevels } from '../levels'
 import { openLevel } from '../core/open'
 import { t, zh, medalName, type LevelId, type VariantId, type PredictionId } from '../locale'
@@ -50,6 +50,8 @@ export class LevelScene implements GameScene {
   private predictionChoice: { variantId: string; index: number } | null = null
   /** 本次完成的结算数据（存档/航程只算一次，覆盖层随 refresh 重绘）。 */
   private winInfo: { variantId: string; lyGained: number; oldLy: number; newLy: number } | null = null
+  /** 算法档案卡层；close 由 openDossierOverlay 返回，销毁场景时必须调用。 */
+  private dossierClose: (() => void) | null = null
   private cellViews = new Map<string, CellView>()
   private rail: CellRowView
   private controls = new Container()
@@ -139,6 +141,12 @@ export class LevelScene implements GameScene {
 
   private backToMap() {
     this.game.switch(g => new MapScene(g))
+  }
+
+  /** 算法档案卡：通关后解锁的陈述性知识层（自包含覆盖层，Esc/按钮关闭）。 */
+  private openDossier() {
+    if (this.dossierClose) return
+    this.dossierClose = openDossierOverlay(this.container, { algo: this.level.algo, onClose: () => { this.dossierClose = null } })
   }
 
   private refresh() {
@@ -311,12 +319,14 @@ export class LevelScene implements GameScene {
     const hintY = drawMilestones(this.dynamic, 232, rulerEnd, win.oldLy, win.newLy)
     makeText(this.dynamic, 232, hintY + 2, state.moves === variant.par.moves && state.compares === variant.par.compares ? t('ui.winPerfect') : t('ui.winCompareHint', { unit }), { size: 12, color: C.muted, wordWrap: 500 })
     const btnY = Math.min(hintY + 26, 412)
-    makeButton(this.dynamic, { x: 232, y: btnY, w: 120, label: t('ui.winAgain'), variant: 'outline', onTap: () => this.restart() })
-    if (this.rest.length > 0) makeButton(this.dynamic, { x: 368, y: btnY, w: 120, label: t('ui.nextLevel'), variant: 'solid', onTap: () => openLevel(this.game, this.rest[0], this.rest.slice(1)) })
-    makeButton(this.dynamic, { x: this.rest.length > 0 ? 504 : 368, y: btnY, w: 120, label: t('ui.backToMap'), variant: 'ghost', onTap: () => this.backToMap() })
+    makeButton(this.dynamic, { x: 232, y: btnY, w: 112, label: t('ui.dossierOpen'), variant: 'outline', onTap: () => this.openDossier() })
+    makeButton(this.dynamic, { x: 360, y: btnY, w: 112, label: t('ui.winAgain'), variant: 'outline', onTap: () => this.restart() })
+    if (this.rest.length > 0) makeButton(this.dynamic, { x: 488, y: btnY, w: 112, label: t('ui.nextLevel'), variant: 'solid', onTap: () => openLevel(this.game, this.rest[0], this.rest.slice(1)) })
+    makeButton(this.dynamic, { x: this.rest.length > 0 ? 616 : 488, y: btnY, w: 112, label: t('ui.backToMap'), variant: 'ghost', onTap: () => this.backToMap() })
   }
 
   destroy() {
+    this.dossierClose?.()
     window.removeEventListener('keydown', this.keyHandler)
     this.container.destroy({ children: true })
   }

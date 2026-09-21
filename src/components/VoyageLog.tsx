@@ -1,12 +1,12 @@
 import { gameLevels } from '@/game/levels'
-import { engineOf, lyOf, nextMilestone, rankOf, medalLyFactor } from '@/game/core/xp'
+import { engineOf, lyOf, nextMilestone, rankOf, medalLyFactor, unlockedAlgos } from '@/game/core/xp'
 import { loadSave } from '@/game/save'
-import { t, zh, medalName, type LevelId } from '@/game/locale'
-import { ArrowRight, Compass, Route } from 'lucide-react'
+import { t, zh, medalName, type AlgoId, type LevelId } from '@/game/locale'
+import { ArrowRight, BookMarked, Compass, Route } from 'lucide-react'
 
 /**
- * 航行日志：舰长档案（军衔/引擎/里程/下一站）+ 航段记录（游戏关卡）。
- * 文案全部走 locale 词表。
+ * 航行日志：舰长档案（军衔/引擎/里程/下一站）+ 航段记录（游戏关卡）+ 算法图鉴。
+ * 文案全部走 locale 词表；图鉴解锁态由存档派生（unlockedAlgos）。
  * 图片约定：public/astro/{banner,leg-1..4}.jpg，缺失时自动回退为程序化深空视觉。
  */
 export function VoyageLog({ onOpenGame }: { onOpenGame: () => void }) {
@@ -15,6 +15,7 @@ export function VoyageLog({ onOpenGame }: { onOpenGame: () => void }) {
   const rank = rankOf(ly)
   const engine = engineOf(ly)
   const milestone = nextMilestone(ly)
+  const unlocked = unlockedAlgos(save, gameLevels)
   const milestoneLabel = milestone
     ? milestone.kind === 'rank' ? zh.rank[milestone.id].title : `${zh.engine[milestone.id].name}（${zh.engine[milestone.id].speed}）`
     : ''
@@ -58,6 +59,32 @@ export function VoyageLog({ onOpenGame }: { onOpenGame: () => void }) {
         })}
       </div>
       <small className="voyage-note">{t('hud.medalFactorNote')}</small>
+    </section>
+
+    <section className="voyage-panel">
+      <h3><BookMarked size={15} />{t('hud.dossierTitle')}</h3>
+      <div className="dossier-grid">
+        {(Object.keys(zh.algo) as AlgoId[]).map(algoId => {
+          const algo = zh.algo[algoId]
+          if (!unlocked.has(algoId)) {
+            return <article key={algoId} className="dossier-card locked">
+              <header><b>{t('hud.dossierLockedName')}</b><small>？？？</small></header>
+              <p>{t('hud.dossierLockedHint')}</p>
+            </article>
+          }
+          const d = zh.dossier[algoId]
+          return <article key={algoId} className="dossier-card">
+            <header><b>{algo.name}</b><small>{algo.en}</small><span className="dossier-badge">{t('hud.dossierArchived')}</span></header>
+            <p><b>{t('ui.dossierBorn')}</b>{d.born}</p>
+            <p><b>{t('ui.dossierMotive')}</b>{d.motive}</p>
+            <p><b>{t('ui.dossierInsight')}</b>{d.insight}</p>
+            <p><b>{t('ui.dossierAlternative')}</b>{d.alternative}</p>
+            <p><b>{t('ui.dossierLegacy')}</b>{d.legacy}</p>
+            <footer>{t('ui.dossierTransfer')}：{d.transfer.prompt} ✓ {d.transfer.options[d.transfer.answer]}</footer>
+          </article>
+        })}
+      </div>
+      <small className="voyage-note">{t('hud.dossierNote')}</small>
     </section>
   </div>
 }
