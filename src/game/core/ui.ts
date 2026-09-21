@@ -38,16 +38,7 @@ export function makeSpaceBackdrop(parent: Container, width: number, height: numb
     band.fill({ color: SPACE.band, alpha: 0.55 * alpha })
   }
   backdrop.addChild(sky, band)
-  const rand = mulberry32(seed)
-  const stars = new Graphics()
-  for (let i = 0; i < 130; i += 1) {
-    const x = rand() * width
-    const y = rand() * height
-    const r = 0.5 + rand() * 1.4
-    stars.circle(x, y, r)
-    stars.fill({ color: SPACE.star, alpha: 0.25 + rand() * 0.65 })
-  }
-  backdrop.addChild(stars)
+  // 背景恒星由 ParticleGalaxy（GPU 粒子星野）提供：差速旋臂星盘 + 星流 + 远景闪烁星野。
   parent.addChildAt(backdrop, 0)
 }
 

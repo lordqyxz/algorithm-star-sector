@@ -1,6 +1,7 @@
 import { Application, Container, Graphics, Text } from 'pixi.js'
 import { animate } from 'animejs'
 import { SPACE, makeSpaceBackdrop } from './ui'
+import { ParticleGalaxy } from './particles'
 import { loadSprites } from './sprites'
 
 /**
@@ -25,6 +26,7 @@ export class Game {
   private host: HTMLElement | null = null
   private observer: ResizeObserver | null = null
   private background = new Container()
+  private galaxy: ParticleGalaxy | null = null
 
   async init(parent: HTMLElement) {
     this.host = parent
@@ -41,6 +43,15 @@ export class Game {
     // 预载程序化贴图资产（缺失时全站回退矢量绘制）。
     await loadSprites()
     this.app.stage.addChild(this.background)
+    // GPU 粒子星野：星盘 + 星流 + 远景星野（与站点外壳同款引擎）。
+    this.galaxy = new ParticleGalaxy({
+      app: this.app,
+      width: STAGE_WIDTH,
+      height: STAGE_HEIGHT,
+      pixelScale: Math.min(window.devicePixelRatio || 1, 2),
+      seed: 20260913,
+    })
+    this.background.addChild(this.galaxy.container)
     this.fit()
     if (typeof ResizeObserver !== 'undefined') {
       this.observer = new ResizeObserver(() => this.fit())
@@ -58,8 +69,14 @@ export class Game {
     const scale = Math.min(w / STAGE_WIDTH, h / STAGE_HEIGHT)
     this.app.stage.scale.set(scale)
     this.app.stage.position.set((w - STAGE_WIDTH * scale) / 2, (h - STAGE_HEIGHT * scale) / 2)
-    this.background.removeChildren().forEach(child => child.destroy({ children: true }))
+    // 静态背景（天空 + 银河带）随尺寸重建；GPU 星野常驻，只更新投影 uniform。
+    for (const child of [...this.background.children]) {
+      if (this.galaxy && child === this.galaxy.container) continue
+      this.background.removeChild(child)
+      child.destroy({ children: true })
+    }
     makeSpaceBackdrop(this.background, w / scale + 40, h / scale + 40)
+    this.galaxy?.resize({ width: w / scale + 40, height: h / scale + 40, pixelScale: this.app.renderer.resolution * scale, stageScale: scale })
     this.background.position.set(-20, -20)
   }
 
@@ -203,6 +220,8 @@ export class Game {
 
 
   destroy() {
+    this.galaxy?.destroy()
+    this.galaxy = null
     this.observer?.disconnect()
     this.observer = null
     this.current?.destroy()
