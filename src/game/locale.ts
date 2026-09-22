@@ -320,7 +320,7 @@ export const zh = {
     dossierArchived: '已归档',
     starMapEyebrow: 'STAR MAP',
     starMapHead: '星图导航 · 点击星辰前往',
-    starMapFoot: 'ESC 关闭 · 鼠标移动改变视角 · 金色航路连接枢纽与星座',
+    starMapFoot: '轨道半径 = 航段距离（对数）· 星色 = 最高奖章 · ESC 关闭 · 移动鼠标改变视角',
     hubLabel: '太阳系',
     footerCopy: '© 2026 中国科学院大学 UCAS · 博学笃志 格物明德',
     footerBuiltBy: 'Built by',
