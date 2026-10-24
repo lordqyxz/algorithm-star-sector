@@ -10,6 +10,7 @@
 - **课程航线**：从线性结构、串、查找、树与图，进入内存管理、内外排序、分治、贪心、动态规划、搜索、复杂性与优化方法。
 - **原理与论证**：在任务中阅读适用条件、不变量、推导和反例；含论证内容的任务另设迁移校验。
 - **航行日志**：查看完成的示例任务与原有航行记录。
+- **互动操练**：Dijkstra、0/1 背包和最大流提供真实图形操作、演示／操练／挑战、两级提示、撤销、改参数比较和独立学习记录。
 - **首航实战**：保留原有六段操作、探测、指令编排和星流汇合游戏。
 
 任务是有明确输入范围的可计算教学示例。走完示例不等于掌握整个知识主题，测试通过也不等于任意输入的正确性证明。各主题的来源、实现方式、理论说明与边界分别记录在 [课程矩阵](docs/CURRICULUM.md) 和 [覆盖审计](docs/COVERAGE-AUDIT.md)。[294042 单独复核](docs/REVIEW-294042.md)记录了第七章总结与综合自测仍未实现的缺口。
@@ -60,6 +61,16 @@ playwright-cli -s=verify --raw run-code --filename=.playwright-cli/browser-layou
 
 默认检查 1280px 桌面。可在生成时通过 `SITE_URL` 指定线上地址、`VIEWPORT_WIDTH` 指定其他桌面宽度。仍使用独立测试会话，并清除该会话的课程进度。
 
+
+三个互动样板另有完整操作和真实指针检查：
+
+```bash
+node --import ./tests/register.mjs tests/export-lab-checks.mjs
+playwright-cli -s=verify --raw run-code --filename=.playwright-cli/lab-checks.generated.js
+playwright-cli -s=verify --raw run-code --filename=.playwright-cli/lab-pointer.generated.js
+```
+
+生成时可用 `SITE_URL` 指定线上站点。该测试会清除独立测试会话中的互动操练记录。设计、输入范围和核验说明见 [INTERACTIVE-LABS.md](docs/INTERACTIVE-LABS.md)。
 
 ## 架构与部署
 

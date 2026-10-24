@@ -14,6 +14,7 @@ import { lyOf, rankOf, engineOf } from '../core/xp'
 import { gameLevels } from '../levels'
 import { CourseMapScene } from './CourseMapScene'
 import { LegacyMapScene } from './LegacyMapScene'
+import { LabScene } from './LabScene'
 
 /** The overview owns chapter selection; the React shell only chooses a site entry. */
 export class MapScene implements GameScene {
@@ -66,6 +67,7 @@ export class MapScene implements GameScene {
     }))
     actions.push(
       { label: t('course.explore'), run: () => this.open() },
+      { label: t('lab.entry'), run: () => this.game.switch(g => new LabScene(g)) },
       {
         label: t('course.legacy'),
         run: () => this.game.switch((g) => new LegacyMapScene(g)),
@@ -323,6 +325,7 @@ export class MapScene implements GameScene {
         `${String(chapters.length).padStart(2, '0')}  ${t('course.sectorLabel')}     /     ${String(courseMissions.length).padStart(2, '0')}  ${t('course.missionLabel')}     /     05  ${t('course.sourceLabel')}`,
         { size: 11, color: C.muted, family: MONO },
       )
+      makeButton(this.container, { x: w - 292, y: h - 61, w: 130, h: 38, label: t('lab.entry'), onTap: () => this.game.switch(g => new LabScene(g)) })
       makeButton(this.container, {
         x: w - 150,
         y: h - 61,

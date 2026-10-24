@@ -22,6 +22,7 @@ const mobile = process.argv.includes('mobile')
 writeFileSync(`.playwright-cli/browser-checks${mobile ? '.mobile' : ''}.generated.js`, `async page => (${readFileSync('tests/browser-checks.js', 'utf8')})(page, ${JSON.stringify(catalog)}, ${JSON.stringify(mobile ? { width: 390, height: 844 } : { width: 1440, height: 1000 })})`)
 if (process.argv.includes('--layout')) {
   const options = { url: process.env.SITE_URL || 'http://127.0.0.1:4173/', width: Number(process.env.VIEWPORT_WIDTH || 1280) }
-  writeFileSync('.playwright-cli/browser-layout-audit.generated.js', `async page => (${readFileSync('tests/browser-layout-audit.js', 'utf8')})(page, ${JSON.stringify(catalog)}, ${JSON.stringify(options)})`)
+  const audit = `window.__auditText = (${readFileSync('tests/browser-text-bounds.js', 'utf8')});`
+  writeFileSync('.playwright-cli/browser-layout-audit.generated.js', `async page => { await page.addInitScript({content: ${JSON.stringify(audit)}}); return (${readFileSync('tests/browser-layout-audit.js', 'utf8')})(page, ${JSON.stringify(catalog)}, ${JSON.stringify(options)}); }`)
 }
 console.log(`${catalog.length} missions exported for browser verification`)

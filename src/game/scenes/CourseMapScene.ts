@@ -11,6 +11,7 @@ import {
 import { t, zh } from '../locale'
 import { CourseScene } from './CourseScene'
 import { MapScene } from './MapScene'
+import { LabScene } from './LabScene'
 
 export class CourseMapScene implements GameScene {
   readonly container = new Container()
@@ -75,6 +76,7 @@ export class CourseMapScene implements GameScene {
       { label: t('course.previousPage'), run: () => this.movePage(-1) },
       { label: t('course.nextPage'), run: () => this.movePage(1) },
     ]
+    actions.push({ label: t('lab.entry'), run: () => this.game.switch(g => new LabScene(g)) })
     this.game.setActions(actions)
 
     if (!mobile) {
@@ -178,6 +180,7 @@ export class CourseMapScene implements GameScene {
       )
     }
 
+    if (!mobile) makeButton(this.container, { x: w - 200, y: 96, w: 164, h: 40, label: t('lab.entry'), onTap: () => this.game.switch(g => new LabScene(g)) })
     const startY = mobile ? 254 : 181
     const baseHeight = mobile ? 1110 : Math.max(760, w * 800 / 1440)
     let rowY = startY

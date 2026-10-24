@@ -156,7 +156,7 @@ export function stateFormula(frame: TraceFrame): string {
     const [row, column] = active
     const value = frame.matrix.values[row]?.[column]
     if (value !== undefined)
-      return String.raw`M_{${texValue(frame.matrix.rows[row])},\,${texValue(frame.matrix.columns[column])}}=${texValue(value)}`
+      return String.raw`M_{${texValue(frame.matrix.rows[row])},\,${texValue(frame.matrix.columns[column])}}=${texValue(value === '' ? '?' : value)}`
   }
 
   const counters = Object.entries(frame.counters).slice(0, 3)
@@ -166,7 +166,7 @@ export function stateFormula(frame: TraceFrame): string {
       counters
         .map(
           ([key, value]) =>
-            String.raw`\mathrm{${escapeText(key)}}=${texValue(value)}`,
+            String.raw`\mathrm{${escapeText(key)}}=${texValue(value === '' ? '?' : value)}`,
         )
         .join(String.raw`\\ `) +
       String.raw`\end{aligned}`

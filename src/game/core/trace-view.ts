@@ -106,6 +106,30 @@ export class TraceView {
   private readonly textWidths = new Map<string, number>()
   private showMoveArrows = false
   private graphLayout: 'graph' | 'tree' | 'spatial' = 'graph'
+  private interactiveTargets = new Set<string>()
+  private markedTargets = new Set<string>()
+  private onTarget: ((target: string) => void) | null = null
+  private markError = false
+
+  setInteraction(
+    targets: string[],
+    onTarget: (target: string) => void,
+    marked: string[] = [],
+    error = false,
+  ) {
+    this.interactiveTargets = new Set(targets)
+    this.markedTargets = new Set(marked)
+    this.onTarget = onTarget
+    this.markError = error
+  }
+
+  private bindTarget(view: Container, target: string) {
+    view.label = target
+    const enabled = this.interactiveTargets.has(target)
+    view.eventMode = enabled ? 'static' : 'auto'
+    view.cursor = enabled ? 'pointer' : 'default'
+    if (enabled) view.on('pointerdown', () => this.onTarget?.(target))
+  }
 
   constructor() {
     this.container.eventMode = 'static'
@@ -249,6 +273,19 @@ export class TraceView {
           },
         )
       }
+    } else if (this.onTarget && hasMatrix && hasItems) {
+      const matrixWidth = Math.floor((full.w - gap) * 0.73)
+      layouts.push(
+        { kind: 'matrix', box: { ...full, w: matrixWidth } },
+        {
+          kind: 'items',
+          box: {
+            ...full,
+            x: full.x + matrixWidth + gap,
+            w: full.w - matrixWidth - gap,
+          },
+        },
+      )
     } else if (hasGraph && hasItems) {
       const top = Math.floor((full.h - gap) * 0.54)
       layouts.push(
@@ -480,6 +517,11 @@ export class TraceView {
           Math.max(26, w - 8),
         )
       view.addChildAt(body, 0)
+      view.label = key
+      view.on('pointerdown', () => {
+        const target = `${prefix}:${id}`
+        if (this.interactiveTargets.has(target)) this.onTarget?.(target)
+      })
       parent.addChild(view)
       e = { view, body, label: val, detail, signature: '', animation: null }
       this.entities.set(key, e)
@@ -490,6 +532,8 @@ export class TraceView {
       parent.addChild(e.view)
     }
     const color = this.tone(tone)
+    e.view.eventMode = this.interactiveTargets.has(key) ? 'static' : 'auto'
+    e.view.cursor = this.interactiveTargets.has(key) ? 'pointer' : 'default'
     const sig = `${v}|${labelText}|${color}|${w}|${h}`
     if (sig !== e.signature) {
       e.body
@@ -577,9 +621,12 @@ export class TraceView {
       this.drawNumericBars(items, box, parent, occupied)
       return
     }
-    const cols = Math.max(1, Math.min(7, Math.floor((box.w + 4) / 52))),
+    const labCards = !!this.onTarget && prefix === 'item'
+    const cols = labCards
+        ? Math.max(1, Math.min(2, Math.floor((box.w + 4) / 84)))
+        : Math.max(1, Math.min(7, Math.floor((box.w + 4) / 52))),
       cellW = (box.w - (cols - 1) * 4) / cols,
-      cellH = 54
+      cellH = labCards ? 64 : 54
     items.forEach((it, i) => {
       const col = i % cols,
         row = Math.floor(i / cols)
@@ -589,7 +636,7 @@ export class TraceView {
         it.label,
         it.tone,
         box.x + col * (cellW + 4),
-        box.y + row * 60,
+        box.y + row * (cellH + 6),
         cellW,
         cellH,
         parent,
@@ -1140,6 +1187,7 @@ export class TraceView {
       'left-sibling',
       'right-sibling',
     ])
+    const edgeHits: Graphics[] = []
     for (const e of edges) {
       const a = centers.get(e.from),
         b = centers.get(e.to)
@@ -1158,6 +1206,15 @@ export class TraceView {
         ex = b.x - ux * rb,
         ey = b.y - uy * rb
       const color = this.tone(e.tone)
+      const edgeTarget = `edge:${e.from}:${e.to}`
+      if (this.interactiveTargets.has(edgeTarget)) {
+        const hit = new Graphics()
+          .moveTo(sx, sy)
+          .lineTo(ex, ey)
+          .stroke({ width: 18, color: P.cyan, alpha: 0.001 })
+        this.bindTarget(hit, edgeTarget)
+        edgeHits.push(hit)
+      }
       layer
         .moveTo(sx, sy)
         .lineTo(ex, ey)
@@ -1329,7 +1386,15 @@ export class TraceView {
       ent.label.style.fontSize = 14
       ent.label.style.fontWeight = '500'
       ent.detail.visible = false
+      if (this.onTarget && n.label) {
+        ent.label.position.set(p.w / 2, p.h * 0.32)
+        ent.detail.visible = true
+        ent.detail.style.fontSize = 12
+        ent.detail.position.set(p.w / 2, p.h * 0.72)
+      }
     }
+    // Transparent edge hit strokes stay above weight backplates.
+    if (edgeHits.length) parent.addChild(...edgeHits)
   }
   private drawMatrix(
     m: {
@@ -1337,6 +1402,7 @@ export class TraceView {
       columns: string[]
       values: (number | string)[][]
       active?: [number, number]
+      links?: { from: [number, number]; to: [number, number] }[]
     },
     box: Box,
     parent: Container,
@@ -1415,6 +1481,7 @@ export class TraceView {
       box.w,
     )
     const g = new Graphics()
+    const cellHits: Graphics[] = []
     parent.addChild(g)
     for (let c = startC; c < endC; c++) {
       const x = gridX + rowHeader + (c - startC) * cellW
@@ -1456,6 +1523,20 @@ export class TraceView {
         g.roundRect(x, y, cellW - 3, cellH - 3, 3)
           .fill({ color: active ? 0x153137 : P.panel })
           .stroke({ width: 1, color: active ? P.cyan : P.border })
+        const target = `cell:${r}:${c}`
+        if (
+          this.interactiveTargets.has(target) ||
+          this.markedTargets.has(target)
+        ) {
+          const hit = new Graphics()
+            .roundRect(x, y, cellW - 3, cellH - 3, 3)
+            .fill({ color: P.cyan, alpha: 0.001 })
+          if (this.markedTargets.has(target))
+            hit.stroke({ width: 2, color: this.markError ? P.red : P.cyan })
+          this.bindTarget(hit, target)
+          hit.hitArea = new Rectangle(x, y, cellW - 3, cellH - 3)
+          cellHits.push(hit)
+        }
         this.text(
           parent,
           String(m.values[r]?.[c] ?? ''),
@@ -1470,6 +1551,36 @@ export class TraceView {
           cellW - 10,
         )
       }
+    }
+    // Hit regions sit above text siblings so blank and filled cells behave identically.
+    if (cellHits.length) parent.addChild(...cellHits)
+    for (const [index, link] of (m.links ?? []).entries()) {
+      const [r0, c0] = link.from,
+        [r1, c1] = link.to
+      if (
+        r0 < startR ||
+        r0 >= endR ||
+        r1 < startR ||
+        r1 >= endR ||
+        c0 < startC ||
+        c0 >= endC ||
+        c1 < startC ||
+        c1 >= endC
+      )
+        continue
+      const x0 = gridX + rowHeader + (c0 - startC + 0.5) * cellW
+      const x1 =
+        gridX + rowHeader + (c1 - startC + 0.5) * cellW + (index ? -6 : 6)
+      const y0 = gridY + headerH + (r0 - startR + 1) * cellH - 3
+      const y1 = gridY + headerH + (r1 - startR) * cellH
+      const color = index ? P.cyan : P.copper
+      g.moveTo(x0, y0)
+        .bezierCurveTo(x0, y0 + 2, x1, y1 - 2, x1, y1)
+        .stroke({ color, width: 1.5, alpha: 0.9 })
+      g.moveTo(x1 - 3, y1 - 4)
+        .lineTo(x1, y1)
+        .lineTo(x1 + 3, y1 - 4)
+        .stroke({ color, width: 1.5 })
     }
     if (needsNav)
       this.navigation(

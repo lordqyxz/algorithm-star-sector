@@ -101,7 +101,7 @@ export type TraceFrame = {
   nodes?: TraceNode[]
   edges?: TraceEdge[]
   groups?: { id: string; items: TraceItem[] }[]
-  matrix?: { rows: string[]; columns: string[]; values: (number | string)[][]; active?: [number, number] }
+  matrix?: { rows: string[]; columns: string[]; values: (number | string)[][]; active?: [number, number]; links?: { from: [number, number]; to: [number, number] }[] }
   output?: TraceItem[]
   counters: Record<string, number | string>
   /** Computed answer for independent checks; never a diagram label or serialized UI tile. */

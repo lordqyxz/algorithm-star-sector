@@ -10,6 +10,8 @@ import { loadCourseSave, saveCourseRecord } from '../save'
 import type { CourseMission, TraceFrame } from '../types'
 import type { ChapterId } from '../curriculum'
 import { CourseMapScene } from './CourseMapScene'
+import { LabScene, labMissions } from './LabScene'
+import type { LabKind } from '../sim'
 
 /** A replayable command cursor over immutable algorithm snapshots. Pixi owns the whole interaction. */
 export class CourseScene implements GameScene {
@@ -477,6 +479,8 @@ export class CourseScene implements GameScene {
       sidebarBottom: sideY + (complete ? 44 : 0),
       controlsTop: controlsY,
     })
+    const labKind = (Object.keys(labMissions) as LabKind[]).find(kind => labMissions[kind] === this.mission.id)
+    if (labKind && !this.theoryOpen) makeButton(this.chrome, { x: w - 462, y: 24, w: 134, h: 36, label: t('lab.practiceEntry'), onTap: () => this.game.switch(g => new LabScene(g, labKind)) })
     const actions: GameAction[] = [
       { label: t('course.back'), run: () => this.back() },
       {
@@ -501,6 +505,7 @@ export class CourseScene implements GameScene {
         },
       },
     ]
+    if (labKind) actions.push({ label: t('lab.practiceEntry'), run: () => this.game.switch(g => new LabScene(g, labKind)) })
     if (this.checkpoint) {
       this.prediction.options.forEach((option, index) =>
         actions.push({

@@ -6,6 +6,8 @@ import { sortingMissions } from './simulation/sorting'
 import { algorithmsMissions } from './simulation/algorithms'
 import { advancedMissions } from './simulation/advanced'
 import { optimizationMissions } from './simulation/optimization'
+export { createLab, labChoices, applyLabAction, labFrame, labHint, labParameter, labIsComplete, labReference, labSummary, labDemoAction } from './simulation/interactive'
+export type { LabKind, LabState, LabAction, LabChoice, LabFeedback } from './simulation/interactive'
 
 /** Public simulation boundary: scene code only consumes these pure deterministic traces. */
 export const courseMissions = [
