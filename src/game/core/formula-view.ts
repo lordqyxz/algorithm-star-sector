@@ -23,17 +23,38 @@ export class FormulaView {
     game.mountOverlay(this.element)
   }
 
-  update(reference: string, state: string, x: number, y: number, width: number, visible: boolean) {
+  update(
+    reference: string,
+    state: string,
+    x: number,
+    y: number,
+    width: number,
+    visible: boolean,
+  ) {
     this.element.hidden = !visible
     if (!visible) return
     this.element.style.left = `${x}px`
     this.element.style.top = `${y}px`
     this.element.style.width = `${width}px`
-    const options = { displayMode: true, output: 'htmlAndMathml' as const, throwOnError: true, trust: false, strict: 'error' as const }
-    if (reference !== this.previous[0]) katex.render(reference, this.reference, options)
-    if (state !== this.previous[1]) katex.render(state, this.state, options)
+    const options = {
+      displayMode: false,
+      output: 'htmlAndMathml' as const,
+      throwOnError: true,
+      trust: false,
+      strict: 'error' as const,
+    }
+    if (reference !== this.previous[0])
+      katex.render(
+        String.raw`\displaystyle ${reference}`,
+        this.reference,
+        options,
+      )
+    if (state !== this.previous[1])
+      katex.render(String.raw`\displaystyle ${state}`, this.state, options)
     this.previous = [reference, state]
   }
 
-  destroy() { this.element.remove() }
+  destroy() {
+    this.element.remove()
+  }
 }

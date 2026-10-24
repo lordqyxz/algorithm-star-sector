@@ -44,7 +44,7 @@ const formulas: Record<string, string> = {
   'g-critical-path': String.raw`E[v]=\max_{(u,v)\in E}(E[u]+w(u,v))`,
   'g-multistage': String.raw`F(v)=\min_{(v,u)\in E}(w(v,u)+F(u))`,
   'g-max-flow': String.raw`\max |f|=\min_{(S,T)}capacity(S,T)`,
-  'g-min-cost-flow': String.raw`\min\sum_e c_e f_e\quad\text{s.t. }|f|=F_{\max},\;0\le f_e\le u_e`,
+  'g-min-cost-flow': String.raw`\begin{gathered}\min\sum_e c_e f_e\\ |f|=F_{\max}\\ 0\le f_e\le u_e\end{gathered}`,
   'sort-insertion-direct': String.raw`A[0..i-1]\text{ sorted};\;insert(A[i])`,
   'sort-insertion-binary': String.raw`p=\operatorname{upperBound}(A[0..i),A[i])`,
   'sort-shell': String.raw`A[j]\gets A[j-h],\quad j\gets j-h\quad\text{while }A[j-h]>\mathrm{key}`,
@@ -71,9 +71,9 @@ const formulas: Record<string, string> = {
   'divide-matrix-multiply': String.raw`C_{ij}\mathrel{+}=A_{ik}B_{kj}`,
   'greedy-fractional-knapsack': String.raw`\text{choose by decreasing }v_i/w_i`,
   'greedy-job-deadline': String.raw`\text{profit-descending; latest free slot}\le d_i`,
-  'greedy-activity-selection': String.raw`\text{choose compatible activity with minimum finish time}`,
+  'greedy-activity-selection': String.raw`j=\arg\min_{i:\,s_i\ge f_{\mathrm{last}}} f_i`,
   'greedy-johnson-flowshop': String.raw`\min(a_i,b_i)\text{ on }M_1\Rightarrow front;\;M_2\Rightarrow back`,
-  'dp-knapsack-01': String.raw`D_{i,c}=\begin{cases}D_{i-1,c},&c<w_i\\\max(D_{i-1,c},D_{i-1,c-w_i}+v_i),&c\ge w_i\end{cases}`,
+  'dp-knapsack-01': String.raw`\begin{gathered}D_{i,c}=\begin{cases}A,&c<w_i\\\max(A,B),&c\ge w_i\end{cases}\\ A=D_{i-1,c}\\ B=D_{i-1,c-w_i}+v_i\end{gathered}`,
   'dp-matrix-chain': String.raw`m[i,j]=\min_{i\le k<j}\{m[i,k]+m[k+1,j]+p_ip_{k+1}p_{j+1}\}`,
   'dp-optimal-bst': String.raw`E[i,j]=\min_{i\le r<j}\!\left(E[i,r]+E[r+1,j]+W[i,j]\right)`,
   'dp-lcs': String.raw`L[i,j]=\begin{cases}L[i-1,j-1]+1,&x_i=y_j\\\max(L[i-1,j],L[i,j-1]),&x_i\ne y_j\end{cases}`,
@@ -113,18 +113,34 @@ const escapeText = (value: string): string =>
 function texValue(value: number | string): string {
   if (typeof value === 'number') {
     if (Number.isNaN(value)) return String.raw`\mathrm{NaN}`
-    if (!Number.isFinite(value)) return value < 0 ? String.raw`-\infty` : String.raw`\infty`
+    if (!Number.isFinite(value))
+      return value < 0 ? String.raw`-\infty` : String.raw`\infty`
     return String(value)
   }
   if (/^-?\d+(\.\d+)?$/.test(value)) return value
   if (value === '∞') return String.raw`\infty`
   if (value === '×') return String.raw`\times`
   const symbols: Record<string, string> = {
-    '≤': String.raw`\le`, '≥': String.raw`\ge`, '≠': String.raw`\ne`,
-    '∞': String.raw`\infty`, '×': String.raw`\times`, '→': String.raw`\to`,
-    '←': String.raw`\leftarrow`, '∅': String.raw`\varnothing`, '−': '-',
+    '≤': String.raw`\le`,
+    '≥': String.raw`\ge`,
+    '≠': String.raw`\ne`,
+    '∞': String.raw`\infty`,
+    '×': String.raw`\times`,
+    '→': String.raw`\to`,
+    '←': String.raw`\leftarrow`,
+    '∅': String.raw`\varnothing`,
+    '−': '-',
   }
-  if (/[≤≥≠∞×→←∅−]/.test(value)) return value.split(/([≤≥≠∞×→←∅−])/).filter(Boolean).map(part => symbols[part] ? `{${symbols[part]}}` : String.raw`\text{${escapeText(part)}}`).join('')
+  if (/[≤≥≠∞×→←∅−]/.test(value))
+    return value
+      .split(/([≤≥≠∞×→←∅−])/)
+      .filter(Boolean)
+      .map((part) =>
+        symbols[part]
+          ? `{${symbols[part]}}`
+          : String.raw`\text{${escapeText(part)}}`,
+      )
+      .join('')
   return String.raw`\text{${escapeText(value)}}`
 }
 
@@ -145,9 +161,16 @@ export function stateFormula(frame: TraceFrame): string {
 
   const counters = Object.entries(frame.counters).slice(0, 3)
   if (counters.length)
-    return counters
-      .map(([key, value]) => String.raw`\mathrm{${escapeText(key)}}=${texValue(value)}`)
-      .join(String.raw`,\quad `)
+    return (
+      String.raw`\begin{aligned}` +
+      counters
+        .map(
+          ([key, value]) =>
+            String.raw`\mathrm{${escapeText(key)}}=${texValue(value)}`,
+        )
+        .join(String.raw`\\ `) +
+      String.raw`\end{aligned}`
+    )
 
   if (frame.nodes?.length || frame.edges?.length)
     return String.raw`|V|=${frame.nodes?.length ?? 0},\quad |E|=${frame.edges?.length ?? 0}`

@@ -7,6 +7,7 @@ import type {
   TraceNode,
   TraceTone,
 } from '../types'
+import { t } from '../locale'
 
 const P = {
   bg: 0x050d11,
@@ -136,7 +137,7 @@ export class TraceView {
 
   private outputPanelHeight(items: TraceItem[], panelWidth: number): number {
     const contentWidth = Math.max(1, panelWidth - 78)
-    const cols = Math.max(1, Math.min(10, Math.floor((contentWidth + 4) / 44)))
+    const cols = Math.max(1, Math.min(7, Math.floor((contentWidth + 4) / 52)))
     const cellWidth = (contentWidth - (cols - 1) * 4) / cols
     const wide = items.some(
       (it) =>
@@ -145,7 +146,7 @@ export class TraceView {
         ) >
         cellWidth * 1.65,
     )
-    if (!wide) return 30 + Math.ceil(items.length / cols) * 36
+    if (!wide) return 30 + Math.ceil(items.length / cols) * 60
     const rowWidth = Math.max(80, contentWidth - 12)
     const rowsHeight = items.reduce(
       (sum, it) =>
@@ -526,10 +527,7 @@ export class TraceView {
     if (!items.length) return
     if (prefix === 'output') {
       const contentWidth = Math.max(1, box.w)
-      const cols = Math.max(
-        1,
-        Math.min(10, Math.floor((contentWidth + 4) / 44)),
-      )
+      const cols = Math.max(1, Math.min(7, Math.floor((contentWidth + 4) / 52)))
       const cellWidth = (contentWidth - (cols - 1) * 4) / cols
       const wide = items.some(
         (it) =>
@@ -1184,8 +1182,10 @@ export class TraceView {
         positional.has(String(e.weight).toLowerCase())
       )
         continue
-      const label = String(e.weight),
-        lw = Math.max(28, label.length * 9 + 12),
+      const label = e.saturated
+          ? t('course.saturatedEdge', { value: String(e.weight) })
+          : String(e.weight),
+        lw = Math.max(28, this.measureTextWidth(label, 14, true, true) + 12),
         lh = 24
       let best:
         | { x: number; y: number; w: number; h: number; score: number }

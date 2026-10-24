@@ -22,7 +22,19 @@ const pack = (
   chapter: string,
   sources: CourseMission['sources'],
   make: (v: 0 | 1) => TraceFrame[],
-): CourseMission => ({ id, chapter, sources, trace: make })
+): CourseMission => ({
+  id,
+  chapter,
+  sources: [
+    'advanced-backtracking-knapsack',
+    'advanced-n-queens',
+    'advanced-bb-knapsack',
+    'advanced-bb-tsp',
+  ].includes(id)
+    ? [...sources, 'ai']
+    : sources,
+  trace: make,
+})
 
 function subset(v: 0 | 1): TraceFrame[] {
   const a = v ? [2, 4, 5, 7] : [3, 4, 5, 8],

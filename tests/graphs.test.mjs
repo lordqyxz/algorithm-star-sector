@@ -46,3 +46,20 @@ test('matrix and Floyd-Warshall traces expose actual state', () => {
   assert.ok(updates.length > 0)
   assert.ok(updates.some(f => f.matrix.values[0][3] === 9))
 })
+
+test('zero-capacity path overlays are marked saturated and belong to the last augmentation', () => {
+  for (const id of ['g-max-flow', 'g-min-cost-flow']) for (const variant of [0, 1]) {
+    const augmented = run(id, variant).filter(frame => frame.counters.path)
+    assert.ok(augmented.some(frame => frame.edges.some(edge => edge.saturated)), `${id}: saturated path remains visible`)
+    for (const frame of augmented) {
+      const path = String(frame.counters.path).split('→').map(index => `v${index}`)
+      for (const edge of frame.edges) {
+        const remaining = Number(String(edge.weight).split(' / ')[0])
+        if (edge.saturated) {
+          assert.equal(remaining, 0)
+          assert.ok(path.some((from, i) => from === edge.from && path[i + 1] === edge.to))
+        } else assert.ok(remaining > 0)
+      }
+    }
+  }
+})

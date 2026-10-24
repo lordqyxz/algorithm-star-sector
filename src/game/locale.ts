@@ -28,7 +28,7 @@ export const zh = {
     evidence: '当前证据', transfer: '带走这个问题',
     theory: '原理与论证', conditions: '适用条件', claim: '要证明的结论', argument: '论证步骤', boundary: '边界与反例', closeTheory: '返回操演', transferCheckpoint: '换一个情境 · 迁移校验',
     dataView: '数据', groupView: '分组', resultView: '结果', matrixView: '计算表', graphView: '结构与关系',
-    mathReference: '数学关系', mathState: '当前状态读数',
+    mathReference: '数学关系', mathState: '当前状态读数', saturatedEdge: '{value} · 已饱和',
     checkpoint: '航行校验 · 先作出判断', checkpointHint: '根据图上的证据选择，再继续推演。',
     correct: '判断正确', retry: '再看一眼不变量与图上的证据。', reveal: '理解并继续',
     complete: '任务已归档', completeNote: '你已走完当前输入的推演，并完成知识校验。',
@@ -977,7 +977,7 @@ export const zh = {
   "g-max-flow": {
     "title": "Edmonds–Karp 最大流",
     "objective": "在残量网络中寻找增广路，并累计瓶颈流量。",
-    "invariant": "增广后正向残量减少、反向残量增加；最大流等于最小割容量。",
+    "invariant": "增广后正向残量减少、反向残量增加；标为“已饱和”的零容量边仅保留本轮路径，不可继续通行。最大流等于最小割容量。",
     "complexity": "O(VE²) 时间。",
     "explanation": "Edmonds–Karp 用 BFS 找最少边数的残量 s→t 路径。反向边允许撤回并重排先前流量。",
     "transfer": "容量约束下的匹配、带宽与供应输送可转成最大流。",
@@ -1015,7 +1015,7 @@ export const zh = {
   "g-min-cost-flow": {
     "title": "最小费用最大流",
     "objective": "沿残量网络的最短费用增广路送流，并观察反向费用。",
-    "invariant": "反向残量边费用为正向费用的相反数，可纠正先前路由。",
+    "invariant": "反向残量边费用取相反数，可纠正先前路径。",
     "complexity": "逐次最短路朴素实现 O(FVE)，势能+Dijkstra 可优化。",
     "explanation": "每轮找残量网络最短费用路并增广瓶颈，直到无路或达到需求。含负费用反向边时需 Bellman–Ford 或可行势能。",
     "transfer": "要求最大输送量同时最低总费用时使用；费用与容量是不同属性。",
@@ -1397,10 +1397,10 @@ export const zh = {
   },
   "divide-quickselect": {
     "title": "随机化快速选择",
-    "objective": "用固定种子的伪随机枢轴定位第 k 小元素，只递归处理一侧。",
+    "objective": "用固定种子的枢轴定位第 k 小：输入 1 取上中位数，输入 2 取一般顺序数。",
     "invariant": "每轮划分后，枢轴处于最终次序位置；所求秩只可能落在一侧或正好是枢轴。",
     "complexity": "期望 Θ(n)，最坏 Θ(n²)；本实现迭代执行，除轨迹快照外使用 Θ(1) 辅助空间。",
-    "explanation": "快速选择沿用快速排序划分，但丢弃不含目标秩的一边；种子让轨迹可重复。",
+    "explanation": "秩从 1 开始。输入 1 的 6 个数排序后为 1、2、3、5、6、7，取 k=4 的上中位数 5；若采用中间两数均值的约定，中位数为 (3+5)/2=4。输入 2 取一般的第 5 小。快速选择只保留含目标秩的一侧；种子让轨迹可重复。",
     "transfer": "只要求一个次序统计量时，不必完整排序。",
     "prediction": {
       "prompt": "划分后，快速选择下一步保留什么？",

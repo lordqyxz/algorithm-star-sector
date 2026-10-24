@@ -354,7 +354,7 @@ const residualEdges = (
   path: number[],
   weight: (u: number, v: number, remaining: number) => string | number,
 ): TraceEdge[] => {
-  const edges = capacity.flatMap((row, u) =>
+  const edges: TraceEdge[] = capacity.flatMap((row, u) =>
     row.flatMap((remaining, v) =>
       remaining > 0
         ? [
@@ -379,6 +379,7 @@ const residualEdges = (
         from: `v${u}`,
         to: `v${v}`,
         weight: weight(u, v, 0),
+        saturated: true,
         directed: true,
         tone: 'active',
       })

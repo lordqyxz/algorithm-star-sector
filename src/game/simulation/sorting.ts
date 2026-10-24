@@ -1022,7 +1022,7 @@ export const sortingMissions: CourseMission[] = specs.map(
   ([id, chapter, sources]) => ({
     id,
     chapter,
-    sources,
+    sources: id === 'sort-merge' ? [...sources, 'ai'] : sources,
     trace: (variant) => run(id, variant).frames,
   }),
 )

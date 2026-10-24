@@ -2320,11 +2320,26 @@ export const algorithmsMissions: CourseMission[] = defs.map(
   ([id, chapter]) => ({
     id,
     chapter,
-    sources: id.startsWith('dp-')
-      ? ['combined', 'design', 'advanced']
-      : id.startsWith('greedy-')
-        ? ['combined', 'design']
-        : ['combined', 'structures', 'design', 'advanced'],
+    sources: [
+      ...(id.startsWith('dp-')
+        ? (['combined', 'design', 'advanced'] as const)
+        : id.startsWith('greedy-')
+          ? (['combined', 'design'] as const)
+          : (['combined', 'structures', 'design', 'advanced'] as const)),
+      ...([
+        'divide-recursion-tree',
+        'divide-closest-pair',
+        'divide-comparison-lower-bound',
+        'divide-quickselect',
+        'dp-knapsack-01',
+        'dp-matrix-chain',
+        'dp-lcs',
+        'greedy-activity-selection',
+        'greedy-fractional-knapsack',
+      ].includes(id)
+        ? (['ai'] as const)
+        : []),
+    ],
     trace: (v: 0 | 1) => sim(id, v),
   }),
 )

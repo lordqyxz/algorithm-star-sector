@@ -21,7 +21,20 @@ const mission = (
   id: string,
   chapter: CourseMission['chapter'],
   trace: CourseMission['trace'],
-): CourseMission => ({ id, chapter, sources: ['structures'], trace })
+): CourseMission => ({
+  id,
+  chapter,
+  sources: [
+    'foundation-modeling',
+    'foundation-asymptotics',
+    'structure-sequence',
+    'structure-stack-recursion',
+    'structure-strings-kmp',
+  ].includes(id)
+    ? ['structures', 'ai']
+    : ['structures'],
+  trace,
+})
 
 function traceLists(variant: 0 | 1): TraceFrame[] {
   const values = variant ? [2, 5, 9, 14] : [1, 4, 8]
@@ -1181,13 +1194,11 @@ function traceStackQueueVariants(variant: 0 | 1): TraceFrame[] {
           x: 0.15 + i * 0.2,
           y: 0.75,
         })),
-        edges: linkedQueue
-          .slice(0, -1)
-          .map((n, i) => ({
-            from: n.id,
-            to: linkedQueue[i + 1].id,
-            directed: true,
-          })),
+        edges: linkedQueue.slice(0, -1).map((n, i) => ({
+          from: n.id,
+          to: linkedQueue[i + 1].id,
+          directed: true,
+        })),
       },
     ),
   )
@@ -1284,13 +1295,11 @@ function traceStackQueueVariants(variant: 0 | 1): TraceFrame[] {
           x: 0.15 + i * 0.2,
           y: 0.75,
         })),
-        edges: linkedQueue
-          .slice(0, -1)
-          .map((n, i) => ({
-            from: n.id,
-            to: linkedQueue[i + 1].id,
-            directed: true,
-          })),
+        edges: linkedQueue.slice(0, -1).map((n, i) => ({
+          from: n.id,
+          to: linkedQueue[i + 1].id,
+          directed: true,
+        })),
       },
     ),
   )
@@ -1327,13 +1336,11 @@ function traceStackQueueVariants(variant: 0 | 1): TraceFrame[] {
           x: 0.1 + i * 0.16,
           y: 0.75,
         })),
-        edges: linkedQueue
-          .slice(0, -1)
-          .map((n, i) => ({
-            from: n.id,
-            to: linkedQueue[i + 1].id,
-            directed: true,
-          })),
+        edges: linkedQueue.slice(0, -1).map((n, i) => ({
+          from: n.id,
+          to: linkedQueue[i + 1].id,
+          directed: true,
+        })),
       },
     ),
   )

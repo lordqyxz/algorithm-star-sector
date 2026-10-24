@@ -17,7 +17,16 @@ const mission = (
   id: string,
   sources: CourseMission['sources'],
   trace: CourseMission['trace'],
-): CourseMission => ({ id, chapter: 'optimization', sources, trace })
+): CourseMission => ({
+  id,
+  chapter: 'optimization',
+  sources: ['approx-vertex-cover-matching', 'approx-subset-sum-fptas'].includes(
+    id,
+  )
+    ? [...sources, 'ai']
+    : sources,
+  trace,
+})
 
 function setCover(v: 0 | 1): TraceFrame[] {
   const sets = v

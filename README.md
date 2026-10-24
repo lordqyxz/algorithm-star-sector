@@ -12,7 +12,7 @@
 - **航行日志**：查看完成的示例任务与原有航行记录。
 - **首航实战**：保留原有六段操作、探测、指令编排和星流汇合游戏。
 
-任务是有明确输入范围的可计算教学示例。走完示例不等于掌握整个知识主题，测试通过也不等于任意输入的正确性证明。各主题的来源、实现方式、理论说明与边界分别记录在 [课程矩阵](docs/CURRICULUM.md) 和 [覆盖审计](docs/COVERAGE-AUDIT.md)。
+任务是有明确输入范围的可计算教学示例。走完示例不等于掌握整个知识主题，测试通过也不等于任意输入的正确性证明。各主题的来源、实现方式、理论说明与边界分别记录在 [课程矩阵](docs/CURRICULUM.md) 和 [覆盖审计](docs/COVERAGE-AUDIT.md)。[294042 单独复核](docs/REVIEW-294042.md)记录了第七章总结与综合自测仍未实现的缺口。
 
 ## 官方课程依据
 
@@ -50,6 +50,16 @@ playwright-cli -s=verify --raw run-code --filename=.playwright-cli/browser-check
 ```
 
 该检查在独立浏览器会话中操作所有任务的两组输入，执行预测、前后步与存档核验，并等待动画结束后检查错误。它会清除该测试会话中本站的课程进度。
+
+可再检查桌面画布中真实文字边界、遮罩裁切与公式溢出：
+
+```bash
+node --import ./tests/register.mjs tests/export-browser-catalog.mjs --layout
+playwright-cli -s=verify --raw run-code --filename=.playwright-cli/browser-layout-audit.generated.js
+```
+
+默认检查 1280px 桌面。可在生成时通过 `SITE_URL` 指定线上地址、`VIEWPORT_WIDTH` 指定其他桌面宽度。仍使用独立测试会话，并清除该会话的课程进度。
+
 
 ## 架构与部署
 

@@ -92,7 +92,7 @@ export type SaveData = { [levelVariantId: string]: SaveRecord }
 export type TraceTone = 'active' | 'settled' | 'muted' | 'red' | 'black'
 export type TraceItem = { id: string; value: string | number; label?: string; tone?: TraceTone }
 export type TraceNode = TraceItem & { x: number; y: number }
-export type TraceEdge = { from: string; to: string; weight?: string | number; directed?: boolean; tone?: TraceTone }
+export type TraceEdge = { from: string; to: string; weight?: string | number; directed?: boolean; tone?: TraceTone; saturated?: boolean }
 export type TraceOperation = 'start' | 'compare' | 'swap' | 'visit' | 'insert' | 'remove' | 'select' | 'split' | 'merge' | 'relax' | 'update' | 'reject' | 'done'
 export type TraceFrame = {
   op: TraceOperation

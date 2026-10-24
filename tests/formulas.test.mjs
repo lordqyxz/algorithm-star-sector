@@ -28,6 +28,6 @@ test('matrix readout uses the selected cell value from the visible table', () =>
 })
 
 test('state readout reports only current counters or visible collection size', () => {
-  assert.equal(stateFormula({ op: 'visit', formula: '', counters: { comparisons: 7, moves: 3, ignored: 4 }, items: [] }), String.raw`\mathrm{comparisons}=7,\quad \mathrm{moves}=3,\quad \mathrm{ignored}=4`)
+  assert.equal(stateFormula({ op: 'visit', formula: '', counters: { comparisons: 7, moves: 3, ignored: 4 }, items: [] }), String.raw`\begin{aligned}\mathrm{comparisons}=7\\ \mathrm{moves}=3\\ \mathrm{ignored}=4\end{aligned}`)
   assert.equal(stateFormula({ op: 'visit', formula: '', counters: {}, items: [{ id: 'x', value: 9 }] }), String.raw`n=1`)
 })

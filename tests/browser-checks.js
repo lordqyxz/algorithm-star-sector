@@ -28,6 +28,7 @@ async (page, catalog, viewport = { width: 1440, height: 1000 }) => {
           if (bounds.controlsTop < bounds.evidenceBottom + 10 || bounds.controlsTop < bounds.sidebarBottom + 10) throw new Error(`${mission.id}: text/control overlap`)
           const math = document.querySelector('.formula-layer:not([hidden])')
           if (math && math.querySelector('.katex-error')) throw new Error(`${mission.id}: unrendered LaTeX`)
+          if (math && [...math.querySelectorAll('.formula-equation')].some(equation => equation.scrollWidth > equation.clientWidth + 2)) throw new Error(`${mission.id}: formula requires horizontal scrolling`)
           const text = document.querySelector('.game-accessible-description').textContent
           const progress = text.match(/\. (\d+)\/(\d+)\./)
           if (!progress) throw new Error(`${mission.id}: missing progress ${text.slice(0,100)}`)
