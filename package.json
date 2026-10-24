@@ -8,10 +8,12 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "typecheck": "tsc -b --pretty false"
+    "typecheck": "tsc -b --pretty false",
+    "test": "node --import ./tests/register.mjs --test tests/*.test.mjs"
   },
   "dependencies": {
     "animejs": "4.5.0",
+    "katex": "0.19.1",
     "lucide-react": "1.45.0",
     "pixi.js": "8.20.1",
     "react": "19.3.0",

@@ -102,7 +102,8 @@ export class LevelScene implements GameScene {
     makeText(this.controls, 24, y.keys, t('ui.zeroPenalty'), { size: 11, color: SPACE.faint })
 
     this.keyHandler = (event: KeyboardEvent) => {
-      if (event.metaKey || event.ctrlKey || event.altKey) return
+      const modal = document.querySelector('[aria-modal="true"]')
+      if (event.metaKey || event.ctrlKey || event.altKey || (modal && !modal.contains(this.game.app.canvas))) return
       const map: Record<string, () => void> = { p: () => this.run('pick'), c: () => this.run('compare'), s: () => this.run('shift'), d: () => this.run('drop'), u: () => this.undo(), r: () => this.restart() }
       const action = map[event.key.toLowerCase()]
       if (action) { event.preventDefault(); action() }
@@ -270,7 +271,7 @@ export class LevelScene implements GameScene {
     const gate = variant.prediction!
     const prediction = zh.prediction[variant.id as PredictionId]
     const dim = makePanel(this.dynamic, 0, 0, 960, 600, { fill: C.dim, alpha: 0.35, radius: 0 }); dim.eventMode = 'static'
-    makePanel(this.dynamic, 120, 130, 720, 300, { stroke: C.yellow, fill: 0xfffaf0 })
+    makePanel(this.dynamic, 120, 130, 720, 300, { stroke: C.yellow, fill: C.yellowBg })
     makeText(this.dynamic, 148, 152, t('ui.predictionTitle'), { size: 12, color: C.yellow, weight: '800' })
     makeText(this.dynamic, 148, 176, prediction.prompt, { size: 14, weight: '700', wordWrap: 660, lineHeight: 20 })
     const choice = this.predictionChoice?.variantId === variant.id ? this.predictionChoice : null
@@ -310,7 +311,7 @@ export class LevelScene implements GameScene {
     const medal = medalFor(this.undoCount)
 
     const dim = makePanel(this.dynamic, 0, 0, 960, 600, { fill: C.dim, alpha: 0.35, radius: 0 }); dim.eventMode = 'static'
-    makePanel(this.dynamic, 200, 150, 560, 300, { stroke: C.greenBorder, fill: 0xf0fbf6 })
+    makePanel(this.dynamic, 200, 150, 560, 300, { stroke: C.greenBorder, fill: C.greenBg })
     makeText(this.dynamic, 232, 170, t('ui.winLine', { medal: medalName(medal), n: this.undoCount, ly: win.lyGained.toFixed(2) }), { size: 19, color: C.green, weight: '800' })
     makeText(this.dynamic, 232, 200, t('ui.winStats', { moves: state.moves, m1: variant.par.moves, compares: state.compares, m2: variant.par.compares }), { size: 14, color: C.ink, family: 'ui-monospace, Menlo, monospace' })
     // 三态标尺：本次比对次数落在 最好 n−1 与 最坏 n(n−1)/2 之间的哪里。

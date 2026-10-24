@@ -1,4 +1,17 @@
 import type { Card, ExecuteCommand, ExecuteState, MedalTone } from '@/game/types'
+import { structuresMissions } from './simulation/structures'
+import { treesMissions } from './simulation/trees'
+import { graphsMissions } from './simulation/graphs'
+import { sortingMissions } from './simulation/sorting'
+import { algorithmsMissions } from './simulation/algorithms'
+import { advancedMissions } from './simulation/advanced'
+import { optimizationMissions } from './simulation/optimization'
+
+/** Public simulation boundary: scene code only consumes these pure deterministic traces. */
+export const courseMissions = [
+  ...structuresMissions, ...treesMissions, ...graphsMissions, ...sortingMissions,
+  ...algorithmsMissions, ...advancedMissions, ...optimizationMissions,
+]
 
 /**
  * 模拟层：纯函数，是游戏规则的唯一权威。

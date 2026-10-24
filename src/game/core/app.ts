@@ -1,7 +1,6 @@
 import { Application, Container, Graphics, Text } from 'pixi.js'
 import { animate } from 'animejs'
 import { SPACE, makeSpaceBackdrop } from './ui'
-import { ParticleGalaxy } from './particles'
 import { loadSprites } from './sprites'
 
 /**
@@ -10,7 +9,8 @@ import { loadSprites } from './sprites'
  * 切换场景、统一销毁。玩法规则仍然只住在 src/game/sim.ts（纯函数 + 命令日志）。
  */
 
-export type GameScene = { container: Container; destroy(): void }
+export type GameAction = { label: string; run: () => void; disabled?: boolean; focusOnChange?: boolean }
+export type GameScene = { container: Container; size?: { width: number; height: number }; backdropAlpha?: number; resize?(width: number): void; destroy(): void }
 export type SceneFactory = (game: Game) => GameScene
 
 export const STAGE_WIDTH = 960
@@ -26,7 +26,40 @@ export class Game {
   private host: HTMLElement | null = null
   private observer: ResizeObserver | null = null
   private background = new Container()
-  private galaxy: ParticleGalaxy | null = null
+  private actions: HTMLDivElement | null = null
+  private description: HTMLDivElement | null = null
+  private transitCleanup: (() => void) | null = null
+
+  get width() { return this.host?.clientWidth ?? STAGE_WIDTH }
+  mountOverlay(element: HTMLElement) { this.host?.appendChild(element) }
+
+  updateLayout() {
+    queueMicrotask(() => {
+      if (this.host && this.current?.size && this.host.style.aspectRatio !== `${this.current.size.width} / ${this.current.size.height}`) this.fit()
+    })
+  }
+
+  setDescription(text: string) { if (this.description) this.description.textContent = text }
+
+  /** Native keyboard/screen-reader access mirrors actions owned by the current Pixi scene. */
+  setActions(actions: readonly GameAction[]) {
+    if (!this.actions) return
+    const focused = this.actions.contains(document.activeElement) ? document.activeElement?.textContent : null
+    this.actions.replaceChildren(...actions.map(action => {
+      const button = document.createElement('button')
+      button.type = 'button'
+      button.textContent = action.label
+      button.disabled = action.disabled ?? false
+      button.addEventListener('click', action.run)
+      return button
+    }))
+    if (focused) {
+      const buttons = Array.from(this.actions.children) as HTMLButtonElement[]
+      const same = buttons.find(button => button.textContent === focused)
+      const target = same && !same.disabled ? same : buttons[actions.findIndex(action => action.focusOnChange && !action.disabled)]
+      target?.focus({ preventScroll: true })
+    }
+  }
 
   async init(parent: HTMLElement) {
     this.host = parent
@@ -40,18 +73,18 @@ export class Game {
       preference: 'webgl',
     })
     parent.appendChild(this.app.canvas)
+    this.actions = document.createElement('div')
+    this.actions.className = 'game-accessible-actions'
+    parent.appendChild(this.actions)
+    this.description = document.createElement('div')
+    this.description.className = 'game-accessible-description'
+    this.description.setAttribute('role', 'status')
+    this.description.setAttribute('aria-live', 'polite')
+    parent.appendChild(this.description)
     // 预载程序化贴图资产（缺失时全站回退矢量绘制）。
     await loadSprites()
     this.app.stage.addChild(this.background)
-    // GPU 粒子星野：星盘 + 星流 + 远景星野（与站点外壳同款引擎）。
-    this.galaxy = new ParticleGalaxy({
-      app: this.app,
-      width: STAGE_WIDTH,
-      height: STAGE_HEIGHT,
-      pixelScale: Math.min(window.devicePixelRatio || 1, 2),
-      seed: 20260913,
-    })
-    this.background.addChild(this.galaxy.container)
+    // The cinematic artwork stays static; a second full-screen particle renderer is unnecessary.
     this.fit()
     if (typeof ResizeObserver !== 'undefined') {
       this.observer = new ResizeObserver(() => this.fit())
@@ -64,28 +97,35 @@ export class Game {
     const host = this.host
     if (!host) return
     const w = Math.max(1, host.clientWidth)
+    this.current?.resize?.(w)
+    host.style.aspectRatio = this.current?.size ? `${this.current.size.width} / ${this.current.size.height}` : '960 / 600'
     const h = Math.max(1, host.clientHeight)
     if (this.app.renderer.width !== w || this.app.renderer.height !== h) this.app.renderer.resize(w, h)
-    const scale = Math.min(w / STAGE_WIDTH, h / STAGE_HEIGHT)
+    const world = this.current?.size ?? { width: STAGE_WIDTH, height: STAGE_HEIGHT }
+    const scale = Math.min(w / world.width, h / world.height)
     this.app.stage.scale.set(scale)
-    this.app.stage.position.set((w - STAGE_WIDTH * scale) / 2, (h - STAGE_HEIGHT * scale) / 2)
+    this.app.stage.position.set((w - world.width * scale) / 2, (h - world.height * scale) / 2)
+    this.background.alpha = this.current?.backdropAlpha ?? 1
     // 静态背景（天空 + 银河带）随尺寸重建；GPU 星野常驻，只更新投影 uniform。
     for (const child of [...this.background.children]) {
-      if (this.galaxy && child === this.galaxy.container) continue
       this.background.removeChild(child)
       child.destroy({ children: true })
     }
     makeSpaceBackdrop(this.background, w / scale + 40, h / scale + 40)
-    this.galaxy?.resize({ width: w / scale + 40, height: h / scale + 40, pixelScale: this.app.renderer.resolution * scale, stageScale: scale })
     this.background.position.set(-20, -20)
   }
 
   switch(factory: SceneFactory, transit?: string) {
+    this.transitCleanup?.()
+    this.transitCleanup = null
+    this.setActions([])
+    this.setDescription('')
     if (this.current) {
       this.app.stage.removeChild(this.current.container)
       this.current.destroy()
     }
     this.current = factory(this)
+    if (this.host) this.host.dataset.layout = this.current.size ? 'responsive' : 'legacy'
     this.app.stage.addChild(this.current.container)
     this.fit()
     if (transit) this.playTransit(transit)
@@ -110,22 +150,9 @@ export class Game {
     const T_TOTAL = T_RAMP + T_HOLD + T_FADE
 
     if (reduced) {
-      // 减动效路径：无星流，仅航标缓慢淡入淡出。
-      let gone = false
-      const slow = () => {
-        if (gone) return
-        tag.alpha = 1
-        setTimeout(() => { gone = true }, 700)
-      }
-      this.app.ticker.add(slow)
-      const fade = setInterval(() => {
-        overlay.alpha -= 0.05
-        if (overlay.alpha <= 0) {
-          clearInterval(fade)
-          this.app.ticker.remove(slow)
-          overlay.destroy({ children: true })
-        }
-      }, 50)
+      tag.alpha = 1
+      const timer = window.setTimeout(() => { overlay.destroy({ children: true }); this.transitCleanup = null }, 600)
+      this.transitCleanup = () => { clearTimeout(timer); if (!overlay.destroyed) overlay.destroy({ children: true }) }
       return
     }
 
@@ -176,8 +203,8 @@ export class Game {
         : elapsed < T_RAMP + T_HOLD ? 1
         : Math.max(0, 1 - (elapsed - T_RAMP - T_HOLD) / T_FADE)
       if (elapsed >= T_TOTAL) {
-        this.app.ticker.remove(tick)
-        overlay.destroy({ children: true })
+        this.transitCleanup?.()
+        this.transitCleanup = null
         return
       }
       g.clear()
@@ -216,17 +243,23 @@ export class Game {
       tag.scale.set(sc)
     }
     this.app.ticker.add(tick)
+    this.transitCleanup = () => { this.app.ticker.remove(tick); if (!overlay.destroyed) overlay.destroy({ children: true }) }
   }
 
 
   destroy() {
-    this.galaxy?.destroy()
-    this.galaxy = null
+    this.transitCleanup?.()
+    this.transitCleanup = null
+    this.actions?.remove()
+    this.actions = null
+    this.description?.remove()
+    this.description = null
     this.observer?.disconnect()
     this.observer = null
     this.current?.destroy()
     this.current = null
     this.app.destroy(true, { children: true })
+    this.host = null
   }
 }
 

@@ -1,6 +1,6 @@
 import { gameLevels } from '@/game/levels'
 import { engineOf, lyOf, nextMilestone, rankOf, medalLyFactor, unlockedAlgos } from '@/game/core/xp'
-import { loadSave } from '@/game/save'
+import { loadCourseSave, loadSave } from '@/game/save'
 import { t, zh, medalName, type AlgoId, type LevelId } from '@/game/locale'
 import { ArrowRight, BookMarked, Compass, Route } from 'lucide-react'
 
@@ -11,6 +11,7 @@ import { ArrowRight, BookMarked, Compass, Route } from 'lucide-react'
  */
 export function VoyageLog({ onOpenGame }: { onOpenGame: () => void }) {
   const save = loadSave()
+  const courseRecords = Object.entries(loadCourseSave()).map(([id, entry]) => ({ id, completedAt: Object.values(entry.attempts).map(record => record?.completedAt).filter((date): date is string => Boolean(date)).sort().at(-1) })).filter(record => record.completedAt && zh.course.missions[record.id]).sort((a, b) => b.completedAt!.localeCompare(a.completedAt!))
   const ly = lyOf(save, gameLevels)
   const rank = rankOf(ly)
   const engine = engineOf(ly)
@@ -22,7 +23,6 @@ export function VoyageLog({ onOpenGame }: { onOpenGame: () => void }) {
 
   return <div className="voyage-log">
     <div className="voyage-banner">
-      <img src="/astro/banner.jpg" alt="" onError={event => { event.currentTarget.style.display = 'none' }} />
       <div className="voyage-banner-veil" aria-hidden="true" />
       <div className="voyage-banner-copy">
         <p className="eyebrow">{t('hud.bannerEyebrow')}</p>
@@ -30,6 +30,11 @@ export function VoyageLog({ onOpenGame }: { onOpenGame: () => void }) {
         <p>{t('hud.voyageMotto')}</p>
       </div>
     </div>
+
+    <section className="voyage-panel">
+      <h3><BookMarked size={15} />{t('course.logProgress')}</h3>
+      {courseRecords.length ? courseRecords.map(record => <div className="course-log-record" key={record.id}><span>{zh.course.missions[record.id].title}</span><small>{new Date(record.completedAt!).toLocaleString('zh-CN', { timeZone: 'Asia/Taipei', dateStyle: 'medium', timeStyle: 'short' })}</small></div>) : <p className="course-log-empty">{t('course.logEmpty')}</p>}
+    </section>
 
     <section className="voyage-panel">
       <h3><Compass size={15} />{t('hud.captainFile')}</h3>
@@ -50,9 +55,8 @@ export function VoyageLog({ onOpenGame }: { onOpenGame: () => void }) {
           const text = zh.level[level.id as LevelId]
           return <button type="button" key={level.id} className="voyage-leg" onClick={onOpenGame}>
             <span className="voyage-leg-thumb">
-              <img src={`/astro/leg-${index + 1}.jpg`} alt="" onError={event => { event.currentTarget.style.display = 'none' }} />
             </span>
-            <span className="voyage-leg-copy"><b>{text.title}</b><small>{text.destination} · {level.ly} 光年</small></span>
+            <span className="voyage-leg-copy"><b>{text.title}</b><small>{text.destination} · {t('course.lightYear', { n: level.ly })}</small></span>
             <span className="voyage-leg-meta">{record ? t('hud.legMeta', { medal: medalName(record.medal), ly: (level.ly * medalLyFactor[record.medal]).toFixed(2) }) : t('hud.legLocked')}</span>
             <ArrowRight size={14} />
           </button>

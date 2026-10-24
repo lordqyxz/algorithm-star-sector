@@ -2,11 +2,11 @@ import { Container, Graphics, Text } from 'pixi.js'
 
 /** 深空航行主题（真实天文意象：银河带 + 背景恒星，位置用固定种子保证可复现）。 */
 export const SPACE = {
-  bg: 0x0b1220,
-  band: 0x1c2742,
-  text: 0xd9e3f3,
-  muted: 0x8fa3c0,
-  faint: 0x5a6c88,
+  bg: 0x050d11,
+  band: 0x0b2026,
+  text: 0xe9eee8,
+  muted: 0xa0b6b7,
+  faint: 0x829698,
   star: 0xffffff,
 } as const
 
@@ -45,32 +45,32 @@ export function makeSpaceBackdrop(parent: Container, width: number, height: numb
 /** 游戏 UI 工具：与站点一致的语义色与面板语言。 */
 
 export const C = {
-  bg: 0xeef2f7,
-  panel: 0xffffff,
-  border: 0xd7e0eb,
-  ink: 0x172235,
-  muted: 0x607087,
-  faint: 0x9aa8ba,
-  blue: 0x2f60d6,
-  blueBg: 0xe7edff,
-  green: 0x12866d,
-  greenBg: 0xdcf4ec,
-  greenBorder: 0x74c9ae,
-  orange: 0xd96643,
-  orangeBg: 0xfff0e9,
-  yellow: 0xb27800,
-  yellowBg: 0xfff0bf,
-  purple: 0x7659d5,
-  purpleBg: 0xf7f4ff,
-  purpleBorder: 0xc5b9ec,
-  cellBg: 0xf3f6f9,
-  cellBorder: 0xcbd5e2,
-  dim: 0x172235,
+  bg: 0x050d11,
+  panel: 0x09191e,
+  border: 0x294146,
+  ink: 0xe9eee8,
+  muted: 0xa0b6b7,
+  faint: 0x829698,
+  blue: 0x9bd8da,
+  blueBg: 0x163137,
+  green: 0x91ba93,
+  greenBg: 0x132b25,
+  greenBorder: 0x497764,
+  orange: 0xd98272,
+  orangeBg: 0x30221f,
+  yellow: 0xc7996b,
+  yellowBg: 0x30291e,
+  purple: 0xb4a8cf,
+  purpleBg: 0x242331,
+  purpleBorder: 0x605772,
+  cellBg: 0x142a30,
+  cellBorder: 0x385157,
+  dim: 0x050d11,
   disabled: 0x2a3a55,
   disabledBorder: 0x51637f,
 } as const
 
-export const SANS = 'Inter, "PingFang SC", "Microsoft YaHei", sans-serif'
+export const SANS = '"Avenir Next", "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif'
 export const MONO = 'ui-monospace, Menlo, monospace'
 
 export type FontWeight = 'normal' | 'bold' | '100' | '200' | '300' | '400' | '500' | '600' | '700' | '800' | '900'
@@ -94,7 +94,7 @@ export function makeText(parent: Container, x: number, y: number, content: strin
 
 export function makePanel(parent: Container, x: number, y: number, w: number, h: number, opts: { fill?: number; stroke?: number; radius?: number; alpha?: number } = {}): Graphics {
   const g = new Graphics()
-  g.roundRect(x, y, w, h, opts.radius ?? 11)
+  g.roundRect(x, y, w, h, opts.radius ?? 3)
   g.fill({ color: opts.fill ?? C.panel, alpha: opts.alpha ?? 1 })
   g.stroke({ width: 1, color: opts.stroke ?? C.border })
   parent.addChild(g)
@@ -215,21 +215,21 @@ export function makeButton(parent: Container, opts: { x: number; y: number; w?: 
   const padX = 14
   const iconPad = opts.icon ? 26 : 0
   let fontSize = opts.size ?? 13
-  const label = new Text({ text: opts.label, resolution: 3, style: { fontFamily: SANS, fontSize, fontWeight: '700', fill: variant === 'solid' ? 0xffffff : variant === 'ghost' ? C.muted : C.ink } })
+  const label = new Text({ text: opts.label, resolution: 3, style: { fontFamily: SANS, fontSize, fontWeight: '500', fill: variant === 'solid' ? C.bg : variant === 'ghost' ? C.muted : C.ink } })
   label.anchor.set(0.5, 0.5)
   const measure = () => Math.ceil(label.width) + padX * 2 + iconPad
   const auto = opts.w === undefined
   let w = opts.w ?? 0
   const draw = (enabled: boolean) => {
     bg.clear()
-    bg.roundRect(0, 0, w, h, 7)
+    bg.roundRect(0, 0, w, h, 2)
     if (variant === 'solid') {
       bg.fill({ color: enabled ? C.blue : C.disabled })
     } else if (variant === 'outline') {
-      bg.fill({ color: 0xffffff, alpha: enabled ? 1 : 0.45 })
-      bg.stroke({ width: 1, color: enabled ? 0xcbd5e2 : C.disabledBorder })
+      bg.fill({ color: C.panel, alpha: enabled ? 1 : 0.45 })
+      bg.stroke({ width: 1, color: enabled ? C.border : C.disabledBorder })
     } else {
-      bg.fill({ color: 0xffffff, alpha: enabled ? 0.7 : 0.25 })
+      bg.fill({ color: C.panel, alpha: enabled ? 0.7 : 0.25 })
     }
   }
   const layout = () => {
@@ -238,7 +238,7 @@ export function makeButton(parent: Container, opts: { x: number; y: number; w?: 
     draw(enabled)
     label.position.set(opts.icon ? (iconPad + w - padX) / 2 : w / 2, h / 2)
   }
-  const iconColor = variant === 'solid' ? 0xffffff : variant === 'ghost' ? C.muted : C.blue
+  const iconColor = variant === 'solid' ? C.bg : variant === 'ghost' ? C.muted : C.blue
   if (opts.icon) {
     const glyph = new Graphics()
     drawGlyph(glyph, opts.icon, 11, h / 2 - 7.5, iconColor)

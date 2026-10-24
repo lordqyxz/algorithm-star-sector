@@ -1,1 +1,3 @@
 packages: []
+minimumReleaseAgeExclude:
+  - katex@0.19.1

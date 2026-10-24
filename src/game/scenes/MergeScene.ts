@@ -54,7 +54,8 @@ export class MergeScene implements GameScene {
     this.rightRail.container.on('pointerdown', () => this.pick('right'))
 
     this.keyHandler = (event: KeyboardEvent) => {
-      if (event.metaKey || event.ctrlKey || event.altKey) return
+      const modal = document.querySelector('[aria-modal="true"]')
+      if (event.metaKey || event.ctrlKey || event.altKey || (modal && !modal.contains(this.game.app.canvas))) return
       const key = event.key.toLowerCase()
       if (key === 'l') this.pick('left')
       if (key === 'r') this.pick('right')
@@ -65,6 +66,7 @@ export class MergeScene implements GameScene {
   }
 
   private pick(side: 'left' | 'right') {
+    if (this.state.done) return
     const { state, ok } = mergePick(this.state, side)
     this.state = state
     if (!ok) this.flashReject(side)
@@ -73,8 +75,9 @@ export class MergeScene implements GameScene {
 
   private flashReject(side: 'left' | 'right') {
     const rail = side === 'left' ? this.leftRail : this.rightRail
+    if (this.flashTimer !== null) { window.clearTimeout(this.flashTimer); this.leftRail.container.x = 0; this.rightRail.container.x = 0 }
     rail.container.x += 6
-    window.setTimeout(() => { rail.container.x -= 6 }, 90)
+    this.flashTimer = window.setTimeout(() => { rail.container.x -= 6; this.flashTimer = null }, 90)
   }
 
   private refresh(level: MergeLevel) {
@@ -118,14 +121,14 @@ export class MergeScene implements GameScene {
     const lyGained = Math.round((newLy - oldLy) * 100) / 100
 
     overlayDim(this.dynamic)
-    makePanel(this.dynamic, 200, 130, 560, 290, { stroke: C.greenBorder, fill: 0xf0fbf6 })
+    makePanel(this.dynamic, 200, 130, 560, 290, { stroke: C.greenBorder, fill: C.greenBg })
     makeText(this.dynamic, 232, 158, `${t('ui.mergeWinLine', { medal: medalName(medal), n: this.state.attempts })} · ${t('ui.lyGain', { ly: lyGained.toFixed(2) })}`, { size: 19, color: C.green, weight: '800' })
     makeText(this.dynamic, 232, 200, t('ui.mergeWinRule', { n: this.state.out.length + this.state.left.length + this.state.right.length }), { size: 13, color: C.ink, wordWrap: 500, lineHeight: 20 })
     const hintY = drawMilestones(this.dynamic, 232, 248, oldLy, newLy)
     makeText(this.dynamic, 232, hintY + 4, this.state.attempts <= level.par.attempts ? t('ui.mergeWinPerfect') : t('ui.mergeWinMiss'), { size: 12, color: C.muted, wordWrap: 500 })
     const btnY = hintY + 96 > 340 ? 340 : hintY + 96
     makeButton(this.dynamic, { x: 232, y: btnY, w: 112, label: t('ui.dossierOpen'), variant: 'outline', onTap: () => this.openDossier() })
-    makeButton(this.dynamic, { x: 360, y: btnY, w: 112, label: t('ui.mergeAgain'), variant: 'outline', onTap: () => { this.state = initMerge(level.variants[0].cells); this.refresh(level) } })
+    makeButton(this.dynamic, { x: 360, y: btnY, w: 112, label: t('ui.mergeAgain'), variant: 'outline', onTap: () => { this.savedKeys.delete(level.id); this.state = initMerge(level.variants[0].cells); this.refresh(level) } })
     if (this.rest.length > 0) makeButton(this.dynamic, { x: 488, y: btnY, w: 112, label: t('ui.nextLevel'), variant: 'solid', onTap: () => openLevel(this.game, this.rest[0], this.rest.slice(1)) })
     makeButton(this.dynamic, { x: this.rest.length > 0 ? 616 : 488, y: btnY, w: 112, label: t('ui.backToMap'), variant: 'ghost', onTap: () => this.backToMap() })
   }
@@ -135,6 +138,7 @@ export class MergeScene implements GameScene {
   }
 
   destroy() {
+    if (this.flashTimer !== null) window.clearTimeout(this.flashTimer)
     this.dossierClose?.()
     window.removeEventListener('keydown', this.keyHandler)
     this.container.destroy({ children: true })

@@ -97,7 +97,8 @@ export class CommandScene implements GameScene {
     makeButton(this.container, { x: 866, y: 282, w: 70, label: t('ui.clear'), variant: 'ghost', onTap: () => { this.stopRun(); this.program = []; this.runner = initProgram(); this.refresh() } })
 
     this.keyHandler = (event: KeyboardEvent) => {
-      if (event.metaKey || event.ctrlKey || event.altKey) return
+      const modal = document.querySelector('[aria-modal="true"]')
+      if (event.metaKey || event.ctrlKey || event.altKey || (modal && !modal.contains(this.game.app.canvas))) return
       if (event.code === 'Space') { event.preventDefault(); this.toggleRun(); return }
       if (event.key === 'Backspace') { event.preventDefault(); if (!this.running) { this.program = this.program.slice(0, -1); this.refresh() } return }
       const index = Number(event.key) - 1
@@ -216,7 +217,7 @@ export class CommandScene implements GameScene {
 
     const dim = makePanel(this.dynamic, 0, 0, 960, 600, { fill: C.dim, alpha: 0.35, radius: 0 })
     dim.eventMode = 'static'
-    makePanel(this.dynamic, 200, 150, 560, 300, { stroke: C.greenBorder, fill: 0xf0fbf6 })
+    makePanel(this.dynamic, 200, 150, 560, 300, { stroke: C.greenBorder, fill: C.greenBg })
     makeText(this.dynamic, 232, 172, t('ui.cmdWinLine', { medal: medalName(medal), n: this.program.length, ly: lyGained.toFixed(2) }), { size: 19, color: C.green, weight: '800' })
     makeText(this.dynamic, 232, 210, t('ui.cmdWinStats', { n: this.runner.steps, a: this.program.length, b: this.level.slots, par: this.level.par.cards }), { size: 14, color: C.ink, family: 'ui-monospace, Menlo, monospace' })
     const hintY = drawMilestones(this.dynamic, 232, 244, oldLy, newLy)

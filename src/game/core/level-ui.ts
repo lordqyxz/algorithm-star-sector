@@ -79,7 +79,7 @@ export function paintSocket(body: Graphics, cell: number): void {
 }
 export class CellRowView {
   readonly container = new Container()
-  private views = new Map<string, { container: Container; body: Graphics; sprite: Sprite; label: Text; kind: CellRowTone; col: number }>()
+  private views = new Map<string, { container: Container; body: Graphics; sprite: Sprite; label: Text; kind: CellRowTone; col: number; animation: ReturnType<typeof animate> | null }>()
   private bracket = new Graphics()
   private cellsLayer = new Container()
   private pointers = new Container()
@@ -132,7 +132,9 @@ export class CellRowView {
         container.position.set(this.opts.x + index * (cell + gap), this.opts.y)
         this.cellsLayer.addChild(container)
         this.paint({ body, sprite }, label, item, options.slotAt === index)
-        this.views.set(item.id, { container, body, sprite, label, kind: item.tone, col: index })
+        const created = { container, body, sprite, label, kind: item.tone, col: index, animation: null as ReturnType<typeof animate> | null }
+        container.once('destroyed', () => created.animation?.cancel())
+        this.views.set(item.id, created)
         return
       }
       if (view.kind !== item.tone) { view.kind = item.tone }
@@ -141,8 +143,9 @@ export class CellRowView {
       const targetX = this.opts.x + index * (cell + gap)
       if (view.col !== index) {
         view.col = index
+        view.animation?.cancel()
         if (reduceMotion) view.container.position.set(targetX, this.opts.y)
-        else animate(view.container, { x: targetX, duration: 220, ease: 'out(3)' })
+        else view.animation = animate(view.container, { x: targetX, duration: 220, ease: 'out(3)' })
       }
     })
     this.views.forEach((view, id) => {
@@ -240,7 +243,7 @@ export function openDossierOverlay(parent: Container, opts: { algo: AlgoId; onCl
     layer.removeChildren().forEach(child => child.destroy({ children: true }))
     const dim = makePanel(layer, 0, 0, 960, 600, { fill: C.dim, alpha: 0.5, radius: 0 })
     dim.eventMode = 'static'
-    makePanel(layer, 120, 50, 720, 516, { stroke: C.purple, fill: 0xf9f8ff })
+    makePanel(layer, 120, 50, 720, 516, { stroke: C.purple, fill: C.panel })
     makeText(layer, 148, 72, t('ui.dossierTitle', { name: algo.name, en: algo.en }), { size: 15, weight: '800', color: C.ink })
     makeButton(layer, { x: 724, y: 66, w: 96, label: t('ui.dossierClose'), variant: 'outline', size: 11, onTap: close })
     const section = (y: number, header: string, color: number, content: string) => {

@@ -29,7 +29,7 @@ export class ProbeScene implements GameScene {
     const text = zh.level[this.level.id as LevelId]
     const chrome = makeLevelChrome(this.container, { title: levelHeading(text), brief: text.brief, algo: level.algo, onBack: () => this.backToMap() })
     this.dynamic = chrome.dynamic
-    this.rail = new CellRowView({ x: RAIL_X, y: RAIL_Y })
+    this.rail = new CellRowView({ x: RAIL_X, y: RAIL_Y, gap: 6 })
     chrome.container.addChild(this.rail.container)
     this.container.addChild(this.hits)
     this.state = initProbe(level.variants[0].cells)
@@ -37,7 +37,8 @@ export class ProbeScene implements GameScene {
     makeText(chrome.controls, 24, 292, t('ui.probeRule'), { size: 11, color: C.faint, wordWrap: 900 })
 
     this.keyHandler = (event: KeyboardEvent) => {
-      if (event.metaKey || event.ctrlKey || event.altKey) return
+      const modal = document.querySelector('[aria-modal="true"]')
+      if (event.metaKey || event.ctrlKey || event.altKey || (modal && !modal.contains(this.game.app.canvas))) return
       const index = Number(event.key)
       if (!Number.isNaN(index) && index >= 1) this.probe(index - 1)
     }
@@ -46,6 +47,7 @@ export class ProbeScene implements GameScene {
   }
 
   private probe(index: number) {
+    if (this.state.done) return
     this.state = probeAt(this.level.variants[0].cells, this.level.variants[0].target, this.state, index)
     this.refresh(this.level)
   }
@@ -118,14 +120,14 @@ export class ProbeScene implements GameScene {
     const lyGained = Math.round((newLy - oldLy) * 100) / 100
 
     overlayDim(this.dynamic)
-    makePanel(this.dynamic, 200, 150, 560, 290, { stroke: C.greenBorder, fill: 0xf0fbf6 })
+    makePanel(this.dynamic, 200, 150, 560, 290, { stroke: C.greenBorder, fill: C.greenBg })
     makeText(this.dynamic, 232, 172, `${t('ui.probeWinLine', { medal: medalName(medal), n: probes })} · ${t('ui.lyGain', { ly: lyGained.toFixed(2) })}`, { size: 21, color: C.green, weight: '800' })
     makeText(this.dynamic, 232, 212, t('ui.probeWinLog', { n: level.variants[0].cells.length, m: level.par.probes }), { size: 13, color: C.ink })
     const hintY = drawMilestones(this.dynamic, 232, 246, oldLy, newLy)
     makeText(this.dynamic, 232, hintY + 4, probes <= level.par.probes ? t('ui.probeWinPerfect') : t('ui.probeWinHint', { m: level.par.probes }), { size: 12, color: C.muted, wordWrap: 500 })
     const btnY = hintY + 96 > 340 ? 340 : hintY + 96
     makeButton(this.dynamic, { x: 232, y: btnY, w: 112, label: t('ui.dossierOpen'), variant: 'outline', onTap: () => this.openDossier() })
-    makeButton(this.dynamic, { x: 360, y: btnY, w: 112, label: t('ui.probeAgain'), variant: 'outline', onTap: () => { this.state = initProbe(level.variants[0].cells); this.refresh(level) } })
+    makeButton(this.dynamic, { x: 360, y: btnY, w: 112, label: t('ui.probeAgain'), variant: 'outline', onTap: () => { this.savedKeys.delete(level.id); this.state = initProbe(level.variants[0].cells); this.refresh(level) } })
     if (this.rest.length > 0) makeButton(this.dynamic, { x: 488, y: btnY, w: 112, label: t('ui.nextLevel'), variant: 'solid', onTap: () => openLevel(this.game, this.rest[0], this.rest.slice(1)) })
     makeButton(this.dynamic, { x: this.rest.length > 0 ? 616 : 488, y: btnY, w: 112, label: t('ui.backToMap'), variant: 'ghost', onTap: () => this.backToMap() })
   }

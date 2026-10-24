@@ -39,7 +39,7 @@ let available: boolean | null = null
 export async function loadSprites(): Promise<boolean> {
   if (available !== null) return available
   try {
-    await Assets.load<Record<string, never>>({ src: { ...spriteUrls } as never })
+    await Assets.load(Object.values(spriteUrls))
     available = true
   } catch {
     available = false

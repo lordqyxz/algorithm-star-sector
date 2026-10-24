@@ -87,3 +87,46 @@ export type GameLevel = ExecuteLevel | ProbeLevel | CommandLevel | MergeLevel
 
 export type SaveRecord = { medal: MedalTone; moves: number; compares: number }
 export type SaveData = { [levelVariantId: string]: SaveRecord }
+
+/** Course simulations are deterministic snapshots. Renderers never decide algorithm rules. */
+export type TraceTone = 'active' | 'settled' | 'muted' | 'red' | 'black'
+export type TraceItem = { id: string; value: string | number; label?: string; tone?: TraceTone }
+export type TraceNode = TraceItem & { x: number; y: number }
+export type TraceEdge = { from: string; to: string; weight?: string | number; directed?: boolean; tone?: TraceTone }
+export type TraceOperation = 'start' | 'compare' | 'swap' | 'visit' | 'insert' | 'remove' | 'select' | 'split' | 'merge' | 'relax' | 'update' | 'reject' | 'done'
+export type TraceFrame = {
+  op: TraceOperation
+  formula: string
+  items?: TraceItem[]
+  nodes?: TraceNode[]
+  edges?: TraceEdge[]
+  groups?: { id: string; items: TraceItem[] }[]
+  matrix?: { rows: string[]; columns: string[]; values: (number | string)[][]; active?: [number, number] }
+  output?: TraceItem[]
+  counters: Record<string, number | string>
+  /** Computed answer for independent checks; never a diagram label or serialized UI tile. */
+  result?: unknown
+}
+export type CourseSource = 'combined' | 'structures' | 'design' | 'advanced' | 'ai'
+export type CourseMission = {
+  id: string
+  chapter: string
+  sources: CourseSource[]
+  trace: (variant: 0 | 1) => TraceFrame[]
+}
+export type MissionCopy = {
+  title: string
+  objective: string
+  invariant: string
+  complexity: string
+  explanation: string
+  transfer: string
+  prediction: { prompt: string; options: string[]; answer: number; explanation: string }
+  theory?: {
+    conditions: string
+    claim: string
+    steps: string[]
+    boundary: string
+    transfer: { prompt: string; options: string[]; answer: number; explanation: string }
+  }
+}
