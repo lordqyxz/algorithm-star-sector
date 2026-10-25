@@ -1,3 +1,9 @@
+import { classroomRemainingMissions } from './simulation/classroom-remaining'
+import { classroomApproxExamMissions } from './simulation/classroom-approx-exam'
+import { classroomGraphsMissions } from './simulation/classroom-graphs'
+import { classroomGreedyStringsMissions } from './simulation/classroom-greedy-strings'
+import { classroomDpMissions } from './simulation/classroom-dp'
+import { classroomSelectionMissions } from './simulation/classroom-selection'
 import type { Card, ExecuteCommand, ExecuteState, MedalTone } from '@/game/types'
 import { structuresMissions } from './simulation/structures'
 import { treesMissions } from './simulation/trees'
@@ -13,6 +19,12 @@ export type { LabKind, LabState, LabAction, LabChoice, LabFeedback } from './sim
 export const courseMissions = [
   ...structuresMissions, ...treesMissions, ...graphsMissions, ...sortingMissions,
   ...algorithmsMissions, ...advancedMissions, ...optimizationMissions,
+  ...classroomRemainingMissions,
+  ...classroomApproxExamMissions,
+  ...classroomGraphsMissions,
+  ...classroomGreedyStringsMissions,
+  ...classroomDpMissions,
+  ...classroomSelectionMissions,
 ]
 
 /**

@@ -3,7 +3,7 @@ import type { Game, GameAction, GameScene } from '../core/app'
 import { C, MONO, makeButton, makePanel, makeText } from '../core/ui'
 import { TraceView } from '../core/trace-view'
 import type { FormulaView } from '../core/formula-view'
-import { missionFormula, stateFormula } from '../core/formulas'
+import { calculationFormula, missionFormula, stateFormula } from '../core/formulas'
 import { t, zh } from '../locale'
 import { courseMissions } from '../sim'
 import { loadCourseSave, saveCourseRecord } from '../save'
@@ -11,6 +11,8 @@ import type { CourseMission, TraceFrame } from '../types'
 import type { ChapterId } from '../curriculum'
 import { CourseMapScene } from './CourseMapScene'
 import { LabScene, labMissions } from './LabScene'
+import { ClassroomScene } from './ClassroomScene'
+import { classroomSources, classroomUnits, type ClassroomUnit } from '../classroom'
 import type { LabKind } from '../sim'
 
 /** A replayable command cursor over immutable algorithm snapshots. Pixi owns the whole interaction. */
@@ -38,6 +40,7 @@ export class CourseScene implements GameScene {
   constructor(
     private game: Game,
     private mission: CourseMission,
+    private classroomUnitId?: ClassroomUnit['id'],
   ) {
     const saved = loadCourseSave()[mission.id]
     this.variant = saved?.variant ?? 0
@@ -170,7 +173,9 @@ export class CourseScene implements GameScene {
   private back() {
     this.persist()
     this.game.switch(
-      (g) => new CourseMapScene(g, this.mission.chapter as ChapterId),
+      (g) => this.classroomUnitId
+        ? new ClassroomScene(g, this.classroomUnitId)
+        : new CourseMapScene(g, this.mission.chapter as ChapterId),
     )
   }
   private changeInput() {
@@ -254,6 +259,16 @@ export class CourseScene implements GameScene {
     const copy = zh.course.missions[this.mission.id]
     if (!copy) throw new Error(`Missing mission copy: ${this.mission.id}`)
     const frame = this.frames[this.cursor]
+    const classroomUnit = this.classroomUnitId
+      ? classroomUnits.find(unit => unit.id === this.classroomUnitId)
+      : this.mission.sources.includes('classroom')
+        ? classroomUnits.find(unit => unit.missions.some(ref => ref.id === this.mission.id))
+        : undefined
+    const reference = classroomUnit?.missions.find(ref => ref.id === this.mission.id)
+    const source = classroomSources.find(item => item.id === classroomUnit?.sourceId)
+    const citation = source && reference ? t('classroom.citation', {
+      file: source.file, pages: reference.pages.join(', '),
+    }) : ''
     this.game.setDescription(
       [
         copy.title,
@@ -274,6 +289,7 @@ export class CourseScene implements GameScene {
           (edge) =>
             `${edge.from} ${edge.directed ? '→' : '↔'} ${edge.to} ${edge.weight ?? ''}`,
         ),
+        citation,
       ].join('. '),
     )
     const complete =
@@ -288,7 +304,7 @@ export class CourseScene implements GameScene {
       x: pad,
       y: 20,
       h: 36,
-      label: `← ${t('course.title')}`,
+      label: `← ${this.classroomUnitId ? t('classroom.entry') : t('course.title')}`,
       variant: 'outline',
       size: 12,
       onTap: () => this.back(),
@@ -331,34 +347,40 @@ export class CourseScene implements GameScene {
         },
       })
 
+    let goalY = mobile ? 169 : 166
+    if (citation) {
+      const sourceText = makeText(this.chrome, pad, goalY, citation, {
+        size: 11, color: C.blue, wordWrap: mainW, lineHeight: 18,
+      })
+      goalY += sourceText.height + 12
+    }
     const goal = makeText(
       this.chrome,
       pad,
-      mobile ? 169 : 166,
+      goalY,
       copy.objective,
       { size: 14, color: C.muted, wordWrap: mainW, lineHeight: 23 },
     )
-    const viewY = (mobile ? 169 : 166) + Math.max(30, goal.height) + 18
-    const viewH = mobile
-      ? 366
-      : stacked
-        ? 410
-        : Math.max(330, baseHeight - viewY - 236)
+    const viewY = goalY + Math.max(30, goal.height) + 18
+    const graphLayout =
+      this.mission.id === 'divide-closest-pair'
+        ? 'spatial'
+        : this.mission.chapter === 'trees' ||
+            ['sort-heap', 'sort-tournament', 'external-optimal-merge', 'ppt-select-tournament-topk'].includes(
+              this.mission.id,
+            )
+          ? 'tree'
+          : 'graph'
+    const viewH = Math.max(
+      mobile ? 366 : stacked ? 410 : Math.max(330, baseHeight - viewY - 236),
+      this.view.minimumHeight(frame, mainW - 24, graphLayout) + 20,
+    )
     makePanel(this.chrome, pad, viewY, mainW, viewH, {
       fill: 0x07161b,
       stroke: 0x385157,
     })
     this.view.container.position.set(pad + 12, viewY + 10)
-    const graphLayout =
-      this.mission.id === 'divide-closest-pair'
-        ? 'spatial'
-        : this.mission.chapter === 'trees' ||
-            ['sort-heap', 'sort-tournament', 'external-optimal-merge'].includes(
-              this.mission.id,
-            )
-          ? 'tree'
-          : 'graph'
-    this.view.update(frame, mainW - 24, viewH - 20, graphLayout)
+    this.view.update(frame, mainW - 24, viewH - 20, graphLayout, this.mission.sources.includes('classroom'))
     const progressY = viewY + viewH + 15
     const progress = new Graphics()
       .rect(pad, progressY, mainW, 2)
@@ -378,7 +400,8 @@ export class CourseScene implements GameScene {
       size: 15,
       color: C.blue,
     })
-    const formula = makeText(this.chrome, pad, evidenceY + 28, frame.formula, {
+    const calculation = calculationFormula(frame)
+    const formula = makeText(this.chrome, pad, evidenceY + 28, calculation ? t('course.calculationNote') : frame.formula, {
       size: 13,
       color: C.ink,
       family: MONO,
@@ -408,7 +431,7 @@ export class CourseScene implements GameScene {
     let sideY = stacked ? Math.max(mobile ? 778 : 760, counterY + 66) : 166
     this.math?.update(
       missionFormula(this.mission.id, frame),
-      stateFormula(frame),
+      calculation ?? stateFormula(frame),
       sideX,
       sideY,
       sideW,
@@ -437,10 +460,11 @@ export class CourseScene implements GameScene {
         sideY,
         sideW,
       )
-      const next =
-        courseMissions[
-          courseMissions.findIndex((m) => m.id === this.mission.id) + 1
-        ]
+      const route = this.classroomUnitId
+        ? classroomUnits.find(unit => unit.id === this.classroomUnitId)?.missions
+            .map(ref => courseMissions.find(mission => mission.id === ref.id)!) ?? []
+        : courseMissions
+      const next = route[route.findIndex(mission => mission.id === this.mission.id) + 1]
       if (next)
         makeButton(this.chrome, {
           x: sideX,
@@ -448,7 +472,7 @@ export class CourseScene implements GameScene {
           w: sideW,
           h: 44,
           label: t('course.continue'),
-          onTap: () => this.game.switch((g) => new CourseScene(g, next)),
+          onTap: () => this.game.switch((g) => new CourseScene(g, next, this.classroomUnitId)),
         })
     } else {
       sideY = this.paragraph(
@@ -482,7 +506,7 @@ export class CourseScene implements GameScene {
     const labKind = (Object.keys(labMissions) as LabKind[]).find(kind => labMissions[kind] === this.mission.id)
     if (labKind && !this.theoryOpen) makeButton(this.chrome, { x: w - 462, y: 24, w: 134, h: 36, label: t('lab.practiceEntry'), onTap: () => this.game.switch(g => new LabScene(g, labKind)) })
     const actions: GameAction[] = [
-      { label: t('course.back'), run: () => this.back() },
+      { label: this.classroomUnitId ? t('classroom.back') : t('course.back'), run: () => this.back() },
       {
         label: t('course.previous'),
         disabled: this.checkpoint || this.cursor === 0,

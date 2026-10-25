@@ -1,6 +1,32 @@
 import type { TraceFrame } from '../types'
 
 const formulas: Record<string, string> = {
+  'ppt-select-bfprt': String.raw`T(n)\le T(\lceil n/5\rceil)+T(7n/10+6)+O(n)`,
+  'ppt-select-topk': String.raw`H_i=\operatorname{largest}_k(A_1,\ldots,A_i)`,
+  'ppt-select-minmax': String.raw`C(n)=\lceil3n/2\rceil-2\quad(n\ge1)`,
+  'ppt-select-tournament-topk': String.raw`C\le n-1+k\lceil\log_2 n\rceil`,
+  'ppt-merge-kway': String.raw`\min H=\min\{\operatorname{head}(S_j):S_j\ne\varnothing\}`,
+  'ppt-dp-lis': String.raw`L_i=1+\max\bigl(\{L_j:j<i,\ A_j\le A_i\}\cup\{0\}\bigr)`,
+  'ppt-dp-weighted-interval': String.raw`D_i=\max(D_{i-1},w_i+D_{p(i)})`,
+  'ppt-dp-rod-cutting': String.raw`R_0=0,\quad R_n=\max_{1\le i\le n}(p_i+R_{n-i})`,
+  'ppt-divide-market': String.raw`\max_{i\le j}\{S_j-B_i\}`,
+  'ppt-greedy-post-office': String.raw`P=\min(H_{\mathrm{left}}+R,H_{\mathrm{last}})`,
+  'ppt-greedy-refuel': String.raw`\mathrm{buy}=\max(0,\mathrm{target}-\mathrm{fuel})`,
+  'ppt-string-rabin-karp': String.raw`h_{s+1}=\bigl(d(h_s-T_s d^{m-1})+T_{s+m}\bigr)\bmod q`,
+  'ppt-string-automaton': String.raw`\delta(q,a)=\max\{k:P_{1..k}\text{ suffix of }P_{1..q}a\}`,
+  'ppt-string-kmp-all': String.raw`q=m\Rightarrow\operatorname{report}(i-m+1),\ q\gets\pi_{m-1}`,
+  'ppt-graph-dfs-classification': String.raw`v\text{ descendant of }u\Rightarrow d_u<d_v<f_v<f_u`,
+  'ppt-graph-biconnected': String.raw`\begin{gathered}u\ne\mathrm{root},\ v\in\mathrm{children}(u)\\low_v\ge d_u\Rightarrow u\text{ cut vertex}\end{gathered}`,
+  'ppt-graph-dinic': String.raw`r_{uv}>0,\quad\ell_v=\ell_u+1`,
+  'ppt-graph-bipartite-matching': String.raw`\max |M|=\max |f|\quad(c_e=1)`,
+  'ppt-search-queens-fifo': String.raw`\operatorname{depth}(Q_1)\le\cdots\le\operatorname{depth}(Q_{|Q|})`,
+  'ppt-approx-max3sat': String.raw`\mathbb E[Y]=7m/8\ge7\,OPT/8`,
+  'ppt-approx-weighted-vertex-cover': String.raw`C=\{v:x_v^*\ge1/2\},\quad w(C)\le2LP^*\le2OPT`,
+  'ppt-sort-radix-base-n': String.raw`a=pn+q,\quad 0\le p,q<n,\quad T(n)=2O(n+n)`,
+  'ppt-np-review-committee': String.raw`S\text{ vertex cover}\iff\forall e=uv:\ S\cap\{u,v\}\ne\varnothing`,
+  'ppt-divide-max-subarray': String.raw`M(l,r)=\max(M_L,M_R,\mathrm{suffix}_L+\mathrm{prefix}_R)`,
+  'ppt-dp-multistage-longest': String.raw`D_{i,o}=\max_{p\in\{0,1\}}(D_{i-1,p}+R_{i-1,p}L_{i,o})`,
+  'ppt-graph-bipartite-color': String.raw`G\text{ bipartite}\iff\exists c:V\to\{0,1\}:\forall uv\in E,\ c_u\ne c_v`,
   'structure-sequence': String.raw`M_{\mathrm{insert}}=n-p,\quad M_{\mathrm{delete}}=n-p-1`,
   'structure-lists': String.raw`p.next=q,\quad q.prev=p`,
   'structure-stack-recursion': String.raw`T(n)=T(n-1)+\Theta(1)`,
@@ -147,6 +173,15 @@ function texValue(value: number | string): string {
 /** Symbolic reference relation for a mission, independent of the current frame prose. */
 export function missionFormula(id: string, frame: TraceFrame): string {
   return formulas[id] ?? stateFormula(frame)
+}
+
+/** A frame's own calculation when it contains TeX commands, otherwise prose. */
+export function calculationFormula(frame: TraceFrame): string | null {
+  const source = frame.formula.trim()
+  if (!/\\[a-zA-Z]+/.test(source)) return null
+  // An authored string may escape \quad twice. Do not collapse an aligned
+  // environment's legitimate \\ line break (including \\\quad).
+  return source.replace(/(?<!\\)\\\\(?=quad\b)/g, '\\')
 }
 
 /** A short equation containing only values present in this rendered frame. */

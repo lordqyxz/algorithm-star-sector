@@ -107,7 +107,7 @@ export type TraceFrame = {
   /** Computed answer for independent checks; never a diagram label or serialized UI tile. */
   result?: unknown
 }
-export type CourseSource = 'combined' | 'structures' | 'design' | 'advanced' | 'ai'
+export type CourseSource = 'combined' | 'structures' | 'design' | 'advanced' | 'ai' | 'classroom'
 export type CourseMission = {
   id: string
   chapter: string

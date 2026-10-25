@@ -15,6 +15,7 @@ import { gameLevels } from '../levels'
 import { CourseMapScene } from './CourseMapScene'
 import { LegacyMapScene } from './LegacyMapScene'
 import { LabScene } from './LabScene'
+import { ClassroomScene } from './ClassroomScene'
 
 /** The overview owns chapter selection; the React shell only chooses a site entry. */
 export class MapScene implements GameScene {
@@ -66,6 +67,7 @@ export class MapScene implements GameScene {
       },
     }))
     actions.push(
+      { label: t('classroom.entry'), run: () => this.game.switch(g => new ClassroomScene(g)) },
       { label: t('course.explore'), run: () => this.open() },
       { label: t('lab.entry'), run: () => this.game.switch(g => new LabScene(g)) },
       {
@@ -276,8 +278,8 @@ export class MapScene implements GameScene {
       this.container.addChild(node)
     })
 
-    const stripY = mobile ? 848 : h - 240
-    const stripH = mobile ? 236 : 162
+    const stripY = mobile ? 848 : h - 265
+    const stripH = mobile ? 236 : 188
     makePanel(this.container, centerX, stripY, centerW, stripH, {
       alpha: 0.93,
       stroke: 0x385157,
@@ -301,7 +303,7 @@ export class MapScene implements GameScene {
     makeText(
       this.container,
       centerX + 24,
-      stripY + 123,
+      stripY + 150,
       t('course.completed', {
         n: available.filter((m) => done.includes(m.id)).length,
         total: available.length,
@@ -310,11 +312,21 @@ export class MapScene implements GameScene {
     )
     makeButton(this.container, {
       x: mobile ? centerX + 24 : centerX + centerW - 230,
-      y: mobile ? stripY + 172 : stripY + 58,
+      y: mobile ? stripY + 172 : stripY + 47,
       w: mobile ? centerW - 48 : 202,
       h: 46,
       size: 14,
+      label: t('classroom.entry'),
+      onTap: () => this.game.switch(g => new ClassroomScene(g)),
+    })
+    if (!mobile) makeButton(this.container, {
+      x: centerX + centerW - 230,
+      y: stripY + 104,
+      w: 202,
+      h: 38,
+      size: 13,
       label: t('course.explore'),
+      variant: 'outline',
       onTap: () => this.open(),
     })
     if (!mobile) {

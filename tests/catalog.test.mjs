@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { courseMissions } from '../src/game/sim.ts'
 import { zh } from '../src/game/locale.ts'
 
-const sourceIds = new Set(['combined', 'structures', 'design', 'advanced', 'ai'])
+const sourceIds = new Set(['combined', 'structures', 'design', 'advanced', 'ai', 'classroom'])
 test('every course entry has unique identity, valid provenance and complete localized teaching copy', () => {
   const ids = courseMissions.map(mission => mission.id)
   assert.equal(new Set(ids).size, ids.length, 'duplicate mission identity')

@@ -2,7 +2,7 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import katex from 'katex'
 import { courseMissions } from '../src/game/sim.ts'
-import { missionFormula, stateFormula } from '../src/game/core/formulas.ts'
+import { calculationFormula, missionFormula, stateFormula } from '../src/game/core/formulas.ts'
 
 const parseMath = (source, label) => {
   assert.ok(source.length > 0, `${label}: formula should not be empty`)
@@ -10,13 +10,32 @@ const parseMath = (source, label) => {
 }
 
 test('every mission reference formula and frame readout parses in strict KaTeX mode', () => {
-  assert.equal(courseMissions.length, 104)
+  assert.equal(courseMissions.length, 130)
+  const calculatedMissions = new Set()
   for (const mission of courseMissions) for (const variant of [0, 1]) {
     for (const [index, frame] of mission.trace(variant).entries()) {
       parseMath(missionFormula(mission.id, frame), `${mission.id}/${variant}/reference`)
       parseMath(stateFormula(frame), `${mission.id}/${variant}/frame-${index}`)
+      const calculation = calculationFormula(frame)
+      if (/\\[a-zA-Z]+/.test(frame.formula))
+        assert.notEqual(calculation, null, `${mission.id}/${variant}/calculation-${index}: raw TeX must not be shown as prose`)
+      if (calculation !== null) {
+        calculatedMissions.add(mission.id)
+        parseMath(calculation, `${mission.id}/${variant}/calculation-${index}`)
+      }
     }
   }
+  for (const id of ['ppt-divide-max-subarray', 'ppt-dp-multistage-longest', 'ppt-graph-bipartite-color', 'ppt-dp-lis', 'ppt-dp-weighted-interval', 'ppt-dp-rod-cutting', 'ppt-divide-market'])
+    assert.ok(calculatedMissions.has(id), `${id}: frame calculations should render as TeX`)
+})
+
+test('calculation formula normalizes a double-escaped quad without damaging aligned line breaks', () => {
+  const frame = (formula) => ({ op: 'update', formula, counters: {} })
+  assert.equal(calculationFormula(frame(String.raw`R_n=1;\\quad C_n=2`)), String.raw`R_n=1;\quad C_n=2`)
+  const aligned = String.raw`\begin{aligned}a&=1\\\quad b&=2\end{aligned}`
+  assert.equal(calculationFormula(frame(aligned)), aligned)
+  parseMath(calculationFormula(frame(aligned)), 'aligned newline')
+  assert.equal(calculationFormula(frame('Compare two candidates, then keep the larger one.')), null)
 })
 
 test('matrix readout uses the selected cell value from the visible table', () => {
