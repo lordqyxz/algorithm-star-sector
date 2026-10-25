@@ -91,7 +91,12 @@ async (
       click('返回课程航线')
     }
     if (issues.length)
-      throw Error(JSON.stringify({ frames, issues: issues.slice(0, 12) }))
+      throw Error(JSON.stringify({
+        frames,
+        issueCount: issues.length,
+        missionIds: [...new Set(issues.map(issue => issue.id))],
+        issues: issues.slice(0, 12),
+      }))
     return { frames, issues }
   }, catalog)
 }

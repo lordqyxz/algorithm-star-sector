@@ -1,7 +1,8 @@
 import { gameLevels } from '@/game/levels'
 import { engineOf, lyOf, nextMilestone, rankOf, medalLyFactor, unlockedAlgos } from '@/game/core/xp'
 import { loadCourseSave, loadSave, loadLabSave } from '@/game/save'
-import { t, zh, medalName, type AlgoId, type LevelId } from '@/game/locale'
+import { loadExperimentSummaries } from '@/game/experiment-session'
+import { t, zh, medalName, type AlgoId, type LevelId, type TextKey } from '@/game/locale'
 import { ArrowRight, BookMarked, Compass, Route } from 'lucide-react'
 
 /**
@@ -12,6 +13,7 @@ import { ArrowRight, BookMarked, Compass, Route } from 'lucide-react'
 export function VoyageLog({ onOpenGame }: { onOpenGame: () => void }) {
   const save = loadSave()
   const labRecords = loadLabSave()
+  const experiments = loadExperimentSummaries()
   const labKinds = ['dijkstra', 'knapsack', 'maxflow'] as const
   const courseRecords = Object.entries(loadCourseSave()).map(([id, entry]) => ({ id, completedAt: Object.values(entry.attempts).map(record => record?.completedAt).filter((date): date is string => Boolean(date)).sort().at(-1) })).filter(record => record.completedAt && zh.course.missions[record.id]).sort((a, b) => b.completedAt!.localeCompare(a.completedAt!))
   const ly = lyOf(save, gameLevels)
@@ -34,13 +36,22 @@ export function VoyageLog({ onOpenGame }: { onOpenGame: () => void }) {
     </div>
 
     <section className="voyage-panel">
+      <h3><Route size={15} />{t('experiment.ui.explorationRecord')}</h3>
+      {experiments.map(record => <div className="course-log-record" key={record.kind}>
+        <span>{t(`experiment.kinds.${record.kind}`)}</span>
+        <small>{t('experiment.ui.explorationLog', record)}</small>
+      </div>)}
+      <p className="course-log-empty">{t('experiment.ui.explorationRecordNote')}</p>
+    </section>
+
+    <section className="voyage-panel">
       <h3><BookMarked size={15} />{t('course.logProgress')}</h3>
       {courseRecords.length ? courseRecords.map(record => <div className="course-log-record" key={record.id}><span>{zh.course.missions[record.id].title}</span><small>{new Date(record.completedAt!).toLocaleString('zh-CN', { timeZone: 'Asia/Taipei', dateStyle: 'medium', timeStyle: 'short' })}</small></div>) : <p className="course-log-empty">{t('course.logEmpty')}</p>}
     </section>
 
     <section className="voyage-panel">
       <h3><BookMarked size={15} />{t('lab.logTitle')}</h3>
-      {labKinds.map(kind => { const record = labRecords[kind]; const metrics = record?.independent ? record.independentMetrics : record?.assistedMetrics; return <div className="course-log-record" key={kind}><span>{zh.lab.kind[kind]} · {record?.independent ? t('lab.independent') : record?.assisted ? t('lab.assisted') : record?.viewed ? t('lab.observed') : t('lab.unseen')}</span><small>{record?.assisted || record?.independent ? t('lab.logDetails', { steps: metrics?.steps ?? 0, hints: metrics?.hints ?? 0, errors: metrics?.errors ?? 0 }) : ''}</small></div> })}
+      {labKinds.map(kind => { const record = labRecords[kind]; const metrics = record?.independentV2 ? record.independentMetricsV2 : record?.independent ? record.independentMetrics : record?.assistedMetrics; return <div className="course-log-record" key={kind}><span>{zh.lab.kind[kind]} · {record?.independentV2 ? t('lab.independent') : record?.independent ? t('lab.legacyIndependent' as TextKey) : record?.assisted ? t('lab.assisted') : record?.viewed ? t('lab.observed') : t('lab.unseen')}</span><small>{record?.assisted || record?.independent || record?.independentV2 ? t('lab.logDetails', { steps: metrics?.steps ?? 0, hints: metrics?.hints ?? 0, errors: metrics?.errors ?? 0 }) : ''}</small></div> })}
       <p className="course-log-empty">{t('lab.statusNote')}</p>
     </section>
 

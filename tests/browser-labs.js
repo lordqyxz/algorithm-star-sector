@@ -6,7 +6,7 @@ async (page, plans, url = 'http://127.0.0.1:4173/') => {
   await page.goto(url)
   await page.setViewportSize({width:1280,height:1100})
   await page.locator('.game-accessible-actions button').first().waitFor({state:'attached'})
-  await page.evaluate(()=>localStorage.removeItem('algorithmia-labs-v1'))
+  await page.evaluate(()=>{localStorage.removeItem('algorithmia-labs-v1');localStorage.removeItem('algorithmia-lab-exposure-v2')})
   const click=async label=>page.locator('.game-accessible-actions button').filter({hasText:label}).filter({hasNot:page.locator('[disabled]')}).all().then(async buttons=>{
     const exact=[];for(const button of buttons)if(await button.textContent()===label)exact.push(button)
     if(exact.length!==1)throw Error(`Ambiguous/missing ${label}`)
@@ -74,17 +74,28 @@ async (page, plans, url = 'http://127.0.0.1:4173/') => {
     }
     const revealed=await page.evaluate(kind=>JSON.parse(localStorage.getItem('algorithmia-labs-v1'))[kind],kind)
     if(!exposed||revealed.independent||!revealed.assisted||revealed.last.hints!==0||revealed.last.errors===0)throw Error('Answer-revealing error earned independent status')
+    const exposure=await page.evaluate(({kind,parameter})=>JSON.parse(localStorage.getItem('algorithmia-lab-exposure-v2'))[`v2:${kind}:1:${parameter}`],{kind,parameter:defaultParameter})
+    if(!exposure?.exposed||!exposure?.completed)throw Error('Challenge judgement was not permanently exposed')
+    await click('操练');await click('挑战')
+    if(!(await state()).exposed)throw Error('Mode switch washed challenge exposure')
     await click('重新操练 [R]')
     for(const step of challenge.steps){await click(step.label);commands++;await bounds()}
     if((await state()).result!==challenge.value)throw Error('Challenge answer mismatch')
+    const replayed=await page.evaluate(kind=>JSON.parse(localStorage.getItem('algorithmia-labs-v1'))[kind],kind)
+    if(replayed.independentV2)throw Error('Restart washed exposed judgement into independent completion')
+    await click('增加参数')
+    const fresh=plans[`${kind}:1:${defaultParameter+1}`]
+    if((await state()).parameter!==defaultParameter+1)throw Error('Did not reach a fresh challenge instance')
+    for(const step of fresh.steps){await click(step.label);commands++;await bounds()}
+    if((await state()).result!==fresh.value)throw Error('Fresh challenge answer mismatch')
     const independent=await page.evaluate(kind=>JSON.parse(localStorage.getItem('algorithmia-labs-v1'))[kind],kind)
-    if(!independent.independent||independent.independentMetrics?.hints!==0||independent.independentMetrics?.errors!==0)throw Error('Missing honest independent completion')
+    if(!independent.independentV2||independent.independentMetricsV2?.judgementVersion!==2||independent.independentMetricsV2?.hints!==0||independent.independentMetricsV2?.errors!==0)throw Error('Missing honest version-2 independent completion')
     if(kind==='dijkstra'){
-      const best=JSON.stringify(independent.independentMetrics)
+      const best=JSON.stringify(independent.independentMetricsV2)
       await click('操练');await click('提示')
       for(const step of plan.steps){await click(step.label);commands++}
       const later=await page.evaluate(kind=>JSON.parse(localStorage.getItem('algorithmia-labs-v1'))[kind],kind)
-      if(JSON.stringify(later.independentMetrics)!==best||later.assistedMetrics.hints!==1)throw Error('Assisted completion overwrote independent metrics')
+      if(JSON.stringify(later.independentMetricsV2)!==best||later.assistedMetrics.hints!==1)throw Error('Assisted completion overwrote independent metrics')
     }
     const beforeLeave=await state()
     await page.getByRole('button',{name:'星域总览',exact:true}).click()

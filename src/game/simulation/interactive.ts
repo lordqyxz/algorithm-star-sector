@@ -275,6 +275,23 @@ function residuals(state: MaxFlowLab) {
     },
   ])
 }
+
+/** Derive the edited edge from the actual input family, rather than a scene-side name. */
+export function labParameterTarget(state: LabState): string | null {
+  if (state.kind === 'knapsack') return null
+  const range = labParameter(state.kind)
+  const low = createLab(state.kind, state.variant, range.min)
+  const high = createLab(state.kind, state.variant, range.max)
+  if (low.kind === 'dijkstra' && high.kind === 'dijkstra') {
+    const edge = low.edges.find(item => high.edges.some(other => other.id === item.id && other.weight !== item.weight))
+    return edge ? `${edge.from}→${edge.to}` : null
+  }
+  if (low.kind === 'maxflow' && high.kind === 'maxflow') {
+    const edge = low.edges.find(item => high.edges.some(other => other.id === item.id && other.capacity !== item.capacity))
+    return edge ? `${edge.from}→${edge.to}` : null
+  }
+  return null
+}
 function reachable(state: MaxFlowLab) {
   const seen = new Set(['s']),
     queue = ['s'],

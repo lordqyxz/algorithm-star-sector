@@ -11,6 +11,7 @@ import {
   labFrame,
   labHint,
   labParameter,
+  labParameterTarget,
   labIsComplete,
   labReference,
   labSummary,
@@ -21,9 +22,10 @@ import {
   type LabChoice,
   type LabFeedback,
 } from '../sim'
-import { loadLabSave, saveLabRecord } from '../save'
+import { labChallengeStatus, loadLabSave, markLabChallenge, saveLabRecord } from '../save'
 import { t, zh, type TextKey } from '../locale'
 import { CourseMapScene } from './CourseMapScene'
+import { ExperimentScene } from './ExperimentScene'
 
 export type LabMode = 'demo' | 'practice' | 'challenge'
 export const labMissions: Record<LabKind, string> = {
@@ -120,7 +122,7 @@ export class LabScene implements GameScene {
         event.preventDefault()
         this.demoNext()
       } else if (/^[1-9]$/.test(event.key) && this.mode !== 'demo') {
-        const choice = labChoices(this.state)[Number(event.key) - 1]
+        const choice = this.shownChoices()[Number(event.key) - 1]
         if (choice) this.act(choice.action)
       }
     }
@@ -161,6 +163,13 @@ export class LabScene implements GameScene {
     }
     const complete = labIsComplete(this.state)
     const date = new Date().toISOString()
+    const challenge = this.mode === 'challenge'
+    const status = challenge
+      ? labChallengeStatus(this.kind, this.state.variant, this.state.parameter)
+      : null
+    const independent = challenge && complete && !status?.exposed && !status?.completed && this.hints === 0 && this.errors === 0
+    if (challenge && complete)
+      markLabChallenge(this.kind, this.state.variant, this.state.parameter, { completed: true })
     saveLabRecord(this.kind, {
       last: {
         mode: this.mode,
@@ -172,20 +181,17 @@ export class LabScene implements GameScene {
       },
       ...(complete
         ? {
-            [this.mode === 'challenge' && this.hints === 0 && this.errors === 0
-              ? 'independent'
-              : 'assisted']: date,
+            ...(independent ? { independentV2: date } : { assisted: date }),
             steps: this.actions.length,
             hints: this.hints,
             errors: this.errors,
-            [this.mode === 'challenge' && this.hints === 0 && this.errors === 0
-              ? 'independentMetrics'
-              : 'assistedMetrics']: {
+            [independent ? 'independentMetricsV2' : 'assistedMetrics']: {
               steps: this.actions.length,
               hints: this.hints,
               errors: this.errors,
               variant: this.state.variant,
               parameter: this.state.parameter,
+              judgementVersion: 2 as const,
             },
           }
         : {}),
@@ -199,13 +205,21 @@ export class LabScene implements GameScene {
     const result = applyLabAction(this.state, action)
     this.attemptedTargets = result.changed ? [] : attempted
     this.feedback = result.feedback
-    this.feedbackError = !result.changed
+    const revealsJudgement = !result.changed && !new Set([
+      'lab.feedback.emptyPath', 'lab.feedback.complete', 'lab.feedback.invalid',
+      'lab.feedback.phase', 'lab.feedback.relaxFirst', 'lab.feedback.augmentFirst',
+    ]).has(result.feedback.key)
+    this.feedbackError = revealsJudgement
     this.hintLevel = 0
     if (result.changed) {
       this.history.push(this.state)
       this.actions.push(action)
       this.state = result.state
-    } else if (this.mode !== 'demo') this.errors++
+    } else if (this.mode !== 'demo' && revealsJudgement) {
+      this.errors++
+      if (this.mode === 'challenge')
+        markLabChallenge(this.kind, this.state.variant, this.state.parameter, { exposed: true })
+    }
     this.persist()
     this.draw()
   }
@@ -228,6 +242,8 @@ export class LabScene implements GameScene {
   private requestHint() {
     if (this.mode === 'demo' || labIsComplete(this.state)) return
     this.hints++
+    if (this.mode === 'challenge')
+      markLabChallenge(this.kind, this.state.variant, this.state.parameter, { exposed: true })
     this.hintLevel = Math.min(2, this.hintLevel + 1)
     this.feedback = labHint(this.state, this.hintLevel)
     this.feedbackError = false
@@ -262,6 +278,17 @@ export class LabScene implements GameScene {
           direction === 'r' ? `${id[1]}→${id[0]}` : `${id[0]}→${id[1]}`
     }
     return text(choice.key, vars)
+  }
+  private shownChoices(): LabChoice[] {
+    const choices = labChoices(this.state)
+    if (this.mode !== 'challenge') return choices
+    const seed = `${this.kind}:${this.state.variant}:${this.state.parameter}:${this.state.phase}:${this.actions.length}`
+    const score = (id: string) => {
+      let hash = 2166136261
+      for (const char of `${seed}:${id}`) hash = Math.imul(hash ^ char.charCodeAt(0), 16777619)
+      return hash >>> 0
+    }
+    return choices.sort((a, b) => score(a.id) - score(b.id) || a.id.localeCompare(b.id))
   }
   private feedbackText() {
     const vars = { ...this.feedback.vars }
@@ -313,7 +340,7 @@ export class LabScene implements GameScene {
       mainW = w - sideW - pad * 3,
       sideX = pad * 2 + mainW
     const complete = labIsComplete(this.state)
-    const choices = this.mode === 'demo' ? [] : labChoices(this.state)
+    const choices = this.mode === 'demo' ? [] : this.shownChoices()
     const actions: GameAction[] = []
     const button = (
       x: number,
@@ -337,6 +364,8 @@ export class LabScene implements GameScene {
       actions.push({ label, run, disabled })
     }
     button(pad, 20, 152, t('lab.back'), () => this.back())
+    button(pad + 164, 20, 166, text('lab.freeExperiment'), () =>
+      this.game.switch((g) => new ExperimentScene(g, this.kind)))
     ;(['demo', 'practice', 'challenge'] as LabMode[]).forEach((mode, i) =>
       button(
         w - pad - 354 + i * 122,
@@ -439,7 +468,7 @@ export class LabScene implements GameScene {
             frame.edges?.push({ ...edge, weight: 0, saturated: true })
           }
       }
-      if (!complete && this.state.phase !== 'bottleneck')
+      if (!complete && (this.mode === 'challenge' || this.state.phase !== 'bottleneck'))
         delete frame.counters.bottleneck
       if (complete)
         frame.counters = {
@@ -603,14 +632,7 @@ export class LabScene implements GameScene {
       size: 11,
       color: C.yellow,
     })
-    const edge =
-      this.kind === 'dijkstra'
-        ? this.state.variant
-          ? 'b→a'
-          : 'a→c'
-        : this.state.variant
-          ? 's→b'
-          : 's→a'
+    const edge = labParameterTarget(this.state) ?? ''
     makeText(
       this.chrome,
       sideX,
@@ -685,12 +707,19 @@ export class LabScene implements GameScene {
         complete,
         true,
       )
+    const challengeStatus = this.mode === 'challenge'
+      ? labChallengeStatus(this.kind, this.state.variant, this.state.parameter)
+      : null
     const note = makeText(
       this.chrome,
       pad,
       controlsY + 63,
       this.mode === 'challenge'
-        ? t('lab.challengeNote')
+        ? challengeStatus?.exposed
+          ? text('lab.exposedChallenge')
+          : challengeStatus?.completed
+            ? text('lab.completedChallenge')
+            : t('lab.challengeNote')
         : t('lab.chooseOnDiagram'),
       { size: 12, color: C.faint, wordWrap: w - pad * 2, lineHeight: 21 },
     )
@@ -710,6 +739,8 @@ export class LabScene implements GameScene {
       steps: this.actions.length,
       hints: this.hints,
       errors: this.errors,
+      exposed: challengeStatus?.exposed ?? false,
+      challengeCompleted: challengeStatus?.completed ?? false,
       result: complete ? labSummary(this.state).value : null,
     })
     this.game.setDescription(

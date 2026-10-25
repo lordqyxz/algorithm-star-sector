@@ -39,6 +39,7 @@ type Box = {
   maxRow?: number
   maxCol?: number
 }
+type GroupRow = { group: string; items: TraceItem[]; head?: boolean; height: number }
 
 /** Pixi-native, data-faithful renderer for deterministic course snapshots. */
 export class TraceView {
@@ -52,7 +53,7 @@ export class TraceView {
   private groupScroll = 0
   private matrixHit: Box | null = null
   private readonly onWheel = (event: WheelEvent) => {
-    if (!this.matrixHit) return
+    if (!this.matrixHit || !this.container.visible || !this.container.renderable) return
     const r = this.container.getBounds()
     const canvas = document.querySelector('canvas')
     const canvasRect = canvas?.getBoundingClientRect()
@@ -103,6 +104,7 @@ export class TraceView {
     string,
     { x: number; y: number; w: number; h: number }
   >()
+  private pendingMoves: { key: string; entity: Entity; from: Box; to: Box }[] = []
   private readonly textWidths = new Map<string, number>()
   private showMoveArrows = false
   private graphLayout: 'graph' | 'tree' | 'spatial' = 'graph'
@@ -173,7 +175,7 @@ export class TraceView {
         ) >
         cellWidth * 1.65,
     )
-    if (!wide) return 30 + Math.ceil(items.length / cols) * 60
+    if (!wide) return 30 + this.itemGrid(items, contentWidth).height
     const rowWidth = Math.max(80, contentWidth - 12)
     const rowsHeight = items.reduce(
       (sum, it) =>
@@ -206,41 +208,64 @@ export class TraceView {
     items.forEach((it, i) => {
       const valueLines = Math.max(1, Math.ceil(this.measureTextWidth(String(it.value), 20, true, true) / Math.max(26, cellW - 18)))
       const detailLines = it.label ? Math.max(1, Math.ceil(this.measureTextWidth(it.label, 14) / Math.max(26, cellW - 16))) : 0
-      rows[Math.floor(i / cols)] = Math.max(rows[Math.floor(i / cols)] ?? 0, Math.max(labCards ? 64 : 54, valueLines * 24 + detailLines * 18 + 14))
+      rows[Math.floor(i / cols)] = Math.max(rows[Math.floor(i / cols)] ?? 0, Math.max(labCards ? 64 : 54, valueLines * 27 + detailLines * 21 + 20))
     })
     return { cols, cellW, rows, height: rows.reduce((sum, h) => sum + h, 0) + Math.max(0, rows.length - 1) * 6 }
   }
 
-  private itemsHeight(items: TraceItem[], width: number): number {
+  private itemsHeight(items: TraceItem[], width: number, interactive = !!this.onTarget): number {
     if (items.every((it) => typeof it.value === 'number')) {
-      const cols = Math.max(1, Math.min(width < 600 ? 6 : 10, Math.floor((width + 6) / 50)))
-      return Math.ceil(items.length / cols) * 80
+      const compact = width < 600
+      const cols = Math.max(1, Math.min(items.length, compact ? 6 : 10, Math.floor((width + 6) / 50)))
+      const cellW = (width - (cols - 1) * (compact ? 4 : 6)) / cols
+      const detailLines = Math.max(0, ...items.map(it => Math.ceil(this.measureTextWidth(it.label ?? String(it.id)) / Math.max(26, cellW - 12))))
+      return Math.ceil(items.length / cols) * Math.max(110, detailLines * 20 + 75)
     }
-    return this.itemGrid(items, width, !!this.onTarget).height
+    return this.itemGrid(items, width, interactive).height
+  }
+
+  private groupRows(groups: { id: string; items: TraceItem[] }[], width: number): { rows: GroupRow[]; cw: number } {
+    const desired = Math.max(96, ...groups.flatMap(group => group.items.map(it => Math.max(
+      this.measureTextWidth(String(it.value), 14, true),
+      it.label ? this.measureTextWidth(it.label, 14) : 0,
+    ) + 20)))
+    let cols = Math.max(1, Math.min(7, Math.floor((width + 4) / 96)))
+    while (cols > 1 && (width - (cols - 1) * 4) / cols < Math.min(280, desired)) cols--
+    const cw = (width - (cols - 1) * 4) / cols
+    const rows: GroupRow[] = []
+    for (const group of groups) {
+      const titleLines = Math.max(1, Math.ceil(this.measureTextWidth(group.id, 14, false, true) / Math.max(40, width - 8)))
+      rows.push({ group: group.id, items: [], head: true, height: Math.max(30, titleLines * 18 + 8) })
+      for (let i = 0; i < group.items.length; i += cols) {
+        const items = group.items.slice(i, i + cols)
+        const cardH = Math.max(50, ...items.map(it => {
+          const valueLines = Math.max(1, Math.ceil(this.measureTextWidth(String(it.value), 14, true) / Math.max(32, cw - 16)))
+          const detailLines = it.label ? Math.max(1, Math.ceil(this.measureTextWidth(it.label, 14) / Math.max(32, cw - 16))) : 0
+          return valueLines * 19 + detailLines * 19 + (detailLines ? 6 : 0) + 14
+        }))
+        rows.push({ group: group.id, items, height: cardH + 4 })
+      }
+    }
+    return { rows, cw }
   }
 
   private groupsHeight(groups: { id: string; items: TraceItem[] }[], width: number): number {
-    const cols = Math.max(1, Math.min(7, Math.floor((width + 4) / 96)))
-    const cw = (width - (cols - 1) * 4) / cols
     // Keep the first two groups legible together; the existing navigation pages larger collections.
-    return groups.slice(0, 2).reduce((sum, group) => {
-      const title = Math.max(30, Math.ceil(this.measureTextWidth(group.id) / Math.max(40, width - 8)) * 18 + 8)
-      const rows = Math.ceil(group.items.length / cols)
-      let cards = 0
-      for (let row = 0; row < rows; row++) {
-        const batch = group.items.slice(row * cols, (row + 1) * cols)
-        cards += Math.max(50, ...batch.map((it) => {
-          const value = Math.ceil(this.measureTextWidth(String(it.value)) / Math.max(32, cw - 10))
-          const detail = it.label ? Math.ceil(this.measureTextWidth(it.label) / Math.max(32, cw - 10)) : 0
-          return (value + detail) * 17 + 12
-        }))
-      }
-      return sum + title + cards
-    }, 0) + (groups.length > 2 ? 28 : 0)
+    const { rows } = this.groupRows(groups.slice(0, 2), width)
+    return rows.reduce((sum, row) => sum + row.height, 0) + (groups.length > 2 ? 28 : 0)
   }
 
   private graphHeight(frame: TraceFrame, layout: 'graph' | 'tree' | 'spatial'): number {
-    if (layout !== 'tree') return 270
+    if (layout === 'spatial') return 270
+    if (layout === 'graph') {
+      const columns = new Map<number, number>()
+      for (const node of frame.nodes ?? []) {
+        const column = Math.round(node.x * 8)
+        columns.set(column, (columns.get(column) ?? 0) + 1)
+      }
+      const weighted = (frame.edges ?? []).filter(edge => edge.weight !== undefined).length
+      return Math.max(270, Math.max(0, ...columns.values()) * 68 + 50, Math.min(720, 220 + weighted * 18))
+    }
     const nodes = frame.nodes ?? []
     const ids = new Set(nodes.map((n) => n.id))
     const incoming = new Map(nodes.map((n) => [n.id, 0]))
@@ -261,16 +286,34 @@ export class TraceView {
     return Math.max(200, Math.max(edgeLevels, coordinateLevels) * 68 + 24)
   }
 
-  minimumHeight(frame: TraceFrame, width: number, layout: 'graph' | 'tree' | 'spatial' = 'graph'): number {
-    const innerW = Math.max(1, width - 28)
+  minimumHeight(frame: TraceFrame, width: number, layout: 'graph' | 'tree' | 'spatial' = 'graph', interactive = !!this.onTarget): number {
+    const fullW = Math.max(1, width - 16)
+    const innerW = Math.max(1, fullW - 12)
     const output = frame.output?.length ? this.outputPanelHeight(frame.output, width - 16) : 0
-    const items = frame.items?.length ? this.itemsHeight(frame.items, innerW) + 30 : 0
-    const groups = frame.groups?.length ? this.groupsHeight(frame.groups, innerW) + 30 : 0
-    const graph = frame.nodes?.length ? this.graphHeight(frame, layout) + 30 : 0
-    let content = Math.max(items, groups, graph, frame.matrix ? 270 : 0, 160)
-    if (graph && items) content = Math.max((graph / 0.54) + 8, (items / 0.46) + 8)
-    else if (graph && frame.matrix && width < 650) content = Math.max((graph / 0.48) + 8, (270 / 0.52) + 8)
-    else if (items && groups) content = Math.max((items / 0.55) + 8, (groups / 0.45) + 8)
+    const hasGraph = !!frame.nodes?.length
+    const hasItems = !!frame.items?.length
+    const hasMatrix = !!frame.matrix
+    const hasGroups = !!frame.groups?.length
+    const graph = hasGraph ? this.graphHeight(frame, layout) + 30 : 0
+    let content = 160
+    if (hasGraph && hasMatrix) {
+      // redraw places these side by side on wide screens, vertically otherwise.
+      content = width >= 1100 ? Math.max(graph, 270) : Math.max(graph / 0.48 + 8, 270 / 0.52 + 8)
+    } else if (interactive && hasMatrix && hasItems) {
+      const matrixWidth = Math.floor((fullW - 8) * 0.73)
+      const sideInnerW = Math.max(1, fullW - matrixWidth - 8 - 12)
+      content = Math.max(270, this.itemsHeight(frame.items!, sideInnerW, true) + 30)
+    } else if (hasGraph && hasItems) {
+      const items = this.itemsHeight(frame.items!, innerW, interactive) + 30
+      content = Math.max(graph / 0.54 + 8, items / 0.46 + 8)
+    } else if (hasGraph) content = graph
+    else if (hasMatrix) content = 270
+    else if (hasItems && hasGroups) {
+      const items = this.itemsHeight(frame.items!, innerW, interactive) + 30
+      const groups = this.groupsHeight(frame.groups!, innerW) + 30
+      content = Math.max(items / 0.55 + 8, groups / 0.45 + 8)
+    } else if (hasItems) content = this.itemsHeight(frame.items!, innerW, interactive) + 30
+    else if (hasGroups) content = this.groupsHeight(frame.groups!, innerW) + 30
     return Math.ceil(32 + content + output)
   }
 
@@ -286,6 +329,7 @@ export class TraceView {
     this.layers = []
     this.matrixHit = null
     this.currentPositions = new Map()
+    this.pendingMoves = []
     const w = this.width,
       h = this.height,
       pad = 8,
@@ -338,7 +382,7 @@ export class TraceView {
     }
     const layouts: { kind: string; box: Box }[] = []
     if (hasGraph && hasMatrix) {
-      if (w >= 650) {
+      if (w >= 1100) {
         const left = Math.floor((full.w - gap) * 0.48)
         layouts.push(
           { kind: 'graph', box: { ...full, w: left } },
@@ -449,6 +493,7 @@ export class TraceView {
         'output',
       )
     }
+    this.finishEntityMoves(occupied)
     for (const [key, e] of this.entities)
       if (!occupied.has(key)) {
         this.cancelEntityAnimation(e)
@@ -502,6 +547,7 @@ export class TraceView {
     mono = false,
     bold = false,
   ): number {
+    size = Math.max(14, size)
     const key = `${value}|${size}|${mono}|${bold}`
     const cached = this.textWidths.get(key)
     if (cached !== undefined) return cached
@@ -543,6 +589,36 @@ export class TraceView {
   private cancelEntityAnimation(entity: Entity): void {
     entity.animation?.cancel()
     entity.animation = null
+  }
+  private finishEntityMoves(occupied: Set<string>): void {
+    const sweep = ({ from, to }: { from: Box; to: Box }): Box => ({
+      x: Math.min(from.x, to.x),
+      y: Math.min(from.y, to.y),
+      w: Math.max(from.x + from.w, to.x + to.w) - Math.min(from.x, to.x),
+      h: Math.max(from.y + from.h, to.y + to.h) - Math.min(from.y, to.y),
+    })
+    const intersects = (a: Box, b: Box) =>
+      a.x < b.x + b.w && a.x + a.w > b.x &&
+      a.y < b.y + b.h && a.y + a.h > b.y
+    const moves = new Map(this.pendingMoves.map((move) => [move.key, move]))
+    for (const move of this.pendingMoves) {
+      const path = sweep(move)
+      const blocked = [...occupied].some((key) => {
+        if (key === move.key) return false
+        const other = moves.get(key)
+        const box = other ? sweep(other) : this.currentPositions.get(key)
+        return !!box && intersects(path, box)
+      })
+      const outside = path.x < 0 || path.y < 0 || path.x + path.w > this.width || path.y + path.h > this.height
+      if (blocked || outside) move.entity.view.position.set(move.to.x, move.to.y)
+      else move.entity.animation = animate(move.entity.view, {
+        x: move.to.x,
+        y: move.to.y,
+        duration: 240,
+        ease: 'out(3)',
+      })
+    }
+    this.pendingMoves = []
   }
   private entity(
     id: string,
@@ -642,7 +718,13 @@ export class TraceView {
     e.detail.style.wordWrapWidth = Math.max(26, w - 8)
     this.cancelEntityAnimation(e)
     if (this.reduced || !this.animateEntities) e.view.position.set(x, y)
-    else e.animation = animate(e.view, { x, y, duration: 240, ease: 'out(3)' })
+    else if (Math.abs(e.view.x - x) > 0.5 || Math.abs(e.view.y - y) > 0.5)
+      this.pendingMoves.push({
+        key,
+        entity: e,
+        from: { x: e.view.x, y: e.view.y, w, h },
+        to: { x, y, w, h },
+      })
     return e
   }
   private drawItems(
@@ -726,16 +808,15 @@ export class TraceView {
         prefix,
       )
       e.label.style.fontSize = 20
-      const valueLines = Math.max(1, Math.ceil(this.measureTextWidth(String(it.value), 20, true, true) / Math.max(26, cellW - 18)))
-      const detailLines = it.label ? Math.max(1, Math.ceil(this.measureTextWidth(it.label, 14) / Math.max(26, cellW - 16))) : 0
-      const textHeight = valueLines * 24 + detailLines * 18
-      const start = Math.max(7, (cellH - textHeight) / 2)
-      e.label.position.set(cellW / 2, start + valueLines * 12)
-      e.detail.position.set(cellW / 2, start + valueLines * 24 + detailLines * 9)
       e.label.style.wordWrapWidth = Math.max(26, cellW - 18)
       e.detail.style.wordWrapWidth = Math.max(26, cellW - 16)
       e.label.style.breakWords = true
       e.detail.style.breakWords = true
+      const detailH = it.label ? e.detail.height : 0
+      const textHeight = e.label.height + detailH + (detailH ? 6 : 0)
+      const start = Math.max(4, (cellH - textHeight) / 2)
+      e.label.position.set(cellW / 2, start + e.label.height / 2)
+      e.detail.position.set(cellW / 2, start + e.label.height + 6 + detailH / 2)
     })
   }
   private drawNumericBars(
@@ -747,7 +828,7 @@ export class TraceView {
     const compact = box.w < 600,
       cols = Math.max(
         1,
-        Math.min(compact ? 6 : 10, Math.floor((box.w + 6) / 50)),
+        Math.min(items.length, compact ? 6 : 10, Math.floor((box.w + 6) / 50)),
       ),
       gap = compact ? 4 : 6,
       cellW = (box.w - gap * (cols - 1)) / cols,
@@ -762,8 +843,9 @@ export class TraceView {
         row = Math.floor(i / cols),
         x = box.x + col * (cellW + gap),
         y = box.y + row * rowH,
+        detailSpace = Math.max(20, Math.ceil(this.measureTextWidth(it.label ?? String(i)) / Math.max(26, cellW - 12)) * 20),
         barTop = y + 24,
-        barBottom = y + Math.max(28, rowH - 22),
+        barBottom = y + Math.max(28, rowH - detailSpace - 42),
         usable = Math.max(0, barBottom - barTop),
         axisY = range === 0 ? barBottom : barTop + (max / range) * usable
       const value = Number(it.value),
@@ -807,12 +889,12 @@ export class TraceView {
           )
           .fill({ color, alpha: it.tone === 'muted' ? 0.56 : 0.94 })
       e.label.text = String(it.value)
-      e.label.anchor.set(0.5, value >= 0 ? 1 : 0)
+      e.label.anchor.set(0.5, 1)
       e.label.position.set(
         cellW / 2,
         value >= 0
           ? Math.max(22, top - y - 3)
-          : Math.min(rowH - 16, top - y + barH + 3),
+          : rowH - 32,
       )
       e.label.style.fontFamily = MONO
       e.label.style.fontSize = 20
@@ -824,11 +906,14 @@ export class TraceView {
             ? P.success
             : P.text
       e.detail.text = it.label ?? String(i)
-      e.detail.anchor.set(0.5, 0.5)
-      e.detail.position.set(cellW / 2, rowH - 10)
+      e.detail.anchor.set(0.5, 1)
+      e.detail.position.set(cellW / 2, rowH - 6)
       e.detail.style.fontSize = 14
       e.detail.style.fill = P.muted
+      e.detail.style.wordWrapWidth = Math.max(26, cellW - 12)
+      e.detail.style.breakWords = true
       e.detail.visible = true
+      if (value < 0) e.label.position.y = rowH - e.detail.height - 12
       e.signature = `bar:${value}:${it.tone}:${it.label}:${cellW}:${rowH}`
     })
   }
@@ -867,46 +952,7 @@ export class TraceView {
     parent: Container,
     occupied: Set<string>,
   ): void {
-    const cols = Math.max(1, Math.min(7, Math.floor((box.w + 4) / 96))),
-      cw = (box.w - (cols - 1) * 4) / cols
-    const rows: {
-      group: string
-      items: TraceItem[]
-      head?: boolean
-      height: number
-    }[] = []
-    for (const group of groups) {
-      const titleRows = Math.max(
-        1,
-        Math.ceil((group.id.length * 8) / Math.max(40, box.w - 8)),
-      )
-      rows.push({
-        group: group.id,
-        items: [],
-        head: true,
-        height: Math.max(30, titleRows * 18 + 8),
-      })
-      for (let i = 0; i < group.items.length; i += cols) {
-        const items = group.items.slice(i, i + cols)
-        const contentLines = Math.max(
-          1,
-          ...items.map(
-            (it) =>
-              Math.ceil(
-                (String(it.value).length * 7.5) / Math.max(32, cw - 10),
-              ) +
-              (it.label
-                ? Math.ceil((it.label.length * 7.5) / Math.max(32, cw - 10))
-                : 0),
-          ),
-        )
-        rows.push({
-          group: group.id,
-          items,
-          height: Math.max(50, contentLines * 17 + 12),
-        })
-      }
-    }
+    const { rows, cw } = this.groupRows(groups, box.w)
     const totalHeight = rows.reduce((sum, row) => sum + row.height, 0)
     const needsNav = totalHeight > box.h
     const contentH = Math.max(1, box.h - (needsNav ? 28 : 0))
@@ -943,16 +989,6 @@ export class TraceView {
         )
       else
         item.items.forEach((it, i) => {
-          const valueLines = Math.max(
-            1,
-            Math.ceil((String(it.value).length * 7.5) / Math.max(32, cw - 10)),
-          )
-          const detailLines = it.label
-            ? Math.max(
-                1,
-                Math.ceil((it.label.length * 7.5) / Math.max(32, cw - 10)),
-              )
-            : 0
           const cardH = item.height - 4
           const view = this.entity(
             it.id,
@@ -967,8 +1003,15 @@ export class TraceView {
             occupied,
             `group:${item.group}`,
           )
-          view.label.position.set(cw / 2, 6 + valueLines * 8.5)
-          view.detail.position.set(cw / 2, cardH - 6 - detailLines * 8.5)
+          view.label.style.wordWrapWidth = Math.max(32, cw - 16)
+          view.detail.style.wordWrapWidth = Math.max(32, cw - 16)
+          view.label.style.breakWords = true
+          view.detail.style.breakWords = true
+          const detailH = it.label ? view.detail.height : 0
+          const textH = view.label.height + detailH + (detailH ? 6 : 0)
+          const top = Math.max(4, (cardH - textH) / 2)
+          view.label.position.set(cw / 2, top + view.label.height / 2)
+          view.detail.position.set(cw / 2, top + view.label.height + 6 + detailH / 2)
         })
     })
     if (needsNav)
@@ -1341,7 +1384,7 @@ export class TraceView {
         | { x: number; y: number; w: number; h: number; score: number }
         | undefined
       for (const t of [0.5, 0.36, 0.64, 0.22, 0.78, 0.1, 0.9])
-        for (const offset of [14, 22, 32, 44, 58, 74])
+        for (const offset of [14, 22, 32, 44, 58, 74, 96, 128, 160])
           for (const sign of [-1, 1]) {
             const cx = sx + (ex - sx) * t - uy * offset * sign,
               cy = sy + (ey - sy) * t + ux * offset * sign
@@ -1361,15 +1404,34 @@ export class TraceView {
               offset * 0.08
             if (!best || score < best.score) best = { ...r, score }
           }
+      if (!best || best.score >= 1000) {
+        const midX = (sx + ex) / 2, midY = (sy + ey) / 2
+        for (let y = box.y + 4; y + lh <= box.y + box.h - 4; y += 14)
+          for (let x = box.x + 4; x + lw <= box.x + box.w - 4; x += 14) {
+            const r = { x, y, w: lw, h: lh }
+            if (nodeBoxes.some(n => overlaps(r, n)) || placedLabels.some(n => overlaps(r, n))) continue
+            const score = Math.hypot(x + lw / 2 - midX, y + lh / 2 - midY)
+            if (!best || best.score >= 1000 || score < best.score) best = { ...r, score }
+          }
+      }
       if (best) {
         placedLabels.push(best)
+        const caption = new Container()
+        // Long residual labels may need a wider berth than the opposite edge's
+        // short f/c label. Keep that displaced reading tied to its real edge.
+        const cx = best.x + best.w / 2, cy = best.y + best.h / 2
+        const along = Math.max(0, Math.min(1, ((cx - sx) * (ex - sx) + (cy - sy) * (ey - sy)) / Math.max(1, (ex - sx) ** 2 + (ey - sy) ** 2)))
+        const lx = sx + (ex - sx) * along, ly = sy + (ey - sy) * along
+        if (Math.hypot(cx - lx, cy - ly) > 44) {
+          layer.moveTo(lx, ly).lineTo(cx, cy).stroke({ width: 1, color, alpha: 0.4 })
+        }
         const bg = new Graphics()
           .roundRect(best.x, best.y, best.w, best.h, 5)
           .fill({ color: P.panel, alpha: 0.96 })
           .stroke({ width: 1, color: P.border, alpha: 0.8 })
-        parent.addChild(bg)
+        caption.addChild(bg)
         this.text(
-          parent,
+          caption,
           label,
           best.x + best.w / 2,
           best.y + best.h / 2,
@@ -1381,6 +1443,12 @@ export class TraceView {
           0.5,
           best.w - 6,
         )
+        if (this.interactiveTargets.has(edgeTarget)) {
+          this.bindTarget(caption, edgeTarget)
+          caption.label = `edge-label:${e.from}:${e.to}`
+          caption.hitArea = new Rectangle(best.x, best.y, best.w, best.h)
+        }
+        parent.addChild(caption)
       }
     }
     for (const n of nodes) {
@@ -1523,20 +1591,14 @@ export class TraceView {
       0,
       ...m.values.flat().map((x) => this.measureTextWidth(String(x), 14, true)),
     )
-    const desiredCell = Math.max(
-      48,
-      Math.min(112, Math.max(widestHeader, widestValue) + 18),
-    )
-    const cellW = Math.min(desiredCell, interior / Math.min(cols, 8))
+    const desiredCell = Math.max(48, Math.max(widestHeader, widestValue) + 18)
+    const cellW = Math.min(desiredCell, interior)
     const visibleCols = Math.max(1, Math.floor(interior / cellW))
     const headerH = Math.max(
       24,
       Math.min(76, Math.ceil(widestHeader / Math.max(24, cellW - 10)) * 17 + 8),
     )
-    const cellH = Math.max(
-      28,
-      Math.min(72, Math.ceil(widestValue / Math.max(24, cellW - 10)) * 17 + 8),
-    )
+    const cellH = Math.max(28, Math.ceil(widestValue / Math.max(24, cellW - 10)) * 19 + 10)
     const workY = box.y + 23,
       workH = Math.max(1, box.h - 23)
     let visibleRows = Math.max(1, Math.floor((workH - headerH - 4) / cellH))
@@ -1632,7 +1694,7 @@ export class TraceView {
           hit.hitArea = new Rectangle(x, y, cellW - 3, cellH - 3)
           cellHits.push(hit)
         }
-        this.text(
+        const value = this.text(
           parent,
           String(m.values[r]?.[c] ?? ''),
           x + (cellW - 3) / 2,
@@ -1645,6 +1707,7 @@ export class TraceView {
           0.5,
           cellW - 10,
         )
+        value.style.breakWords = true
       }
     }
     // Hit regions sit above text siblings so blank and filled cells behave identically.
@@ -1682,25 +1745,21 @@ export class TraceView {
         parent,
         box,
         () => {
-          this.matrixScroll.row = Math.max(
-            0,
-            this.matrixScroll.row - visibleRows,
-          )
-          this.matrixScroll.col = Math.max(
-            0,
-            this.matrixScroll.col - visibleCols,
-          )
+          if (this.matrixScroll.col > 0)
+            this.matrixScroll.col = Math.max(0, (Math.ceil(this.matrixScroll.col / visibleCols) - 1) * visibleCols)
+          else if (this.matrixScroll.row > 0) {
+            this.matrixScroll.row = Math.max(0, (Math.ceil(this.matrixScroll.row / visibleRows) - 1) * visibleRows)
+            this.matrixScroll.col = maxCol
+          }
           this.redraw()
         },
         () => {
-          this.matrixScroll.row = Math.min(
-            maxRow,
-            this.matrixScroll.row + visibleRows,
-          )
-          this.matrixScroll.col = Math.min(
-            maxCol,
-            this.matrixScroll.col + visibleCols,
-          )
+          if (this.matrixScroll.col < maxCol)
+            this.matrixScroll.col = Math.min(maxCol, (Math.floor(this.matrixScroll.col / visibleCols) + 1) * visibleCols)
+          else if (this.matrixScroll.row < maxRow) {
+            this.matrixScroll.row = Math.min(maxRow, (Math.floor(this.matrixScroll.row / visibleRows) + 1) * visibleRows)
+            this.matrixScroll.col = 0
+          }
           this.redraw()
         },
         'MATRIX',

@@ -13,6 +13,7 @@ import { CourseScene } from './CourseScene'
 import { MapScene } from './MapScene'
 import { LabScene } from './LabScene'
 import { ClassroomScene } from './ClassroomScene'
+import { ExperimentScene } from './ExperimentScene'
 
 export class CourseMapScene implements GameScene {
   readonly container = new Container()
@@ -78,6 +79,7 @@ export class CourseMapScene implements GameScene {
       { label: t('course.nextPage'), run: () => this.movePage(1) },
     ]
     actions.push({ label: t('lab.entry'), run: () => this.game.switch(g => new LabScene(g)) })
+    actions.push({ label: t('experiment.entry'), run: () => this.game.switch(g => new ExperimentScene(g)) })
     actions.push({ label: t('classroom.entry'), run: () => this.game.switch(g => new ClassroomScene(g)) })
     this.game.setActions(actions)
 
@@ -190,6 +192,7 @@ export class CourseMapScene implements GameScene {
       )
     }
 
+    if (!mobile) makeButton(this.container, { x: w - 376, y: 96, w: 164, h: 40, label: t('experiment.entry'), onTap: () => this.game.switch(g => new ExperimentScene(g)) })
     if (!mobile) makeButton(this.container, { x: w - 200, y: 96, w: 164, h: 40, label: t('lab.entry'), onTap: () => this.game.switch(g => new LabScene(g)) })
     const startY = mobile ? 254 : 181
     const baseHeight = mobile ? 1110 : Math.max(830, w * 800 / 1440)

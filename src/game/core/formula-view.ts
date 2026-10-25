@@ -8,6 +8,7 @@ export class FormulaView {
   readonly element = document.createElement('div')
   private reference = document.createElement('div')
   private state = document.createElement('div')
+  private stateLabel = document.createElement('div')
   private previous = ['', '']
 
   constructor(game: Game) {
@@ -15,11 +16,10 @@ export class FormulaView {
     const referenceLabel = document.createElement('div')
     referenceLabel.className = 'formula-label'
     referenceLabel.textContent = t('course.mathReference')
-    const stateLabel = document.createElement('div')
-    stateLabel.className = 'formula-label'
-    stateLabel.textContent = t('course.mathState')
+    this.stateLabel.className = 'formula-label'
+    this.stateLabel.textContent = t('course.mathState')
     this.reference.className = this.state.className = 'formula-equation'
-    this.element.append(referenceLabel, this.reference, stateLabel, this.state)
+    this.element.append(referenceLabel, this.reference, this.stateLabel, this.state)
     game.mountOverlay(this.element)
   }
 
@@ -30,9 +30,11 @@ export class FormulaView {
     y: number,
     width: number,
     visible: boolean,
+    stateCaption = t('course.mathState'),
   ) {
     this.element.hidden = !visible
     if (!visible) return
+    this.stateLabel.textContent = stateCaption
     this.element.style.left = `${x}px`
     this.element.style.top = `${y}px`
     this.element.style.width = `${width}px`

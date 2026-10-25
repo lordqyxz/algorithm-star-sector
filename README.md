@@ -11,6 +11,7 @@
 - **课程航线**：从线性结构、串、查找、树与图，进入内存管理、内外排序、分治、贪心、动态规划、搜索、复杂性与优化方法。
 - **原理与论证**：在任务中阅读适用条件、不变量、推导和反例；含论证内容的任务另设迁移校验。
 - **航行日志**：查看完成的示例任务与原有航行记录。
+- **自由实验室**：Dijkstra、0/1 背包、最大流、顶点覆盖→审稿委员会构造提供预计/当前切换、真实对象点击、有界输入编辑、保留未来的回退与 A/B 分支；可保留合法但较差的选择，分别观察可行性、策略、结论和实际成本。
 - **互动操练**：Dijkstra、0/1 背包和最大流提供真实图形操作、演示／操练／挑战、两级提示、撤销、改参数比较和独立学习记录。
 - **首航实战**：保留原有六段操作、探测、指令编排和星流汇合游戏。
 
@@ -81,6 +82,16 @@ playwright-cli -s=verify --raw run-code --filename=.playwright-cli/lab-pointer.g
 ```
 
 生成时可用 `SITE_URL` 指定线上站点。该测试会清除独立测试会话中的互动操练记录。设计、输入范围和核验说明见 [INTERACTIVE-LABS.md](docs/INTERACTIVE-LABS.md)。
+
+四个自由实验样板的操作、分支、刷新与真实指针检查：
+
+```bash
+node --import ./tests/register.mjs tests/export-experiment-checks.mjs
+playwright-cli -s=verify --raw run-code --filename=.playwright-cli/experiment-checks.generated.js
+playwright-cli -s=verify --raw run-code --filename=.playwright-cli/experiment-pointer.generated.js
+```
+
+生成时支持 `SITE_URL` 和 `VIEWPORT_WIDTH`（1280／1440）。该检查清除测试会话的自由实验记录。原操练记录继续保留；挑战暴露跨重开与刷新保持，新旧独立判定分别记录。设计与实现边界见 [第二轮实验台](docs/INTERACTION-ROUND2.md) 与 [验证记录](docs/ROUND2-VERIFICATION.md)。
 
 ## 架构与部署
 

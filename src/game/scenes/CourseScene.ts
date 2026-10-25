@@ -12,6 +12,7 @@ import type { ChapterId } from '../curriculum'
 import { CourseMapScene } from './CourseMapScene'
 import { LabScene, labMissions } from './LabScene'
 import { ClassroomScene } from './ClassroomScene'
+import { ExperimentScene } from './ExperimentScene'
 import { classroomSources, classroomUnits, type ClassroomUnit } from '../classroom'
 import type { LabKind } from '../sim'
 
@@ -504,6 +505,8 @@ export class CourseScene implements GameScene {
       controlsTop: controlsY,
     })
     const labKind = (Object.keys(labMissions) as LabKind[]).find(kind => labMissions[kind] === this.mission.id)
+    const experimentKind = labKind ?? (this.mission.id === 'ppt-np-review-committee' ? 'reduction' : undefined)
+    if (experimentKind && !this.theoryOpen) makeButton(this.chrome, { x: w - 610, y: 24, w: 138, h: 36, label: t('experiment.entry'), onTap: () => this.game.switch(g => new ExperimentScene(g, experimentKind)) })
     if (labKind && !this.theoryOpen) makeButton(this.chrome, { x: w - 462, y: 24, w: 134, h: 36, label: t('lab.practiceEntry'), onTap: () => this.game.switch(g => new LabScene(g, labKind)) })
     const actions: GameAction[] = [
       { label: this.classroomUnitId ? t('classroom.back') : t('course.back'), run: () => this.back() },
@@ -530,6 +533,7 @@ export class CourseScene implements GameScene {
       },
     ]
     if (labKind) actions.push({ label: t('lab.practiceEntry'), run: () => this.game.switch(g => new LabScene(g, labKind)) })
+    if (experimentKind) actions.push({ label: t('experiment.entry'), run: () => this.game.switch(g => new ExperimentScene(g, experimentKind)) })
     if (this.checkpoint) {
       this.prediction.options.forEach((option, index) =>
         actions.push({

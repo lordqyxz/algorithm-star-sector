@@ -185,3 +185,6 @@ export function mergePick(state: MergeState, side: 'left' | 'right'): { state: M
 export function mergeMedal(attempts: number, optimal: number): MedalTone {
   return attempts <= optimal ? 'gold' : attempts <= optimal + 2 ? 'silver' : 'bronze'
 }
+export { createExperiment, experimentChoices, applyExperiment, experimentFrame, experimentReport, experimentFields, experimentFormula, experimentReading, experimentKinds } from './simulation/experiments'
+export type { ExperimentState, ExperimentKind, ExperimentAction, ExperimentChoice, ExperimentFact, ExperimentField, ExperimentReport } from './simulation/experiments'
+export { labParameterTarget } from './simulation/interactive'

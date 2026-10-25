@@ -3,6 +3,7 @@
       app.render()
       const texts = [],
         clipped = []
+      const maskBounds = new Map()
       const walk = (n, shown = true) => {
         shown =
           shown &&
@@ -26,15 +27,23 @@
           const raw = { ...r }
           let p = n.parent
           while (p) {
-            if (p.mask?.getBounds) {
-              const m = p.mask.getBounds()
+            if (p.mask?.getLocalBounds && p.mask?.toGlobal) {
+              // Pixi excludes a Graphics used as a mask from getBounds(); its
+              // local geometry still has the actual clipping rectangle.
+              let m = maskBounds.get(p.mask)
+              if (!m) {
+                const local = p.mask.getLocalBounds()
+                const points = [[local.minX, local.minY], [local.maxX, local.minY], [local.minX, local.maxY], [local.maxX, local.maxY]].map(([x, y]) => p.mask.toGlobal({ x, y }))
+                m = { minX: Math.min(...points.map(q => q.x)), minY: Math.min(...points.map(q => q.y)), maxX: Math.max(...points.map(q => q.x)), maxY: Math.max(...points.map(q => q.y)) }
+                maskBounds.set(p.mask, m)
+              }
               const x = Math.max(r.x, m.minX),
                 y = Math.max(r.y, m.minY)
               r = {
                 x,
                 y,
-                w: Math.min(r.x + r.w, m.maxX) - x,
-                h: Math.min(r.y + r.h, m.maxY) - y,
+                w: Math.max(0, Math.min(r.x + r.w, m.maxX) - x),
+                h: Math.max(0, Math.min(r.y + r.h, m.maxY) - y),
               }
             }
             p = p.parent

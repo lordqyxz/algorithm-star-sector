@@ -7,6 +7,7 @@ import { courseMissions } from '../sim'
 import { t, zh } from '../locale'
 import { CourseScene } from './CourseScene'
 import { MapScene } from './MapScene'
+import { ExperimentScene } from './ExperimentScene'
 
 type UnitId = ClassroomUnit['id']
 const copy = zh.classroom
@@ -69,6 +70,7 @@ export class ClassroomScene implements GameScene {
 
     const actions: GameAction[] = [
       { label: word('course.overview'), run: () => this.game.switch(game => new MapScene(game)) },
+      { label: word('experiment.entry'), run: () => this.game.switch(game => new ExperimentScene(game)) },
       ...classroomUnits.map(unit => ({ label: copy.units[unit.id].title, run: () => this.choose(unit) })),
       ...references.map(ref => ({
         label: zh.course.missions[ref.id as keyof typeof zh.course.missions]?.title ?? ref.id,
@@ -91,6 +93,7 @@ export class ClassroomScene implements GameScene {
     makeText(this.container, pad, 57, word('classroom.heading'), {
       size: 32, weight: '400', color: C.ink,
     })
+    makeButton(this.container, { x: w - pad - 164, y: 51, w: 164, h: 40, label: word('experiment.entry'), onTap: () => this.game.switch(game => new ExperimentScene(game)) })
     makeText(this.container, pad, 105, word('classroom.intro'), {
       size: 13, color: C.muted, wordWrap: w - pad * 2, lineHeight: 20,
     })
